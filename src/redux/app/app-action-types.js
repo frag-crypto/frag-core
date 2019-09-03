@@ -1,0 +1,8 @@
+export const INIT_WORKERS = 'INIT_WORKERS'
+export const LOG_IN = 'LOG_IN'
+export const LOG_OUT = 'LOG_OUT'
+export const ADD_PLUGIN_URL = 'ADD_PLUGIN_URL'
+export const ADD_PLUGIN = 'ADD_PLUGIN'
+export const NAVIGATE = 'NAVIGATE'
+export const SELECT_ADDRESS = 'SELECT_ADDRESS'
+export const NETWORK_CONNECTION_STATUS = 'NETWORK_CONNECTION_STATUS'
