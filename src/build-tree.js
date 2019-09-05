@@ -5,9 +5,14 @@ const path = require('path')
 // SRC_FOLDER = '' // Comes from config
 // BUILD_FOLDER = '' // Comes from config
 
+// Could be used to overwrite absolutely anything
+const aliases = {
+    '@frag/crypto': 'node_modules/frag-qora-crypto/api.js'
+}
+
 const apiComponents = {
     // All the do stuff imports...such as login(...) and logout()
-    'api': {
+    api: {
         file: 'api/api.js',
         className: 'api'
     }
@@ -119,5 +124,6 @@ addPathToSource(functionalComponents)
 module.exports = {
     componentTree,
     functionalComponents,
-    apiComponents
+    apiComponents,
+    aliases
 }

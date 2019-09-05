@@ -89,3 +89,6 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
 }
 
 window.customElements.define('confirm-transaction-dialog', ConfirmTransactionDialog)
+
+const txDialog = document.createElement('confirm-transaction-dialog')
+export const requestTransactionDialog = document.body.appendChild(txDialog)

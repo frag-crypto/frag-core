@@ -1,12 +1,5 @@
 const rollup = require('rollup')
 
-const {
-    // inputs,
-    outputs,
-    outputOptions,
-    inputOptions
-} = require('./build.config.js')
-
 async function writeBundle (bundle, outputOptions) {
     // generate code
     const { output } = await bundle.generate(outputOptions)
@@ -19,7 +12,7 @@ async function writeBundle (bundle, outputOptions) {
     await bundle.write(outputOptions)
 }
 
-async function build () {
+async function build (outputs, outputOptions, inputOptions) {
     // create a bundle
     // inputOptions.input = generateInputs(tree, Object.assign({}, inputOptions.input))
     console.log(inputOptions.input)
@@ -36,4 +29,6 @@ async function build () {
     }
 }
 
-build()
+// build()
+
+module.exports = build

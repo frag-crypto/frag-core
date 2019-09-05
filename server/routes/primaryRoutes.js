@@ -21,7 +21,7 @@ routes.push(
         method: 'GET',
         path: `/${config.coin.baseUrl}/{path*}`,
         handler: {
-            file: path.join(__dirname, '../../index.html')
+            file: path.join(__dirname, '../../public/index.html')
             // file: path.join(__dirname, "../../build/src/index.html") // Production
         }
     },

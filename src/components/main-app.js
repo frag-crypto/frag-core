@@ -57,7 +57,7 @@ class MainApp extends connect(store)(LitElement) {
             
             <app-view></app-view> <!-- Might dynamic import this one... YUP DEFINITELY :) -->
             
-            <confirm-transaction-dialog></confirm-transaction-dialog>
+            <!-- <confirm-transaction-dialog></confirm-transaction-dialog> -->
 
             <!-- <input type="text" placeholder="name" value="${this.name}" @input=${this._nameChanged}> -->
         `

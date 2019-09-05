@@ -4,11 +4,13 @@ import { store } from '../../store.js'
 
 // import { createWallet } from '../../../qora/createWallet.js'
 // import { createWallet } from '../../qora/createWallet.js'
-import { createWallet } from '../../api/createWallet.js'
+// import { createWallet } from '../../api/createWallet.js'
+import { createWallet, registerUsername } from '@frag/crypto'
 
 import { doLogin, doLogout, doSelectAddress } from '../../redux/app/app-actions.js'
-import { doStoreWallet, doClaimAirdrop } from '../../redux/user/user-actions.js'
-import { registerUsername } from '../../api/registerUsername.js'
+import { doStoreWallet, doClaimAirdrop, doUpdateAccountName } from '../../redux/user/user-actions.js'
+// import { registerUsername } from '../../api/registerUsername.js'
+// import { registerUsername } from 'frag-qora-crypto'
 
 // import { logIn } from '../../actions/app-actions.js'
 import '@polymer/iron-pages'
@@ -24,7 +26,7 @@ import 'random-sentence-generator'
 // import ripple from '../loading-ripple.js'
 import ripple from '../../functional-components/loading-ripple.js'
 // import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
-import { doUpdateAccountName } from '../../redux/user/user-actions.js'
+// import { doUpdateAccountName } from '../../redux/user/user-actions.js'
 
 const EMAIL_VALIDATION_REGEX = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 

@@ -2,6 +2,7 @@ const resolve = require('rollup-plugin-node-resolve')
 const builtins = require('rollup-plugin-node-builtins')
 const globals = require('rollup-plugin-node-globals')
 const commonjs = require('rollup-plugin-commonjs')
+const alias = require('rollup-plugin-alias')
 
 const sass = require('rollup-plugin-sass')
 const autoprefixer = require('autoprefixer')
@@ -24,17 +25,28 @@ const inputOptions = {
     // core input options
     // external,
     input: {
+        main: 'src/main.js'
         // Populated from the tree
     },
     plugins: [
+        alias({
+            entries: Object.keys(tree.aliases).map(find => {
+                return {
+                    find, replacement: tree.aliases[find]
+                }
+            })
+        }),
         resolve({
-            module: true
+            // module: true
         }),
         commonjs({}),
         globals(),
-        sass(sassOptions),
-        builtins()
+        builtins(),
+        sass(sassOptions)
     ],
+
+    context: 'window',
+
     manualChunks: {
         // 'lit-element': ['lit-element']
     }
