@@ -1,3 +1,5 @@
+// Default build config
+
 const resolve = require('rollup-plugin-node-resolve')
 const builtins = require('rollup-plugin-node-builtins')
 const globals = require('rollup-plugin-node-globals')
@@ -10,9 +12,15 @@ const autoprefixer = require('autoprefixer')
 const postcss = require('postcss')
 
 // import minifyHTML from 'rollup-plugin-minify-html-literals'
-const terser = require('rollup-plugin-terser').terser
+// const terser = require('rollup-plugin-terser').terser
 
+// This is where we can doooo stufff
 const tree = require('../src/build-tree.js')
+
+// ?? Not sure this should be here...Prefixing build dir does need to happen...but rather to be relative to the project that depends on this
+const options = {
+    outputDir: 'build'
+}
 
 const sassOptions = {
     output: 'build/styles.bundle.css',
@@ -32,7 +40,8 @@ const inputOptions = {
         alias({
             entries: Object.keys(tree.aliases).map(find => {
                 return {
-                    find, replacement: tree.aliases[find]
+                    find,
+                    replacement: tree.aliases[find]
                 }
             })
         }),
@@ -54,11 +63,13 @@ const inputOptions = {
 
 const outputs = [
     {
-        dir: 'build/es6',
+        // dir: 'build/es6',
+        dir: 'es6',
         format: 'esm'
     },
     {
-        dir: 'build/system',
+        // dir: 'build/system',
+        dir: 'system',
         format: 'system' // required
     }
 ]
@@ -90,5 +101,6 @@ inputOptions.input = generateInputs(tree.componentTree, inputOptions.input)
 module.exports = {
     outputs,
     outputOptions,
-    inputOptions
+    inputOptions,
+    options
 }

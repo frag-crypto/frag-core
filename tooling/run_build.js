@@ -1,10 +1,13 @@
+// Just testing
+
 const {
     // inputs,
     outputs,
     outputOptions,
-    inputOptions
+    inputOptions,
+    options
 } = require('./build.config.js')
 
 const build = require('./build.js')
 
-build(outputs, outputOptions, inputOptions)
+build(options, outputs, outputOptions, inputOptions)

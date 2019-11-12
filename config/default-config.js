@@ -90,10 +90,11 @@ const config = {
         },
         plugins: {
             domain: '127.0.0.1',
+            // domain: 'frag.ui'
             port: 9087, // Port for plugins to be loaded from. User will never interact with this port
             directory: './plugins', // Where the plugin folders are stored,
             default: 'wallet',
-            host: '0.0.0.0'
+            host: '0.0.0.0' // frag.ui?
         }
     },
 

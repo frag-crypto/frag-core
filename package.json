@@ -1,8 +1,8 @@
 {
-  "name": "frag-ui",
+  "name": "frag-core",
   "version": "2.0.0-alpha.1",
   "description": "Frag's UI",
-  "main": "index.js",
+  "main": "frag-core.js",
   "repository": "https://github.com/irontiga/frag-ui.git",
   "author": "irontiga <irontiga@gmail.com>",
   "license": "GPL-3.0",
@@ -53,6 +53,7 @@
     "epml": "^0.3.3",
     "h2o2": "^8.1.2",
     "hapi": "^18.0.0",
+    "hostile": "^1.3.2",
     "inert": "^5.1.2",
     "lit-element": "^2.2.1",
     "lit-redux-router": "^0.9.14",

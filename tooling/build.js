@@ -1,8 +1,10 @@
 const rollup = require('rollup')
+const path = require('path')
 
 async function writeBundle (bundle, outputOptions) {
     // generate code
-    const { output } = await bundle.generate(outputOptions)
+    // const { output } = await bundle.generate(outputOptions)
+    await bundle.generate(outputOptions)
 
     // for (const chunkOrAsset of output) {
     //     if (chunkOrAsset.isAsset)  console.log('Asset', chunkOrAsset)
@@ -12,7 +14,11 @@ async function writeBundle (bundle, outputOptions) {
     await bundle.write(outputOptions)
 }
 
-async function build (outputs, outputOptions, inputOptions) {
+async function build (options, outputs, outputOptions, inputOptions) {
+
+    for (const output of outputs) {
+        output.dir = path.join(options.outputDir, output.dir)
+    }
     // create a bundle
     // inputOptions.input = generateInputs(tree, Object.assign({}, inputOptions.input))
     console.log(inputOptions.input)

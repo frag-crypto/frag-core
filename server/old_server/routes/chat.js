@@ -1,15 +1,12 @@
 // Meh
 const Loki = require('lokijs')
-const chatDB = new Loki('chat.db', {
-    autoload: true,
-    autoloadCallback: initDB,
-    autosave: true,
-    autosaveInterval: 4
-})
-// const messages = chatDB.addCollection('messages')
 
 let messages
-function initDB () {
+
+// ===
+// DB
+// ===
+function initDB (db) {
     messages = chatDB.getCollection('messages')
     if (messages === null) {
         messages = chatDB.addCollection('messages')
@@ -23,7 +20,18 @@ const dbReady = new Promise((resolve, reject) => {
     dbIsReady = resolve
 })
 
-module.exports = async function (server, socket) {
+// ===
+// Server
+// ===
+const addChatToServer = async (server, socket) => {
+    const chatDB = new Loki('chat.db', {
+        autoload: true,
+        autoloadCallback: initDB,
+        autosave: true,
+        autosaveInterval: 4
+    })
+
+    initDB(chatDB)
     await dbReady
     server.route({
         method: 'GET',
@@ -65,3 +73,5 @@ module.exports = async function (server, socket) {
         // console.log('Someone connected to chat')
     })
 }
+
+module.exports = addChatToServer

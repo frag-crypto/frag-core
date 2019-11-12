@@ -33,6 +33,7 @@ function serverFactory (routes, address, port, tls) {
             delete this.startServer
             return this.server
         } catch (e) {
+            console.error(e)
             throw e
         }
     }

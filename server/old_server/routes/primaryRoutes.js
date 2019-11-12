@@ -4,7 +4,7 @@ const routes = require('./commonRoutes.js')
 const getPluginDirs = require('../getPluginDirs.js')
 const getAirdrop = require('./getAirdrop.js')
 const checkName = require('./checkName.js')
-const saveEmail = require('./saveEmail.js')
+// const saveEmail = require('./saveEmail.js') // Nah fam we decentralized
 
 const config = require('../../config/config-loader.js')
 
