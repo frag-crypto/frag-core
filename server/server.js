@@ -4,9 +4,14 @@ const platform = require('os').platform()
 
 // const Hapi = require('hapi') Use Glue instead to create the Hapi server
 const Glue = require('@hapi/glue') // Hapi composer
-// const Inert = require('inert') // For serving static files... we'll get there
+
+const Inert = require('inert') // For serving static files
+const h2o2 = require('h2o2') // Proxy
 
 const hostile = require('hostile')
+
+const createPrimaryServerFromConfig = require('./primaryServer.js')
+const createPluginServerFromConfig = require('./pluginServer.js')
 
 // const defaultConfig = require('../config/config.js')
 // const serverConf = defaultConfig.user.server
@@ -14,7 +19,7 @@ const hostile = require('hostile')
 // const plugins = ['plugin1', 'punk', 'plugin2', 'test1']
 
 // Check for admin on windows...
-if (platform == 'win32' || platform == 'win64') {
+if (platform === 'win32' || platform === 'win64') {
     require('child_process').exec('net session', function (err, stdout, stderr) {
         if (err || !(stdout.indexOf('There are no entries in the list.') > -1)) {
             console.log('')
@@ -29,12 +34,16 @@ if (platform == 'win32' || platform == 'win64') {
 
 const setDNS = (target, domain, subdomain) => {
     subdomain = subdomain ? subdomain + '.' : ''
-    hostile.set(target, subdomain + domain, function (err) {
-        if (err) {
-            console.error(err)
-        } else {
-            console.log(`set /etc/hosts successfully for ${subdomain}${domain}!`)
-        }
+    return new Promise((resolve, reject) => {
+        hostile.set(target, subdomain + domain, function (err) {
+            if (err) {
+                console.error(err)
+                // reject(err) Probably could or should but meh
+            } else {
+                console.log(`set /etc/hosts successfully for ${subdomain}${domain}!`)
+            }
+            resolve()
+        })
     })
 }
 
@@ -44,7 +53,7 @@ const createServer = (config, plugins) => {
     // Set DNS for plugins if it's enabled
     if (serverConf.writeHosts.enabled) {
         setDNS(serverConf.plugin.address, serverConf.plugin.domain) // No subdomain specified so sets DNS for the root domain
-        plugins.forEach(plugin => setDNS(serverConf.plugin.address, serverConf.plugin.domain, plugin))
+        plugins.forEach(plugin => setDNS(serverConf.plugin.address, serverConf.plugin.domain, plugin.name))
     }
 
     const manifest = {
@@ -54,24 +63,28 @@ const createServer = (config, plugins) => {
         },
         register: {
             plugins: [
+                Inert,
+                h2o2,
                 {
-                    plugin: './primaryServer',
+                    // plugin: './primaryServer',
+                    plugin: createPrimaryServerFromConfig(config),
                     routes: {
                         vhost: config.user.server.primary.domain
                     }
                 },
                 {
-                    plugin: './pluginServer',
+                    // plugin: './pluginServer',
+                    plugin: createPluginServerFromConfig(config),
                     routes: {
                         // vhost: '*.' + defaultConfig.user.server.plugin.domain // Guess we gone need to make an array of subdomains...
-                        vhost: plugins.map(plugin => plugin + '.' + serverConf.plugin.domain)
+                        vhost: plugins.map(plugin => plugin.name + '.' + serverConf.plugin.domain)
                     }
                 }
             ]
         }
     }
 
-    console.log(plugins.map(plugin => plugin + '.' + serverConf.plugin.domain))
+    console.log(plugins.map(plugin => plugin.name + '.' + serverConf.plugin.domain))
     const options = {
         relativeTo: __dirname
     }
