@@ -1,11 +1,18 @@
 const path = require('path')
 
+const { makeSourceAbsolute } = require('../tooling/utils.js')
 // All these paths are resolved BEFORE building. Rollup handles things for the client side.
 
 // SRC_FOLDER = '' // Comes from config
 // BUILD_FOLDER = '' // Comes from config
 
 // Could be used to overwrite absolutely anything
+const options = {
+    inputFile: path.join(__dirname, '../src/main.js'),
+    outputDir: path.join(__dirname, '../build'),
+    sassOutputDir: path.join(__dirname, '../build/styles.bundle.css')
+}
+
 const aliases = {
     '@frag/crypto': 'node_modules/frag-qora-crypto/api.js'
 }
@@ -25,7 +32,9 @@ const apiComponents = {
 
 // No idea what this was for...
 const styleTree = {
-    '': {}
+    styles: {
+        file: 'styles/styles.scss'
+    }
 }
 
 // There are imports which append themselves to the dom and export that specific instance. There are purely meant to be used as an api, rather than as a component
@@ -46,7 +55,7 @@ const functionalComponents = {
 
 // This is the actual app structure. Each component is given access to itself I guess, after being loaded via dynamic import or systemjs
 // Give every component an onLoaded method that is called once it's imported so that it can import it's own dependencies. Is passed it's children.
-const componentTree = {
+const elementComponents = {
     'main-app': {
         file: 'components/main-app.js',
         className: 'MainApp',
@@ -103,27 +112,12 @@ const componentTree = {
 // import './create-account-section.js'
 // import './login-section.js'
 
-// So that the directory rollup is running in doesn't matter as the paths aren't relative
-function addPathToSource (tree) {
-    for (const component of Object.values(tree)) {
-        // console.log(component)
-        component.source = path.join(__dirname, component.file)
-        if (component.children) {
-            addPathToSource(component.children)
-            // for (const child of Object.values(component.children)) {
-            //     console.log(child)
-            //     addPathToSource(child)
-            // }
-        }
-    }
-    return tree
-}
-
-addPathToSource(componentTree)
-addPathToSource(functionalComponents)
+makeSourceAbsolute(path.join(__dirname, '../src'), elementComponents)
+makeSourceAbsolute(path.join(__dirname, '../src'), functionalComponents)
 
 module.exports = {
-    componentTree,
+    options,
+    elementComponents,
     functionalComponents,
     apiComponents,
     aliases

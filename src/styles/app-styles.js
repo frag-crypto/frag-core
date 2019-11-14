@@ -2,7 +2,8 @@ import { LitElement, html } from 'lit-element'
 // import { connect } from 'pwa-helpers'
 // import { store } from '../store.js'
 
-import '../styles/styles.scss'
+// import '../styles/styles.scss'
+// import './styles.scss'
 import './app-theme.js'
 
 // class AppStyles extends connect(store)(LitElement) {

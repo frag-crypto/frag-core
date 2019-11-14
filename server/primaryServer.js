@@ -1,7 +1,7 @@
 // ./sites/cats.js
 const createPrimaryRoutes = require('./routes/createPrimaryRoutes.js')
 
-const createPrimaryServerFromConfig = config => {
+const createPrimaryServerFromConfig = (config, plugins) => {
     return {
         plugin: {
             name: 'primary',
@@ -14,7 +14,7 @@ const createPrimaryServerFromConfig = config => {
                 //         return 'Prims'
                 //     }
                 // })
-                const routes = createPrimaryRoutes(config)
+                const routes = createPrimaryRoutes(config, plugins)
                 console.log('routes: ', routes)
                 server.route(routes)
             }

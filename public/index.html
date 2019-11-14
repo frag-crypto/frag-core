@@ -31,7 +31,8 @@
             if (typeof Promise === 'undefined') document.write('<script src="/node_modules/bluebird/js/browser/bluebird.core.js"><\/script>');
             if (typeof fetch === 'undefined') document.write('<script src="/node_modules/whatwg-fetch/dist/fetch.umd.js"><\/script>');
         </script>
-        <script nomodule src="/node_modules/systemjs/dist/s.js"></script>
+        <!-- <script nomodulee src="/node_modules/systemjs/dist/s.js"></script> -->
+        <script nomodule src="/src/libraries/s.js"></script>
     </head>
 
     <body>
@@ -60,7 +61,7 @@
         <script nomodule>
             // nvm the warning, it's being used for every browser
             // console.warn('Your browser does not support modules. Loading through SystemJS.')
-            System.import('/build/es5/main.js')
+            System.import('/build/system/main.js')
         </script>
 
 

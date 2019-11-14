@@ -23,7 +23,9 @@ async function build (options, outputs, outputOptions, inputOptions) {
     // inputOptions.input = generateInputs(tree, Object.assign({}, inputOptions.input))
     console.log(inputOptions.input)
     console.log(__dirname)
-    const bundle = await rollup.rollup(inputOptions)
+    const bundle = await rollup.rollup(inputOptions).catch(err => {
+        throw err
+    })
 
     console.log(bundle.watchFiles) // an array of file names this bundle depends on
 

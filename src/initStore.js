@@ -3,6 +3,8 @@ import { doLoadConfigFromAPI } from './redux/config/config-actions.js'
 import { doInitWorkers } from './redux/app/app-actions.js'
 import './persistState.js'
 
+console.log(store)
+
 const workerInitChecker = () => {
     const state = store.getState()
     // console.log('store changed', state)

@@ -25,3 +25,5 @@ If network timeouts of google-material-icons
 ```
 yarn install --network-timeout 100000
 ```
+
+Need to fix `src/styles/app-styles.js`. Currently if I uncomment the import of `styles.scss` it breaks despite having the rollup sass plugin...

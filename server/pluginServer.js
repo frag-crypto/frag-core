@@ -1,7 +1,7 @@
 // ./sites/cats.js
 const createPluginRoutes = require('./routes/createPluginRoutes')
 
-const createPluginServerFromConfig = config => {
+const createPluginServerFromConfig = (config, plugins) => {
     return {
         plugin: {
             name: 'plugin server',
@@ -14,7 +14,7 @@ const createPluginServerFromConfig = config => {
                 //         return 'Plugs'
                 //     }
                 // })
-                server.route(createPluginRoutes(config))
+                server.route(createPluginRoutes(config, plugins)) // Annoying to to be passing it down... guess i'll change this later
             }
         }
     }

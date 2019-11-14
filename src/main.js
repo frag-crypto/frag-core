@@ -11,3 +11,5 @@ import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js'
 // import 'core-js/modules/es.array.iterator'
 import './initStore.js'
 import './components/main-app.js'
+
+console.log('hello')

@@ -1,4 +1,6 @@
-const config = {
+const path = require('path')
+
+const config = {   
     node: {
         explorer: {
             // url: "http://127.0.0.1:9090", // Qora
@@ -28,6 +30,7 @@ const config = {
         writeHosts: {
             enabled: true
         },
+        relativeTo: path.join(__dirname, '../'),
         primary: {
             baseUrl: 'frag', // from coinConfig...hopefully useless
             domain: 'qor.tal',

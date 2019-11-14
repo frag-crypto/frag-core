@@ -1,28 +1,18 @@
 // const config = require('../../config/config-loader.js')
 
 const createRoutes = config => [
-    {
-        method: 'GET',
-        path: '/src/{param*}',
-        handler: {
-            directory: {
-                path: './src',
-                redirectToSlash: true,
-                index: true
-            }
-        }
-    },
-    {
-        method: 'GET',
-        path: '/build/{param*}',
-        handler: {
-            directory: {
-                path: './build',
-                redirectToSlash: true,
-                index: true
-            }
-        }
-    },
+    // Nope why would we need?
+    // {
+    //     method: 'GET',
+    //     path: '/src/{param*}',
+    //     handler: {
+    //         directory: {
+    //             path: './src',
+    //             redirectToSlash: true,
+    //             index: true
+    //         }
+    //     }
+    // },
     {
         method: 'GET',
         path: '/img/{param*}',
@@ -34,17 +24,18 @@ const createRoutes = config => [
             }
         }
     },
-    {
-        method: 'GET',
-        path: '/node_modules/{param*}',
-        handler: {
-            directory: {
-                path: './node_modules',
-                redirectToSlash: true,
-                index: true
-            }
-        }
-    },
+    // Don't need...I think and hope. More secure if untrusted code isn't loaded over our origins
+    // {
+    //     method: 'GET',
+    //     path: '/node_modules/{param*}',
+    //     handler: {
+    //         directory: {
+    //             path: './node_modules',
+    //             redirectToSlash: true,
+    //             index: true
+    //         }
+    //     }
+    // },
     {
         method: 'GET',
         path: '/getConfig',

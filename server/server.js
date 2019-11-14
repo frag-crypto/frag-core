@@ -1,4 +1,4 @@
-// const Path = require('path')
+const path = require('path')
 
 const platform = require('os').platform()
 
@@ -19,17 +19,21 @@ const createPluginServerFromConfig = require('./pluginServer.js')
 // const plugins = ['plugin1', 'punk', 'plugin2', 'test1']
 
 // Check for admin on windows...
-if (platform === 'win32' || platform === 'win64') {
-    require('child_process').exec('net session', function (err, stdout, stderr) {
-        if (err || !(stdout.indexOf('There are no entries in the list.') > -1)) {
-            console.log('')
-            throw new Error('Cannot set hosts as you are not running as admin')
-        } else {
-            console.log('This is being ran with administrator privileges!')
-        }
-    })
-} else {
-    console.log('Unknown')
+const checkAdmin = () => {
+    if (platform === 'win32' || platform === 'win64') {
+        require('child_process').exec('net session', function (err, stdout, stderr) {
+            if (err || !(stdout.indexOf('There are no entries in the list.') > -1)) {
+                console.log('')
+                throw new Error('Cannot set hosts as you are not running as admin')
+                return false
+            } else {
+                console.log('This is being ran with administrator privileges!')
+                return true
+            }
+        })
+    } else {
+        console.log('Unknown')
+    }
 }
 
 const setDNS = (target, domain, subdomain) => {
@@ -67,14 +71,14 @@ const createServer = (config, plugins) => {
                 h2o2,
                 {
                     // plugin: './primaryServer',
-                    plugin: createPrimaryServerFromConfig(config),
+                    plugin: createPrimaryServerFromConfig(config, plugins),
                     routes: {
                         vhost: config.user.server.primary.domain
                     }
                 },
                 {
                     // plugin: './pluginServer',
-                    plugin: createPluginServerFromConfig(config),
+                    plugin: createPluginServerFromConfig(config, plugins),
                     routes: {
                         // vhost: '*.' + defaultConfig.user.server.plugin.domain // Guess we gone need to make an array of subdomains...
                         vhost: plugins.map(plugin => plugin.name + '.' + serverConf.plugin.domain)
@@ -83,18 +87,16 @@ const createServer = (config, plugins) => {
             ]
         }
     }
-
-    console.log(plugins.map(plugin => plugin.name + '.' + serverConf.plugin.domain))
     const options = {
-        relativeTo: __dirname
+        relativeTo: serverConf.relativeTo
     }
-
+    console.log(options)
     // Glue is async because it includes the server.register part (which is async)
     this.start = async function () {
         try {
             this.server = await Glue.compose(manifest, options)
             await this.server.start()
-            console.log('Hapi days for Cats and for Dogs!')
+            console.log('Yeet!')
             console.log(`Plugin server started at ${this.server.info.uri} and listening on ${this.server.info.address}`)
         } catch (err) {
             console.error(err)

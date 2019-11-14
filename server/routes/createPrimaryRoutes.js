@@ -8,31 +8,29 @@ const createCommonRoutes = require('./createCommonRoutes.js')
 // const saveEmail = require('./saveEmail.js') // Nah fam we decentralized
 // const config = require('../../config/config-loader.js')
 
-const createPrimaryRoutes = config => {
+const createPrimaryRoutes = (config, plugins) => {
     const routes = createCommonRoutes(config)
 
     routes.push(
         {
             method: 'GET',
-            path: '/',
-            handler: (request, h) => {
-                console.log(request.params)
-                return h.redirect(`/${config.coin.baseUrl}/wallet`) // Should be /config.defaultPlugin or something like that...
-            }
-        },
-        {
-            method: 'GET',
-            path: `/${config.coin.baseUrl}/{path*}`,
+            path: '/{path*}',
             handler: {
-                file: path.join(__dirname, '../../public/index.html')
-                // file: path.join(__dirname, "../../build/src/index.html") // Production
+                file: {
+                    path: path.join(__dirname, '../../public/index.html'),
+                    confine: false
+                }
+                // file: path.join(__dirname, "../../build/src/index.html") // Production...maybe
             }
         },
         {
             method: 'GET',
             path: '/favicon.ico',
             handler: {
-                file: path.join(__dirname, '../../favicon.ico')
+                file: {
+                    path: path.join(__dirname, '../../favicon.ico'),
+                    confine: false
+                }
                 // file: path.join(__dirname, "../../build/src/index.html") // Production
             }
         },
@@ -41,9 +39,31 @@ const createPrimaryRoutes = config => {
             path: '/getPlugins',
             handler: (request, h) => {
                 // pluginLoader.loadPlugins()
-                return getPluginDirs().then(dirs => {
-                    return { plugins: dirs }
-                }).catch(e => console.error(e))
+                return { plugins }
+            }
+        },
+        {
+            method: 'GET',
+            path: '/build/{param*}',
+            handler: {
+                directory: {
+                    // path: path.join(__dirname, '../../build'),
+                    path: config.build.options.outputDir,
+                    redirectToSlash: true,
+                    index: true
+                }
+            }
+        },
+        {
+            method: 'GET',
+            path: '/src/{param*}',
+            handler: {
+                directory: {
+                    // path: path.join(__dirname, '../../build'),
+                    path: path.join(__dirname, '../../src'),
+                    redirectToSlash: true,
+                    index: true
+                }
             }
         },
         {
