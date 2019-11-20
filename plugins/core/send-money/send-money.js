@@ -9155,7 +9155,7 @@
           promise$3.resolve(fn(data)).catch(function (err) {
             if (err instanceof Error) return err.message;
             return err;
-          }) // Still send errors you dumb fuck
+          }) // Still send errors you clown
           .then(function (response) {
             // console.log(response)
             // response = this.constructor.prepareOutgoingData(response)

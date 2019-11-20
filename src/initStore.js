@@ -3,6 +3,10 @@ import { doLoadConfigFromAPI } from './redux/config/config-actions.js'
 import { doInitWorkers } from './redux/app/app-actions.js'
 import './persistState.js'
 
+// Send the store to the ting
+import { initApi } from '@frag/crypto'
+
+initApi(store)
 console.log(store)
 
 const workerInitChecker = () => {
