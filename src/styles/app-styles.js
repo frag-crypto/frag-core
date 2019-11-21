@@ -3,7 +3,7 @@ import { LitElement, html } from 'lit-element'
 // import { store } from '../store.js'
 
 // import '../styles/styles.scss'
-// import './styles.scss'
+import './styles.scss'
 import './app-theme.js'
 
 // class AppStyles extends connect(store)(LitElement) {

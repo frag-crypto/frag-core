@@ -10,4 +10,6 @@ const {
 
 const build = require('./build.js')
 
+console.log(options, outputs, outputOptions, inputOptions)
+
 build(options, outputs, outputOptions, inputOptions)
