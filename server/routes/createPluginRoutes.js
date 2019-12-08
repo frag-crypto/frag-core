@@ -56,6 +56,26 @@ const createPluginRoutes = (config, plugins) => {
             handler: (request, h) => {
                 return h.file(path.join(__dirname, '../../', config.server.primary.page404))
             }
+        },
+        {
+            method: 'GET',
+            path: '/frag-components/plugin-mainjs-loader.html',
+            handler: (request, h) => {
+                return h.file(path.join(__dirname, '../../src/plugins/plugin-mainjs-loader.html'), {
+                    confine: false
+                })
+            }
+        },
+        {
+            method: 'GET',
+            path: '/frag-components/plugin-mainjs-loader.js',
+            handler: (request, h) => {
+                const file = path.join(config.build.options.outputDir, '/plugins/plugin-mainjs-loader.js')
+                console.log(file)
+                return h.file(file, {
+                    // confine: false
+                })
+            }
         }
     )
 

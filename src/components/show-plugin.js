@@ -26,11 +26,20 @@ class ShowPlugin extends connect(store)(LitElement) {
     }
 
     // ${window.location.protocol}//${this.pluginConfig.domain}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
+
+    /*
+    <iframe src="${this.app.registeredUrls[this.url] ? `
+                ${window.location.protocol}//${window.location.hostname}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
+            ` : `about:blank`}" id="showPluginFrame"></iframe>
+            */
     render () {
+        // console.log(this.app.registeredUrls[this.url])
+        // console.log(this.app.registeredUrls)
+        // Let's come back to this...
         return html`
             <iframe src="${this.app.registeredUrls[this.url] ? `
                 ${window.location.protocol}//${window.location.hostname}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
-            ` : `about:blank`}" id="showPluginFrame"></iframe>
+            ` : 'about:blank'}" id="showPluginFrame"></iframe>
         `
     }
 
@@ -62,7 +71,8 @@ class ShowPlugin extends connect(store)(LitElement) {
 
     stateChanged (state) {
         this.app = state.app
-        this.pluginConfig = state.config.server.plugins
+        // console.log(state.config.user)
+        this.pluginConfig = state.config.user.server.plugin
         this.url = state.app.url.split('/')[2]
     }
 }

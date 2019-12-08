@@ -16,10 +16,13 @@ const DEFAULT_INITIAL_STATE = {
     coin: {
         name: ''
     },
-    server: {},
+    // server: {},
     user: {
+        // Wrong place I think...?
         language: 'english',
-        theme: 'light'
+        theme: 'light',
+        // This should probably move? Or maybe not.
+        server: {}
     },
     savedWallets: {},
     loaded: false

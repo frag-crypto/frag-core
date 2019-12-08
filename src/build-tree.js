@@ -1,3 +1,5 @@
+// ALSO NOT BEING USED RIGHT NOW
+
 const path = require('path')
 
 // All these paths are resolved BEFORE building. Rollup handles things for the client side.
@@ -7,7 +9,8 @@ const path = require('path')
 
 // Could be used to overwrite absolutely anything
 const aliases = {
-    '@frag/crypto': 'node_modules/frag-qora-crypto/api.js'
+    // '@frag/crypto': 'node_modules/frag-qora-crypto/api.js'
+    '@frag/crypto': 'node_modules/frag-qora-crypto'
 }
 
 const apiComponents = {

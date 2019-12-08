@@ -39,6 +39,7 @@ routes.push(
         handler: (request, h) => {
             // pluginLoader.loadPlugins()
             return getPluginDirs().then(dirs => {
+                console.log(dirs)
                 return { plugins: dirs }
             }).catch(e => console.error(e))
         }

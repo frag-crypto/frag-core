@@ -10,8 +10,9 @@ let retryLoadPluginsInterval = 0
 export const loadPlugins = () => fetch('/getPlugins')
     .then(response => response.json())
     .then(response => {
-        // console.log(response)
+        console.log(response)
         const plugins = response.plugins
+        console.log(plugins)
         const config = store.getState().config
         // console.log(config)
         pluginLoader(plugins, config)
@@ -30,7 +31,8 @@ export const pluginLoader = (plugins, config) => {
         frame.className += 'pluginJSFrame'
         frame.sandbox = 'allow-scripts allow-same-origin'
         // Why not support http/https, pass the plugin as a location hash
-        frame.src = window.location.protocol + '//' + window.location.hostname + ':' + config.server.plugins.port + '/src/plugins/plugin-mainjs-loader.html#' + plugin + '/main.js'
+        // frame.src = window.location.protocol + '//' + window.location.hostname + ':' + config.user.server.plugin.port + '/src/plugins/plugin-mainjs-loader.html#' + plugin // + '/main.js'
+        frame.src = window.location.protocol + '//' + plugin + '.' + window.location.hostname + ':' + config.user.server.plugin.port + '/frag-components/plugin-mainjs-loader.html' // + '/main.js'
 
         const insertedFrame = window.document.body.appendChild(frame)
 

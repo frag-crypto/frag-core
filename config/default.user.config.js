@@ -1,6 +1,6 @@
 const path = require('path')
 
-const config = {   
+const config = {
     node: {
         explorer: {
             // url: "http://127.0.0.1:9090", // Qora
@@ -22,10 +22,12 @@ const config = {
         }
     },
     version: process.env.npm_package_version,
-    user: {
-        language: 'english', // default...english
-        theme: 'light' // maybe could become dark
-    },
+    // user: {
+    //     language: 'english', // default...english
+    //     theme: 'light' // maybe could become dark
+    // },
+    language: 'english', // default...english
+    theme: 'light', // maybe could become dark
     server: {
         writeHosts: {
             enabled: true
@@ -62,7 +64,7 @@ const config = {
     constants: {
         pollingInterval: 3000, // How long between checking for new unconfirmed transactions and new blocks (in milliseconds).
         proxyURL: '/proxy/',
-        workerURL: '/build/es6/worker.js' // Probably be replaced with something in all the build config
+        workerURL: '/build/worker.js' // Probably be replaced with something in all the build config
     }
 }
 

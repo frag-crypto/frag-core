@@ -22,6 +22,7 @@ const loadPluginsFromDir = async pluginDir => {
     let directories = listings.filter(listing => listing)
 
     directories = await Promise.all(directories.map(dir => {
+        console.log(dir)
         return readFile(path.join(pluginDir, dir, '/main.js'))
             .then(file => {
                 return {

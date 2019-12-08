@@ -1,3 +1,6 @@
+// This isn't used... was an idea for building lazy loading elements...but seeing as we are building through frag.build now, I don't see much need for it.
+// Lazy loading can still be accomplished...but shouldn't need this class
+
 import { LitElement, html } from 'lit-element'
 
 const modulesLoading = []

@@ -3,6 +3,8 @@ Generates config for rollup from the build tree and it's options
 */
 const progress = require('rollup-plugin-progress')
 
+const path = require('path')
+
 const resolve = require('rollup-plugin-node-resolve')
 const builtins = require('rollup-plugin-node-builtins')
 const globals = require('rollup-plugin-node-globals')
@@ -10,6 +12,8 @@ const commonjs = require('rollup-plugin-commonjs')
 const alias = require('rollup-plugin-alias')
 
 const scss = require('rollup-plugin-scss')
+
+const generateES5BuildConfig = require('./generateES5BuildConfig')
 
 // const sass = require('rollup-plugin-sass')
 // const autoprefixer = require('autoprefixer')
@@ -29,9 +33,17 @@ const generateInputs = (tree, inputs = {}) => {
     return inputs
 }
 
-const generateBuildConfig = ({ elementComponents, functionalComponents, apiComponents, aliases, options }) => {
+// Change to something like, (buildTree, buildOptions)
+// Where biuldTree has { inlineComponents, elementComponents, functionalComponents, apiComponents, otherOutputs } not sure about otherOutputs...
+// And buildOptions has { aliases, options }
+const generateBuildConfig = ({ elementComponents, functionalComponents, otherOutputs, apiComponents, aliases, options, inlineComponents }) => {
     const buildConfig = {
         outputs: [
+            // ...otherOutputs,
+            // {
+            //     dir: 'es5',
+            //     format: 'iife'
+            // },
             {
                 // dir: 'build/es6',
                 dir: 'es6',
@@ -100,8 +112,19 @@ const generateBuildConfig = ({ elementComponents, functionalComponents, apiCompo
         }
     }
 
-    console.log(buildConfig.inputOptions.plugins)
-    return buildConfig
+    for (const output of buildConfig.outputs) {
+        output.dir = path.join(options.outputDir, output.dir)
+    }
+
+    const inlineConfigs = generateES5BuildConfig(inlineComponents, {
+        outputDir: options.outputDir,
+        aliases
+    })
+
+    return {
+        buildConfig,
+        inlineConfigs
+    }
 }
 
 module.exports = generateBuildConfig

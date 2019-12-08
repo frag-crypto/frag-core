@@ -11,6 +11,9 @@ const pluginScript = document.createElement('script')
 pluginScript.async = false
 pluginScript.type = 'module'
 const hash = window.location.hash
-pluginScript.src = '/plugins/' + hash.slice(1)
-
+console.log(hash)
+// pluginScript.src = '/plugins/' + hash.slice(1)
+// pluginScript.src = window.location.protocol + '//' + hash.slice(1) + '.' + window.location.hostname + '/main.js'
+pluginScript.src = '/main.js'
+console.log(pluginScript.src)
 document.body.appendChild(pluginScript)

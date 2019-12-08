@@ -1,5 +1,4 @@
 const rollup = require('rollup')
-const path = require('path')
 
 async function writeBundle (bundle, outputOptions) {
     // generate code
@@ -14,15 +13,24 @@ async function writeBundle (bundle, outputOptions) {
     await bundle.write(outputOptions)
 }
 
-async function build (options, outputs, outputOptions, inputOptions) {
+async function buildInline (conf) {
+    const bundle = await rollup.rollup(conf.inputOptions).catch(err => {
+        throw err
+    })
 
-    for (const output of outputs) {
-        output.dir = path.join(options.outputDir, output.dir)
-    }
+    console.log(bundle.watchFiles) // an array of file names this bundle depends on
+
+    console.log(bundle, conf.outputOptions)
+    await writeBundle(bundle, conf.outputOptions)
+    console.log('bundle written')
+}
+
+async function build (options, outputs, outputOptions, inputOptions, inlineConfigs) {
+    // for (const output of outputs) {
+    //     output.dir = path.join(options.outputDir, output.dir)
+    // }
     // create a bundle
     // inputOptions.input = generateInputs(tree, Object.assign({}, inputOptions.input))
-    console.log(inputOptions.input)
-    console.log(__dirname)
     const bundle = await rollup.rollup(inputOptions).catch(err => {
         throw err
     })
@@ -34,6 +42,10 @@ async function build (options, outputs, outputOptions, inputOptions) {
             ...outputOptions,
             ...option
         })
+    }
+
+    for (const conf of inlineConfigs) {
+        await buildInline(conf)
     }
 }
 

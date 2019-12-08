@@ -39,7 +39,8 @@ const createPrimaryRoutes = (config, plugins) => {
             path: '/getPlugins',
             handler: (request, h) => {
                 // pluginLoader.loadPlugins()
-                return { plugins }
+                console.log(plugins)
+                return { plugins: plugins.map(p => p.name) }
             }
         },
         {

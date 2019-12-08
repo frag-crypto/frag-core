@@ -1,6 +1,7 @@
 const path = require('path')
 
 const { makeSourceAbsolute } = require('../tooling/utils.js')
+const srcDir = '../src'
 // All these paths are resolved BEFORE building. Rollup handles things for the client side.
 
 // SRC_FOLDER = '' // Comes from config
@@ -15,6 +16,7 @@ const options = {
 
 const aliases = {
     '@frag/crypto': 'node_modules/frag-qora-crypto/api.js'
+    // '@frag/crypto': path.join(__dirname, '../node_modules/frag-qora-crypto/')
 }
 
 const apiComponents = {
@@ -53,9 +55,24 @@ const functionalComponents = {
     }
 }
 
+// Inlines all dependencies... transpiles to es5
+const inlineComponents = [
+    {
+        className: 'worker',
+        input: path.join(__dirname, srcDir, 'worker.js'),
+        output: 'worker.js' // relative to outputDir
+    },
+    {
+        className: 'PluginMainJSLoader',
+        input: path.join(__dirname, srcDir, '/plugins/plugin-mainjs-loader.js'),
+        output: 'plugins/plugin-mainjs-loader.js' // relative to outputDir
+    }
+]
+
 // This is the actual app structure. Each component is given access to itself I guess, after being loaded via dynamic import or systemjs
 // Give every component an onLoaded method that is called once it's imported so that it can import it's own dependencies. Is passed it's children.
 const elementComponents = {
+    // This should be in the frag-qora-crypto thing
     'main-app': {
         file: 'components/main-app.js',
         className: 'MainApp',
@@ -112,13 +129,14 @@ const elementComponents = {
 // import './create-account-section.js'
 // import './login-section.js'
 
-makeSourceAbsolute(path.join(__dirname, '../src'), elementComponents)
-makeSourceAbsolute(path.join(__dirname, '../src'), functionalComponents)
+makeSourceAbsolute(path.join(__dirname, srcDir), elementComponents)
+makeSourceAbsolute(path.join(__dirname, srcDir), functionalComponents)
 
 module.exports = {
     options,
     elementComponents,
     functionalComponents,
+    inlineComponents,
     apiComponents,
     aliases
 }

@@ -1,3 +1,5 @@
+// NOT BEING USED ANYMORE
+
 const config = {
     version: process.env.npm_package_version,
     coin: {
@@ -110,7 +112,7 @@ const config = {
     constants: {
         pollingInterval: 3000, // How long between checking for new unconfirmed transactions and new blocks (in milliseconds).
         proxyURL: '/proxy/',
-        workerURL: '/build/es6/worker.js'
+        workerURL: '/build/worker.js'
     },
     crypto: {
         kdfThreads: 16,

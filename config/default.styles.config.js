@@ -47,6 +47,4 @@ const styles = {
     }
 }
 
-module.exports = {
-    styles
-}
+module.exports = styles
