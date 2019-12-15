@@ -45,6 +45,7 @@ class SidenavMenu extends connect(store)(LitElement) {
         ]
     }
     // .menuItemClick=${() => this.shadowRoot.getElementById('appdrawer').close()}
+
     render () {
         return html`
             <style>
@@ -57,7 +58,8 @@ class SidenavMenu extends connect(store)(LitElement) {
                         <!-- Now to make the router interpret this url to meaning iframe src = url.page -->
                         <li @click=${() => this.menuItemClick()}>
                             <paper-ripple></paper-ripple>
-                            <a href="/${this.config.coin.baseUrl}/${url}">
+                            <!-- <a href="/${this.config.coin.baseUrl}/${url}"> -->
+                            <a href="/${url}"> <!-- No /plugin ? -->
                                 <mwc-icon>${urlInfo.icon}</mwc-icon>
                                 <span>${urlInfo.title}</span>
                             </a>
@@ -65,7 +67,6 @@ class SidenavMenu extends connect(store)(LitElement) {
                     `)}
                 </ul>
             </div>
-
         `
     }
 

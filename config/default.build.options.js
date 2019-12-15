@@ -11,7 +11,8 @@ const srcDir = '../src'
 const options = {
     inputFile: path.join(__dirname, '../src/main.js'),
     outputDir: path.join(__dirname, '../build'),
-    sassOutputDir: path.join(__dirname, '../build/styles.bundle.css')
+    sassOutputDir: path.join(__dirname, '../build/styles.bundle.css'),
+    imgDir: path.join(__dirname, '../img')
 }
 
 const aliases = {

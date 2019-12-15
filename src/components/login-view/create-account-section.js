@@ -15,7 +15,8 @@ import { doStoreWallet, doClaimAirdrop, doUpdateAccountName } from '../../redux/
 // import { logIn } from '../../actions/app-actions.js'
 import '@polymer/iron-pages'
 import '@material/mwc-button'
-import '@material/mwc-checkbox'
+// import '@material/mwc-checkbox'
+import '@polymer/paper-checkbox/paper-checkbox.js'
 import '@material/mwc-icon'
 import '@material/mwc-formfield'
 import '@polymer/paper-input/paper-input-container.js'
@@ -334,6 +335,17 @@ class CreateAccountSection extends connect(store)(LitElement) {
                 #birthMonthContainer select {
                     padding:8px;
                     width:100%;
+                    background:transparent;
+                    border:0;
+                    color:#fff;
+                }
+
+                #birthMonthContainer select option {
+                    background: #333;
+                }
+
+                paper-input {
+                    --paper-input-container-input-color: #fff;
                 }
             </style>
             
@@ -399,7 +411,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                         <div id="infoContent" class="section-content" style="">
                             <!-- <paper-input always-float-labell id="dobInput" label="Date of birth (needed to login again)" type="date"></paper-input> -->
 
-                            <div style="display:flex;">
+                            <!-- <div style="display:flex; justify-content: flex-start;">
                                 <mwc-icon style="padding: 20px; padding-left:0; padding-top: 26px;">calendar_today</mwc-icon>
                                 <paper-input-container style="width:100%; flex:1;" always-float-label="true" id="birthMonthContainer">
                                     <label slot="label">Birth month</label>
@@ -411,7 +423,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                         </select>
                                     </iron-input>
                                 </paper-input-container>
-                            </div>
+                            </div> -->
                             <br>
                             <div style="display:flex;">
                                 <mwc-icon style="padding: 20px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
@@ -442,6 +454,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                 for="tosCheckbox"
                                 @click=${() => this.shadowRoot.getElementById('saveCheckbox').click()}>
                                 I have saved my seedphrase!</label>
+                                <paper-checkbox>Unchecked</paper-checkbox>
                             <mwc-checkbox
                                 id="saveCheckbox"
                                 style="vertical-align: top; margin-top: -10px; display: inline-block;"

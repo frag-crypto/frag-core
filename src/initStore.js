@@ -21,7 +21,7 @@ const workerInitChecker = () => {
         } else {
             // Make sure it isn't busy at the moment and go set them up
             // console.log('Dispatching worker initialization')
-            if (!state.app.workers.loading) store.dispatch(doInitWorkers(state.config.coin.crypto.kdfThreads, state.config.user.constants.workerURL))
+            if (!state.app.workers.loading) store.dispatch(doInitWorkers(state.config.crypto.kdfThreads, state.config.user.constants.workerURL))
             // if (!state.app.workers.loading) store.dispatch(doInitWorkers(16))
         }
     }

@@ -16,6 +16,7 @@ const createPrimaryServerFromConfig = (config, plugins) => {
                 // })
                 const routes = createPrimaryRoutes(config, plugins)
                 console.log('routes: ', routes)
+                console.log('routes: ', routes[0].handler)
                 server.route(routes)
             }
         }

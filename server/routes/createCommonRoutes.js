@@ -1,5 +1,5 @@
 // const config = require('../../config/config-loader.js')
-
+const path = require('path')
 const createRoutes = config => [
     // Nope why would we need?
     // {
@@ -13,12 +13,36 @@ const createRoutes = config => [
     //         }
     //     }
     // },
+    // {
+    //     method: 'GET',
+    //     path: '/img/{param*}',
+    //     handler: {
+    //         directory: {
+    //             path: './img',
+    //             redirectToSlash: true,
+    //             index: true
+    //         }
+    //     }
+    // },
     {
         method: 'GET',
         path: '/img/{param*}',
         handler: {
             directory: {
-                path: './img',
+                // path: path.join(__dirname, '../../build'),
+                path: config.build.options.imgDir,
+                redirectToSlash: true,
+                index: true
+            }
+        }
+    },
+    {
+        method: 'GET',
+        path: '/font/{param*}',
+        handler: {
+            directory: {
+                path: path.join(__dirname, '../../font'),
+                // path: config.build.options.fontDir,
                 redirectToSlash: true,
                 index: true
             }

@@ -16,8 +16,13 @@ import '@polymer/iron-pages'
 import '@polymer/paper-icon-button/paper-icon-button.js'
 import '@polymer/paper-spinner/paper-spinner-lite.js'
 
+// import particleJS from 'particle.js'
+import './particle.js'
+
 import './create-account-section.js'
 import './login-section.js'
+
+import particleConfig from './particle-config.js'
 
 window.reduxStore = store
 
@@ -53,9 +58,9 @@ class LoginView extends connect(store)(LitElement) {
         this.selectedPage = this.getPreSelectedPage()
         this.rippleIsOpen = false
         this.pages = {
-            'welcome': 0,
+            welcome: 0,
             'create-account': 1,
-            'login': 2
+            login: 2
         }
         this.rippleLoadingMessage = 'Getting information'
     }
@@ -63,11 +68,35 @@ class LoginView extends connect(store)(LitElement) {
     firstUpdated () {
         // this.shadowRoot.getElementById('createAccountSection').loginFunction = (...args) => this.login(...args)
         // this.shadowRoot.getElementById('loginSection').loginFunction = (...args) => this.login(...args)
+        setTimeout(() => {
+            const particleDiv = this.shadowRoot.querySelector('#particles-js')
+            const part = new particlesJS(particleDiv, particleConfig, (c) => {
+                console.log('yeeeee')
+                console.log(c)
+            })
+            console.log(part)
+        }, 1)
     }
 
     render () {
         return html`
             <style>
+            
+                canvas {
+                    display: block;
+                    vertical-align: bottom;
+                } /* ---- particles.js container ---- */
+                #particles-js {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    z-index:0;
+                    background-color: #202020;
+                    background-image: url("");
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    background-position: 50% 50%;
+                }
                 /* GO SASSSSSSS ASAPPP */
                 .login-page {
                     height: var(--window-height);
@@ -79,11 +108,30 @@ class LoginView extends connect(store)(LitElement) {
                     left:0;
                     /* background: var(--mdc-theme-surface); */
                     /* background: var(--mdc-theme-background); */
-                    background: #333; /* Needs to become configurable... */
+                    /* background: #333; Needs to become configurable... */
                     z-index:1;
                 }
                 .login-card-container {
-                    max-width:100vw;
+                    max-width:1240px;
+                    max-height:var(--window-height);
+
+                    padding-right: 15px;
+                    padding-left: 15px;
+                    margin-right: auto;
+                    margin-left: auto;
+
+                    width: calc(100vw - 30px);
+                }
+
+                .qortal-logo {
+                    padding:40px 30px;
+                    position: absolute;
+                    width:120px;
+                    max-width:40%;
+                    z-index:1;
+                }
+                .login-card-center-container {
+                    max-width:100%;
                     max-height:var(--window-height);
                     display: flex;
                     align-items: center;
@@ -92,13 +140,15 @@ class LoginView extends connect(store)(LitElement) {
                     overflow:hidden;
                 }
                 #loginContainerPages [page] {
-                    background: var(--mdc-theme-surface);
+                    /* background: var(--mdc-theme-surface); */
+                    background: none;
                     padding:0;
                 }
                 .login-card {
                     min-width: 340px;
                     /* background:#fff; */
                     text-align:center;
+                    z-index:0;
                 }
                 .login-card p {
                     margin-top: 0;
@@ -129,7 +179,7 @@ class LoginView extends connect(store)(LitElement) {
                     }
                     #loginContainerPages [page] {
                         /* border: 1px solid var(--mdc-theme-on-surface); */
-                        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+                        /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
                         border-radius: 4px;
                         /* padding: 6px; */
                     }
@@ -180,67 +230,82 @@ class LoginView extends connect(store)(LitElement) {
                     visibility:none;
                 }
             </style>
+
+            <!-- particles.js container -->
+            <!-- <div id="particles-js"></div> -->
+             <!-- stats - count particles --> 
+            <!-- <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script> -->
+            
             
             <div class="login-page" ?hidden=${this.loggedIn}>
+                <div id="particles-js"></div>
                 <div class="login-card-container">
-                    <div class="login-card">
-                        <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="loginContainerPages">
-                            <div page="welcome">
-                                <i style="visibility: hidden; float:right; padding:24px;">${this.config.coin.name} ${this.config.version}</i>
-                                <br>
-                                <br>
-                                <!-- <h1>Karma</h1> -->
-                                <img src="/img/karma/logo/KARMASHIP_LOGO_COLOR_WEB_MED.png" style="max-width: 300px; width:60%;">
-                                <!-- <p>Enter the Karmaconomy</p> -->
-                                <br><br><br>
-                                <mwc-button
-                                    @click=${() => this.selectPage('create-account')}
-                                    raised
-                                >
-                                    Create account
-                                </mwc-button>
-                                <mwc-button
-                                    @click=${() => this.selectPage('login')}
-                                >
-                                    Login
-                                </mwc-button>
-                                <div style="text-align: right; padding:12px;">
+                    <img class="qortal-logo" src="${this.config.coin.logo}">
+                    <div class="login-card-center-container">
+                        <div class="login-card">
+                            <div style="width:50px; height:50px; border-left:3px solid #64ffda; border-top: 3px solid #64ffda; float:left; margin-left:-50px;"></div>
+                            <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="loginContainerPages">
+                                <div page="welcome">
+                                    <!-- <i style="visibility: hidden; float:right; padding:24px;">${this.config.coin.name} ${this.config.version}</i>
                                     <br>
-                                    <p style="margin:0; font-size: 0.9rem">Karmaship, LLC [alpha build v2.0]</p>
-                                    <p style="font-size: 0.9rem"><i><small>Rewarding real life experiences</small></i></p>
-                                </div>
-                                <!-- <login-welcome-page selected-page="{{selectedPage}}"></login-welcome-page> -->
-                            </div>
-                            
-                            <div page="create-account" style="text-align:left">
-                                <!-- <paper-icon-button
-                                    icon="icons:arrow-back"
-                                    @click=${() => this.selectPage('welcome')}
-                                ></paper-icon-button> -->
-                                <div class="backButton">
+                                    <br> -->
+                                    <!-- <h1>Karma</h1> -->
+                                    <!-- <img src="${this.config.coin.logo}" style="max-width: 300px; width:60%;"> -->
+                                    <!-- <p>Enter the Karmaconomy</p> -->
+
+                                    <br><br><br>
                                     <mwc-button
-                                        @click=${() => this.selectPage('welcome')}
-                                    ><mwc-icon>keyboard_arrow_left</mwc-icon> Login</mwc-button>
-                                </div>
-                                <br>
-                                <create-account-section class="section" id="createAccountSection"></create-account-section>
-                            </div>
-                            
-                            <div page="login">
-                                <!-- <paper-icon-button
-                                    icon="icons:arrow-back"
-                                    @click=${() => this.selectPage('welcome')}
-                                ></paper-icon-button> -->
-                                <div class="backButton">
+                                        @click=${() => this.selectPage('create-account')}
+                                        
+                                        outlined
+                                    >
+                                    <!--raised -->
+                                        Create account
+                                    </mwc-button>
                                     <mwc-button
-                                        @click=${() => this.selectPage('welcome')}
-                                    ><mwc-icon>keyboard_arrow_left</mwc-icon> Create account</mwc-button>
+                                        @click=${() => this.selectPage('login')}
+                                    >
+                                        Login
+                                    </mwc-button>
+                                    <!-- <div style="text-align: right; padding:12px;">
+                                        <br>
+                                        <p style="margin:0; font-size: 0.9rem">Karmaship, LLC [alpha build v2.0]</p>
+                                        <p style="font-size: 0.9rem"><i><small>Rewarding real life experiences</small></i></p>
+                                    </div> -->
+                                    <!-- <login-welcome-page selected-page="{{selectedPage}}"></login-welcome-page> -->
+                                    <br><br><br><br>
                                 </div>
-                                <br>
-                                <login-section class="section" id='loginSection'></login-section>
-                            </div>
-                        </iron-pages>
-                        
+                                
+                                <div page="create-account" style="text-align:left">
+                                    <!-- <paper-icon-button
+                                        icon="icons:arrow-back"
+                                        @click=${() => this.selectPage('welcome')}
+                                    ></paper-icon-button> -->
+                                    <div class="backButton">
+                                        <mwc-button
+                                            @click=${() => this.selectPage('welcome')}
+                                        ><mwc-icon>keyboard_arrow_left</mwc-icon> Login</mwc-button>
+                                    </div>
+                                    <br>
+                                    <create-account-section class="section" id="createAccountSection"></create-account-section>
+                                </div>
+                                
+                                <div page="login">
+                                    <!-- <paper-icon-button
+                                        icon="icons:arrow-back"
+                                        @click=${() => this.selectPage('welcome')}
+                                    ></paper-icon-button> -->
+                                    <div class="backButton">
+                                        <mwc-button
+                                            @click=${() => this.selectPage('welcome')}
+                                        ><mwc-icon>keyboard_arrow_left</mwc-icon> Create account</mwc-button>
+                                    </div>
+                                    <br>
+                                    <login-section class="section" id='loginSection'></login-section>
+                                </div>
+                            </iron-pages>
+                            <div style="width:50px; height:50px; border-right:3px solid #64ffda; border-bottom: 3px solid #64ffda; float:right; margin-right:-50px; margin-top:-50px;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -271,6 +336,7 @@ class LoginView extends connect(store)(LitElement) {
             pages[oldIndex].classList.remove('animated')
         }
     }
+
     _backToWelcome () {
         this.selectedPage = 'welcome'
     }
