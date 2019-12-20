@@ -10,7 +10,8 @@ import { loadConfigFromAPI } from './reducers/load-config-from-api.js'
 const DEFAULT_INITIAL_STATE = {
     styles: {
         theme: {
-            color: 'green'
+            color: 'green', // Not sure this is a thing,
+            colors: {}
         }
     },
     coin: {

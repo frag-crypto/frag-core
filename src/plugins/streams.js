@@ -42,17 +42,18 @@ store.subscribe(() => {
             textColor: state.app.selectedAddress.textColor
         })
 
-        if (state.app.selectedAddress.address) {
-            const node = store.getState().config.coin.node.airdrop
-            const fn = () => {
-                console.log('PINGING DHCP')
-                const url = node.protocol + '://' + node.domain + ':' + node.port + node.dhcpUrl + state.app.wallet.addresses[0].address
-                console.log(url)
-                fetch(url, { mode: 'no-cors' }).then(res => console.log('Ping resonse', res)).catch(err => console.error('Ping error', err))
-            }
-            pingInterval = setInterval(fn, node.pingInterval)
-            fn()
-        }
+        // Don't think we want this crap
+        // if (state.app.selectedAddress.address) {
+        //     const node = store.getState().config.coin.node.airdrop
+        //     const fn = () => {
+        //         console.log('PINGING DHCP')
+        //         const url = node.protocol + '://' + node.domain + ':' + node.port + node.dhcpUrl + state.app.wallet.addresses[0].address
+        //         console.log(url)
+        //         fetch(url, { mode: 'no-cors' }).then(res => console.log('Ping resonse', res)).catch(err => console.error('Ping error', err))
+        //     }
+        //     pingInterval = setInterval(fn, node.pingInterval)
+        //     fn()
+        // }
     }
     oldState = state
 })

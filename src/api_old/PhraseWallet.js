@@ -1,7 +1,7 @@
 /*
 Copyright 2017-2018 @ irontiga and vbcs (original developer)
 */
-'use strict';
+'use strict'
 import Base58 from './deps/Base58.js'
 import RIPEMD160 from './deps/ripemd160.js'
 // import { SHA256, SHA512 } from "asmcrypto.js/asmcrypto.all.js"
@@ -26,6 +26,7 @@ export default class PhraseWallet {
         this.savedSeedData = {}
         this.hasBeenSaved = false
     }
+
     /*
     seed is a byte array
     */
@@ -97,7 +98,7 @@ export default class PhraseWallet {
         // console.log("Seed after nonce and seed ", addrSeed)
         addrSeed = utils.appendBuffer(addrSeed, nonceBytes)
         // console.log("Appended seed ", addrSeed)
-        
+
         // Questionable advantage to sha256d...sha256(sha256(x) + x) does not increase collisions the way sha256d does. Really nitpicky though. Not that this seed is computed from the original seed (which went through (pbkdf2) so does it's generation does not need to be computationally expenise
         if (this._walletVersion == 1) {
             // addrSeed = new SHA256.digest(SHA256.digest(addrSeed))
@@ -122,7 +123,9 @@ export default class PhraseWallet {
         const addrKeyPair = nacl.sign.keyPair.fromSeed(new Uint8Array(addrSeed))
 
         // const publicKeyHash = new RIPEMD160().digest(Sha256.bytes(addrKeyPair.publicKey));
-        const publicKeyHash = new RIPEMD160().digest(new Sha256().process(addrKeyPair.publicKey).finish().result)
+        const pubkeySha = new Sha256().process(addrKeyPair.publicKey).finish().result
+        console.log(pubkeySha)
+        const publicKeyHash = new RIPEMD160().digest(pubkeySha)
 
         let address = new Uint8Array()
 

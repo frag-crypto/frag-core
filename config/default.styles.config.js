@@ -6,17 +6,18 @@ const styles = {
     },
     theme: {
         colors: {
-            primary: '#64ffda', /* Sets the text color to the theme primary color. */
+            // primary: '#64ffda', /* Sets the text color to the theme primary color. */
+            primary: '#03a9f4', /* Sets the text color to the theme primary color. */
             primaryBg: '#e8eaf6', /* Sets the background color to the theme primary color. */
             onPrimary: '#fff', /* Sets the text color to the color configured for text on the primary color. */
 
-            secondary: '#64ffda', /* Sets the text color to the theme secondary color. */
+            secondary: '#03a9f4', /* Sets the text color to the theme secondary color. */
             secondaryBg: '#fce4ec', /* Sets the background color to the theme secondary color. */
-            onSecondary: '#000000', /* Sets the text color to the color configured for text on the secondary color. */
+            onSecondary: '#fff', /* Sets the text color to the color configured for text on the secondary color. */
 
-            surface: '#333', /* Sets the background color to the surface background color. */
-            onSurface: '#fff', /* Sets the text color to the color configured for text on the surface color. */
-            background: '#202020', /* Sets the background color to the theme background color. */
+            surface: '#fff', /* Sets the background color to the surface background color. */
+            onSurface: '#333', /* Sets the text color to the color configured for text on the surface color. */
+            background: '#eee', /* Sets the background color to the theme background color. */
 
             warning: '#FFA000',
             error: '#F44336'

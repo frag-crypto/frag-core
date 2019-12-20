@@ -34,4 +34,5 @@ onNewBlock(block => {
     blockStream.emit(block)
     addrWatcher.testBlock(block)
 })
-check()
+// Just to get rid of console errors for now...
+// check()

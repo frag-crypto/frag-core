@@ -12,6 +12,9 @@ import './wallet-profile.js'
 import './sidenav-menu.js'
 import './show-plugin.js'
 
+import '@material/mwc-drawer'
+import '@material/mwc-top-app-bar'
+
 import '@polymer/app-layout/app-layout.js'
 import '@polymer/paper-ripple'
 /* Should probably only import the parts I need
@@ -52,10 +55,11 @@ class AppView extends connect(store)(LitElement) {
             }
 
             app-drawer {
-                box-shadow: var(--shadow-2)
+                box-shadow: var(--shadow-2);
+                background: var(--mdc-theme-surface);
             }
             app-header {
-                box-shadow: var(--shadow-2)
+                box-shadow: var(--shadow-2);
             }
             app-toolbar {
                 background: var(--mdc-theme-surface);
@@ -70,8 +74,8 @@ class AppView extends connect(store)(LitElement) {
         <style>
 
         </style>
-        <!--style="height: var(--window-height);" -->
-        <app-drawer-layout responsive-width='${getComputedStyle(document.body).getPropertyValue('--layout-breakpoint-desktop')}' fullbleed>
+        < !--style="height: var(--window-height);" -- >
+        <app-drawer-layout responsive-width='${getComputedStyle(document.body).getPropertyValue('--layout - breakpoint - desktop')}' fullbleed >
             <app-drawer swipe-open slot="drawer" id="appdrawer">
                 <app-header-layout>
 
@@ -88,34 +92,32 @@ class AppView extends connect(store)(LitElement) {
                     <app-toolbar>
 
                         <paper-icon-button class="menu-toggle-button" drawer-toggle icon="menu"></paper-icon-button>
-                        
+
                         <div main-title>
                             <span class="qora-title">
-                                &nbsp;${this.config.coin.name} 
+                                &nbsp;${this.config.coin.name}
                             </span>
-                            
+
                             <small>
-                                <!-- <i>{{route.path}}#{{hashRoute.path}}</i> -->
-                            </small>
+                                <!-- <i>{{ route.path }}#{{ hashRoute.path }}</i> -->
+                                    </small>
                         </div>
 
                         <template is="dom-repeat" items="{{topMenuItems}}">
-                            <paper-button style="font-size:16px; height:40px;" on-tap="_openTopMenuModal">{{item.text}}&nbsp;<iron-icon icon="{{item.icon}}"></iron-icon></paper-button>
+                            <paper-button style="font-size:16px; height:40px;" on-tap="_openTopMenuModal">{{ item.text }}&nbsp;<iron-icon icon="{{item.icon}}"></iron-icon></paper-button>
                         </template>
 
                         <div style="display:inline">
                             <!-- <paper-icon-button icon="icons:settings" on-tap="openSettings"></paper-icon-button> -->
-                            <paper-icon-button title="Log out" icon="icons:power-settings-new" style="background:#fff; border-radius:50%;" @click=${e => this.logout(e)}></paper-icon-button>
-                            
+                                <paper-icon-button title="Log out" icon="icons:power-settings-new" style="background:#fff; border-radius:50%;" @click=${e => this.logout(e)}></paper-icon-button>
                         </div>
                     </app-toolbar>
                 </app-header>
-                
-                <show-plugin size='100' logged-in="{{loggedIn}}" config="{{config}}" current-plugin-frame="{{currentPluginFrame}}" route="{{route}}" data="{{routeData}}" subroute="{{subroute}}" url="{{activeUrl}}"></show-plugin>
-            
-            </app-header-layout>
-        </app-drawer-layout>
 
+                <show-plugin size='100' logged-in="{{loggedIn}}" config="{{config}}" current-plugin-frame="{{currentPluginFrame}}" route="{{route}}" data="{{routeData}}" subroute="{{subroute}}" url="{{activeUrl}}"></show-plugin>
+                    
+            </app-header-layout >
+        </app-drawer-layout >
     `
     }
 

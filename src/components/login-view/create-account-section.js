@@ -5,10 +5,10 @@ import { store } from '../../store.js'
 // import { createWallet } from '../../../qora/createWallet.js'
 // import { createWallet } from '../../qora/createWallet.js'
 // import { createWallet } from '../../api/createWallet.js'
-import { createWallet, registerUsername } from '@frag/crypto'
+import { createWallet } from '@frag/crypto'
 
 import { doLogin, doLogout, doSelectAddress } from '../../redux/app/app-actions.js'
-import { doStoreWallet, doClaimAirdrop, doUpdateAccountName } from '../../redux/user/user-actions.js'
+import { doStoreWallet } from '../../redux/user/user-actions.js'
 // import { registerUsername } from '../../api/registerUsername.js'
 // import { registerUsername } from 'frag-qora-crypto'
 
@@ -17,6 +17,7 @@ import '@polymer/iron-pages'
 import '@material/mwc-button'
 // import '@material/mwc-checkbox'
 import '@polymer/paper-checkbox/paper-checkbox.js'
+import '@polymer/iron-label/iron-label.js'
 import '@material/mwc-icon'
 import '@material/mwc-formfield'
 import '@polymer/paper-input/paper-input-container.js'
@@ -29,8 +30,6 @@ import ripple from '../../functional-components/loading-ripple.js'
 // import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
 // import { doUpdateAccountName } from '../../redux/user/user-actions.js'
 
-const EMAIL_VALIDATION_REGEX = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
 // import '@polymer/paper-spinner/paper-spinner-lite.js'
 // import '@polymer/iron-flex-layout/iron-flex-layout-classes.js'
 
@@ -39,10 +38,11 @@ const EMAIL_VALIDATION_REGEX = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"
 // import { MDCTextField } from '@material/textfield'
 // const textField = new MDCTextField(document.querySelector('.mdc-text-field'))
 
+let lastPassword = ''
+
 class CreateAccountSection extends connect(store)(LitElement) {
     static get properties () {
         return {
-            tosAccepted: { type: Boolean },
             selectedPage: { type: String },
             error: { type: Boolean },
             errorMessage: { type: String },
@@ -63,8 +63,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
 
     constructor () {
         super()
-        this.selectedPage = 'tos'
-        this.tosAccepted = false
+        this.selectedPage = 'info'
         this.nextButtonText = 'Next'
         this.saveAccount = true
         this.hasSavedSeedphrase = false
@@ -73,45 +72,10 @@ class CreateAccountSection extends connect(store)(LitElement) {
         this.welcomeMessage = welcomeMessage
 
         this.pages = {
-            tos: {
-                next: e => {
-                    this.error = false
-                    this.errorMessage = ''
-                    // Validation not needed... Button disabled if not checked
-                    // if (!this.tosAccepted) {
-                    //     this.error = true
-                    //     this.errorMessage = 'You must tick the box and accept the terms of service'
-                    //     return
-                    // }
-                    this.selectPage('info')
-                },
-                prev: () => {}
-            },
             info: {
                 next: e => {
                     this.error = false
                     this.errorMessage = ''
-                    // const dob = this.shadowRoot.getElementById('dobInput').value
-                    // console.log(dob)
-                    // const dobValid = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.test(dob)
-                    // if (!dobValid) {
-                    //     this.error = true
-                    //     this.errorMessage = 'Please enter a valid date of birth (dd/mm/yyyy)'
-                    //     return
-                    // }
-                    const birthMonth = this.shadowRoot.getElementById('birthMonth').value
-                    // console.log(birthMonth, this.shadowRoot.getElementById('birthMonth'))
-                    if (!(!isNaN(birthMonth) && birthMonth > 0 && birthMonth <= 12)) {
-                        this.error = true
-                        this.errorMessage = 'Please enter a valid birth month'
-                        return
-                    }
-                    const pin = this.shadowRoot.getElementById('createPin').value
-                    if (!(pin.length === 4)) {
-                        this.error = true
-                        this.errorMessage = 'Please enter a 4 digit pin'
-                        return
-                    }
                     // const randSeedPhrase = this.shadowRoot.getElementById('randSentence').parsedString
                     // const seedPhrase = this.shadowRoot.getElementById('seedPhrase').value
                     // console.log(randSeedPhrase, seedPhrase)
@@ -122,35 +86,42 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     }
 
                     this.nextButtonText = 'Create'
-                    this.selectPage('save')
+                    this.selectPage('password')
                 },
-                prev: () => this.selectPage('tos')
+                prev: () => { }
             },
-            save: {
+            password: {
                 next: e => {
                     // Create account and login :)
                     this.createAccountLoading = true
 
-                    let username = this.shadowRoot.getElementById('username').value.replace(/^\s+|\s+$/g, '') // Removing leading and trailing whitespace
-                    username = username.toLowerCase()
-                    const email = this.shadowRoot.getElementById('email').value
+                    const pin = this.shadowRoot.getElementById('createPin').value
+                    const password = this.shadowRoot.getElementById('password').value
+                    console.log(this.shadowRoot.getElementById('password'))
 
-                    if (username === '') {
+                    if (!(pin.length === 4)) {
                         this.error = true
-                        this.errorMessage = 'Please choose a username'
+                        this.errorMessage = 'Please enter a 4 digit pin'
                         return
                     }
-                    if (!EMAIL_VALIDATION_REGEX.test(email)) {
+
+                    if (password === '') {
                         this.error = true
-                        this.errorMessage = 'Invalid email address'
+                        this.errorMessage = 'Please enter a password'
+                    }
+
+                    if (password.length < 8 && lastPassword !== password) {
+                        this.error = true
+                        this.errorMessage = 'Your password is less than 8 characters! This is not recommended. You can press login again to ignore this warning.'
+                        lastPassword = password
                         return
                     }
 
                     const seedPhrase = this.shadowRoot.getElementById('randSentence').parsedString
-                    const password = this.shadowRoot.getElementById('createPin').value + this.shadowRoot.getElementById('birthMonth').value
+                    // const password = this.shadowRoot.getElementById('createPin').value + this.shadowRoot.getElementById('birthMonth').value
 
                     // this.loadingRipple.welcomeMessage = welcomeMessage + ', ' + username
-                    ripple.welcomeMessage = welcomeMessage + ', ' + username
+                    ripple.welcomeMessage = welcomeMessage
 
                     // this.loadingRipple.open({
                     ripple.open({
@@ -167,35 +138,17 @@ class CreateAccountSection extends connect(store)(LitElement) {
                             // })))
                             // Get airdrop here ninja
                             // Do the callbacks here so that I can return the wallet again at the end of it
-                            const addr0 = wallet.addresses[0]
-                            console.log(`/getAirdrop/${username}/${addr0.address}`)
-                            return fetch(`/getAirdrop/${username}/${addr0.address}`)
-                                .then(res => res.json())
-                                .then(res => {
-                                    if (!res.success) throw new Error(res.errorMessage)
-                                    store.dispatch(doClaimAirdrop())
-                                    registerUsername({
-                                        name: username,
-                                        address: addr0.address,
-                                        lastRef: res.data.reference,
-                                        keyPair: addr0.keyPair
-                                    })
-                                })
-                                .then(() => {
-                                    store.dispatch(doLogin(wallet, password))
-                                    store.dispatch(doSelectAddress(wallet.addresses[0]))
-                                    // store.dispatch(doUpdateAccountInfo({ name: username }))
-                                    const expectedName = username
-                                    store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, true))
-                                    fetch('/saveEmail/' + email).catch(e => console.error(e))
-                                    this.cleanup()
-                                    // return this.loadingRipple.fade()
-                                    return ripple.fade()
-                                })
+
+                            store.dispatch(doLogin(wallet, password))
+                            store.dispatch(doSelectAddress(wallet.addresses[0]))
+                            this.cleanup()
+                            // return this.loadingRipple.fade()
+                            return ripple.fade()
+                            // Save account after user is logged in...for good UX
                                 .then(() => {
                                     console.log(this.saveAccount)
                                     if (!this.saveAccount) return
-                                    return store.dispatch(doStoreWallet(wallet, password, username, () => {
+                                    return store.dispatch(doStoreWallet(wallet, password, '' /* username */, () => {
                                         // console.log('STATUS UPDATE <3')
                                         // this.loadingRipple.loadingMessage = status
                                         ripple.loadingMessage = status
@@ -219,9 +172,8 @@ class CreateAccountSection extends connect(store)(LitElement) {
             }
         }
         this.pageIndexes = {
-            'tos': 0,
-            'info': 1,
-            'save': 2
+            info: 0,
+            password: 1
         }
 
         this.nextEnabled = false
@@ -231,10 +183,9 @@ class CreateAccountSection extends connect(store)(LitElement) {
     cleanup () { // Practically the constructor...what a waste
         this.shadowRoot.getElementById('randSentence').generate()
         this.shadowRoot.getElementById('createPin').value = ''
-        this.shadowRoot.getElementById('birthMonth').value = ''
-        this.tosAccepted = false
+        this.shadowRoot.getElementById('password').value = ''
         this.hasSavedSeedphrase = false
-        this.selectPage('tos')
+        this.selectPage('info')
         this.error = false
         this.errorMessage = ''
         this.nextButtonText = 'Next'
@@ -245,6 +196,9 @@ class CreateAccountSection extends connect(store)(LitElement) {
     render () {
         return html`
             <style>
+                div[hidden] {
+                    display:none !important; 
+                }
                 .flex {
                     display: flex;
                 }
@@ -267,18 +221,14 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     flex-shrink:1;
                 }
                 /* #tosContent { */
-                .section-content {
+                /* .section-content {
                     padding:0 24px;
                     padding-bottom:0;
-                    /* display:inline-block; */
                     overflow:auto;
                     flex-shrink:1;
                     max-height: calc(100vh - 296px);
                     
-                }
-                #tosContent > p {
-                    margin-top:0;
-                }
+                } */
 
                 mwc-checkbox::shadow .mdc-checkbox::after, mwc-checkbox::shadow .mdc-checkbox::before {
                     background-color:var(--mdc-theme-primary)
@@ -294,15 +244,10 @@ class CreateAccountSection extends connect(store)(LitElement) {
                         height:100%;
                     }
                     /* #tosContent { */
-                    .section-content {
-                        /* padding:12px; */
+                    /* .section-content {
                         max-height:calc(var(--window-height) - 166px);
                         min-height:calc(var(--window-height) - 166px);
-                    }
-                    #tosContent {
-                        max-height:calc(var(--window-height) - 206px);
-                        min-height:calc(var(--window-height) - 206px)
-                    }
+                    } */
                     #nav {
                         flex-shrink:0;
                         padding-top:8px;
@@ -327,117 +272,56 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     animation-name: fade;
                 }
 
-                #birthMonthContainer {
-                    --paper-input-container-underline: {
-                        border:0;
-                    }
-                }
-                #birthMonthContainer select {
-                    padding:8px;
-                    width:100%;
-                    background:transparent;
-                    border:0;
-                    color:#fff;
-                }
-
-                #birthMonthContainer select option {
-                    background: #333;
-                }
-
                 paper-input {
-                    --paper-input-container-input-color: #fff;
+                    --paper-input-container-input-color: var(--mdc-theme-on-surface);
+                }
+
+                paper-checkbox {
+                    --paper-checkbox-checked-color: var(--mdc-theme-primary);
+                    --paper-checkbox-checked-ink-color: var(--mdc-theme-primary);
+                    --paper-checkbox-unchecked-color: var(--mdc-theme-on-surface);
+                    --paper-checkbox-unchecked-ink-color: var(--mdc-theme-on-surface);
+                    --paper-checkbox-label-color: var(--mdc-theme-on-surface);
+                    --paper-checkbox-vertical-align: top;
+                }
+
+                paper-icon-button {
+                    --paper-icon-button-ink-color: var(--mdc-theme-primary);
                 }
             </style>
             
             <div id="createAccountSection" class="flex column">
                 <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="createAccountPages">
-                    <div page="tos" id="tosPage" class="flex column">
-                        <div id="tosContent" class="section-content">
-                            <p>
-                                Congratulations! By agreeing to these terms of service you will become a part of the Karmaship Community [alpha v2.0]
-                            </p>
-                            <hr>
-                            <ol>
-                                <li>
-                                    Economy
-                                    <ol>
-                                        <li>Our current economic model is subject to change as it becomes optimized.</li>
-                                    </ol>
-                                </li>
-                                <li>
-                                    Redeeming User Rewards
-                                    <ol>
-                                        <li>All users will be able to redeem their rewards at this event given certain parameters subject to change.</li>
-                                    </ol>
-                                </li>
-                                <li>
-                                    Information we Collect and Use
-                                    <ol>
-                                        <li>We collect several different types of information for various purposes to provide and improve our Service to you.</li>
-                                        <li>
-                                            Types of Data Collected
-                                            <ol>
-                                                <li>Email Address</li>
-                                                <li>Usage Data</li>
-                                            </ol>
-                                        </li>
-                                        <li>
-                                            We may use your Personal Data to contact you with newsletters, marketing or promotional materials and other information that may be of interest to you. You may opt out of receiving any, or all, of these communications from us by following the unsubscribe link or the instructions provided in any email we send.
-                                        </li>
-                                    </ol>
-                                </li>
-                                <li>
-                                    Rewards
-                                    <ol>
-                                        <li>At the end of Alpha 2.0, existing users will be rewarded for their participation when they migrate over to beta. This reward is yet to be determined.</li>
-                                    </ol>
-                                </li>
-                            </ol>
-                        </div>
-                        <div style="text-align:right; padding-right:8px; height:40px;">
-                            <p style="vertical-align: top; line-height: 40px; margin:0;">
-                                <label for="tosCheckbox" @click=${() => this.shadowRoot.getElementById('tosCheckbox').click()}>I agree to these terms of service</label>
-                                <mwc-checkbox
-                                    id="tosCheckbox"
-                                    style="margin-bottom:-12px;"
-                                    @click=${e => { this.tosAccepted = !e.target.checked }}
-                                    ?checked="${this.tosAccepted}"></mwc-checkbox>
-                            </p>
-                        </div>
-                        
-                    </div>
-
                     <div page="info">
                         <div id="infoContent" class="section-content" style="">
-                            <!-- <paper-input always-float-labell id="dobInput" label="Date of birth (needed to login again)" type="date"></paper-input> -->
-
-                            <!-- <div style="display:flex; justify-content: flex-start;">
-                                <mwc-icon style="padding: 20px; padding-left:0; padding-top: 26px;">calendar_today</mwc-icon>
-                                <paper-input-container style="width:100%; flex:1;" always-float-label="true" id="birthMonthContainer">
-                                    <label slot="label">Birth month</label>
-                                    <iron-input slot="input">
-                                        <select id="birthMonth">
-                                            ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => html`
-                                                <option value="${num}">${num}</option>
-                                            `)}
-                                        </select>
-                                    </iron-input>
-                                </paper-input-container>
-                            </div> -->
                             <br>
-                            <div style="display:flex;">
-                                <mwc-icon style="padding: 20px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
-                                <paper-input style="width:100%;" always-float-labell label="Pin" id="createPin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
-                            </div>
-                            <br>
-                            <p style="margin-bottom:0;">
+                            <!-- <p style="margin-bottom:0;">
                                 Below is a randomly generated seedphrase. You can regenerate it until you find one that you like. Please write it down and/or memorise it. You will need it in order to login to your account.
+                            </p> -->
+                            <p>
+                                Welcome to QORT, you will find it to be similar to that of an RPG game, you, as a minter on the QORT network (if you choose to become one) will have the chance to level your account up, giving you both more of the QORT block reward and also larger influence over the network in terms of voting on decisions for the platform. 
                             </p>
-                            <br>
-                            <div style="display: inline-block; padding:8px; width:calc(100% - 76px); margin-top:24px; background: var(--mdc-theme-secondary-bg); border-radius:2px;">
+                            <p style="margin-bottom:0;">
+                                The first step, is to create your QORT account! Below, you will see a randomly generated ‘seedphrase’. This phrase is used as your private key generator for your blockchain account in QORT. Please take a screen shot or write down this phrase and save it somewhere safe. This is extremely important information for your QORT account.
+                            </p>
+
+                            <div style="display: inline-block; padding:12px; width:calc(100% - 84px); margin-top:24px; border-bottom: 2px solid var(--mdc-theme-primary); border-top: 2px solid var(--mdc-theme-primary); border-radius:2px;">
                                 <random-sentence-generator
                                     template="adverb verb the adjective noun and verb the adjective noun with the adjective noun"
                                     id="randSentence"></random-sentence-generator>
+                                    <!--
+                                        --- --- --- --- --- --- --- --- --- --- --- -
+                                        Calculations
+                                        --- --- --- --- --- --- --- --- --- --- --- -
+                                        403 adjectives
+                                        60 interjections
+                                        243 adverbs
+                                        2353 nouns
+                                        3387 verbs
+                                        --- --- --- --- --- --- --- --- --- --- --- -
+                                        sooo 243*3387*403*2353*3387*403*2353*403*2353
+                                        --- --- --- --- --- --- --- --- --- --- --- -
+                                        -->
                             </div>
                             <paper-icon-button
                                 icon="icons:autorenew"
@@ -448,40 +332,38 @@ class CreateAccountSection extends connect(store)(LitElement) {
                              <!-- <div style="display:flex;">
                                 <mwc-icon style="padding: 20px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
                                 <paper-input style="width:100%;" id="seedPhrase" always-float-labell label="Repeat seed phrase"></paper-input>
-                            </div> --><br>
+                            </div> -->
+                            <br>
                             <div style="text-align:right;">
-                                <label
-                                for="tosCheckbox"
-                                @click=${() => this.shadowRoot.getElementById('saveCheckbox').click()}>
-                                I have saved my seedphrase!</label>
-                                <paper-checkbox>Unchecked</paper-checkbox>
-                            <mwc-checkbox
-                                id="saveCheckbox"
-                                style="vertical-align: top; margin-top: -10px; display: inline-block;"
-                                @click=${e => { this.hasSavedSeedphrase = !e.target.checked }} ?checked="${this.hasSavedSeedphrase}"></mwc-checkbox>
+                                <iron-label 
+                                    style="color:var(--mdc-theme-on-surface); display:inline-flex; cursor: pointer;" >
+                                    I have saved my seedphrase &nbsp;
+                                    <paper-checkbox
+                                    @click=${e => { this.hasSavedSeedphrase = e.target.checked }} ?checked="${this.hasSavedSeedphrase}" iron-label-target></paper-checkbox>
+                                </iron-label>
+                                <!-- <paper-checkbox>I have saved my seedphrase!</paper-checkbox> -->
                             </div>
                         </div>
                     </div>
 
-                    <div page="save">
+                    <div page="password">
                         <div id="saveContent" class="section-content">
                             <p>Your account is now ready to be created. It will be saved in this browser. If you do not want your new account to be saved in your browser you can uncheck the box below. You will still be able to login with your new account(after logging out), you'll just have to retype your seedphrase.</p>
                             <div style="display:flex;">
-                                <mwc-icon style="padding: 20px; padding-left:0; padding-top: 28px;">perm_identity</mwc-icon>
-                                <paper-input style="width:100%;" label="Username" id="username" type="text"></paper-input>
+                                <mwc-icon style="padding: 20px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
+                                <paper-input style="width:100%;" always-float-labell label="Pin" id="createPin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
                             </div>
-                            <div style="display:flex;">
-                                <mwc-icon style="padding: 20px; padding-left:0; padding-top: 28px;">email</mwc-icon>
-                                <paper-input style="width:100%;" label="Email" id="email" type="text"></paper-input>
+                            <div style="display:flex;" ?hidden=${!this.saveAccount}>
+                                <mwc-icon style="padding: 20px; padding-left:0; padding-top: 28px;">vpn_key</mwc-icon>
+                                <paper-input style="width:100%;" label="Password" id="password" type="password"></paper-input>
                             </div>
                             <div style="text-align:right; padding-right:8px; min-height:40px;">
-                                <p style="vertical-align: top; line-height: 40px; margin:0;">
-                                    <label 
-                                    for="tosCheckbox"
-                                    @click=${() => this.shadowRoot.getElementById('saveCheckbox').click()}
-                                    >Save in this browser</label>
-                                    <mwc-checkbox id="saveCheckbox" style="margin-bottom:-12px;" @click=${e => { this.saveAccount = !e.target.checked }} ?checked="${this.saveAccount}"></mwc-checkbox>
-                                </p>
+                                <iron-label
+                                    style="color:var(--mdc-theme-primary); display:inline-flex; cursor: pointer;" >
+                                    Save in this browser &nbsp;
+                                    <paper-checkbox
+                                    @click=${e => { this.saveAccount = e.target.checked }} ?checked="${this.saveAccount}" iron-label-target></paper-checkbox>
+                                </iron-label>
                             </div>
                         </div>
                     </div>
@@ -496,13 +378,13 @@ class CreateAccountSection extends connect(store)(LitElement) {
                 </div>
                 <div id="nav">
                     <mwc-button 
-                        ?disabled=${this.selectedPage === 'tos'}
+                        ?disabled=${this.selectedPage === 'info'}
                         @click=${() => this.pages[this.selectedPage].prev()}
                         style="margin: 0 0 12px 12px;">
                         <mwc-icon>keyboard_arrow_left</mwc-icon> Back 
                     </mwc-button>
                     <mwc-button 
-                        ?disabled=${!this.tosAccepted}
+                        ?disabled=${!this.hasSavedSeedphrase}
                         @click=${e => this.pages[this.selectedPage].next(e)}
                         style="margin: 0 12px 12px 0; float:right;">
                         ${this.nextButtonText} <mwc-icon>keyboard_arrow_right</mwc-icon>

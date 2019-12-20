@@ -6,7 +6,6 @@ import { store } from './store.js'
 let subscriptions = []
 store.subscribe(() => {
     const state = store.getState()
-
     subscriptions = subscriptions.filter(fn => fn(state))
 })
 export const stateAwait = fn => {

@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../../store.js'
+import { stateAwait } from '../../stateAwait.js'
 
 // import { createWallet } from '../../qora/createWallet.js'
 // import { generateSaveWalletData } from '../../qora/storeWallet.js'
@@ -22,7 +23,7 @@ import './particle.js'
 import './create-account-section.js'
 import './login-section.js'
 
-import particleConfig from './particle-config.js'
+import getParticleConfig from './particle-config.js'
 
 window.reduxStore = store
 
@@ -68,14 +69,18 @@ class LoginView extends connect(store)(LitElement) {
     firstUpdated () {
         // this.shadowRoot.getElementById('createAccountSection').loginFunction = (...args) => this.login(...args)
         // this.shadowRoot.getElementById('loginSection').loginFunction = (...args) => this.login(...args)
-        setTimeout(() => {
+        stateAwait(state => {
+            console.log('==========!!!!!=============')
+            console.log(state.config.styles.theme.colors.primary)
+            return 'primary' in state.config.styles.theme.colors
+        }).then(() => {
             const particleDiv = this.shadowRoot.querySelector('#particles-js')
-            const part = new particlesJS(particleDiv, particleConfig, (c) => {
+            const part = new particlesJS(particleDiv, getParticleConfig(this.config), (c) => {
                 console.log('yeeeee')
                 console.log(c)
             })
             console.log(part)
-        }, 1)
+        }).catch(e => console.error(e))
     }
 
     render () {
@@ -91,7 +96,7 @@ class LoginView extends connect(store)(LitElement) {
                     width: 100%;
                     height: 100%;
                     z-index:0;
-                    background-color: #202020;
+                    background-color: var(--mdc-theme-background);
                     background-image: url("");
                     background-repeat: no-repeat;
                     background-size: cover;
@@ -229,6 +234,9 @@ class LoginView extends connect(store)(LitElement) {
                 .hideme { 
                     visibility:none;
                 }
+                .corner-box {
+                    border-color: var(--mdc-theme-primary) !important;
+                }
             </style>
 
             <!-- particles.js container -->
@@ -243,7 +251,7 @@ class LoginView extends connect(store)(LitElement) {
                     <img class="qortal-logo" src="${this.config.coin.logo}">
                     <div class="login-card-center-container">
                         <div class="login-card">
-                            <div style="width:50px; height:50px; border-left:3px solid #64ffda; border-top: 3px solid #64ffda; float:left; margin-left:-50px;"></div>
+                            <div class='corner-box' style="width:50px; height:50px; border-left:3px solid; border-top: 3px solid; float:left; margin-left:-50px;"></div>
                             <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="loginContainerPages">
                                 <div page="welcome">
                                     <!-- <i style="visibility: hidden; float:right; padding:24px;">${this.config.coin.name} ${this.config.version}</i>
@@ -257,9 +265,10 @@ class LoginView extends connect(store)(LitElement) {
                                     <mwc-button
                                         @click=${() => this.selectPage('create-account')}
                                         
-                                        outlined
+                                        raised
+                                        style="border-top:0; border-bottom:0;"
                                     >
-                                    <!--raised -->
+                                    <!--outlined -->
                                         Create account
                                     </mwc-button>
                                     <mwc-button
@@ -304,7 +313,7 @@ class LoginView extends connect(store)(LitElement) {
                                     <login-section class="section" id='loginSection'></login-section>
                                 </div>
                             </iron-pages>
-                            <div style="width:50px; height:50px; border-right:3px solid #64ffda; border-bottom: 3px solid #64ffda; float:right; margin-right:-50px; margin-top:-50px;"></div>
+                            <div class='corner-box' style="width:50px; height:50px; border-right:3px solid; border-bottom: 3px solid; float:right; margin-right:-50px; margin-top:-50px;"></div>
                         </div>
                     </div>
                 </div>
