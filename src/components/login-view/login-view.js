@@ -151,7 +151,7 @@ class LoginView extends connect(store)(LitElement) {
                 }
                 .login-card {
                     min-width: 340px;
-                    /* background:#fff; */
+                    /* background: var(--mdc-theme-surface); */
                     text-align:center;
                     z-index:0;
                 }
@@ -251,7 +251,7 @@ class LoginView extends connect(store)(LitElement) {
                     <img class="qortal-logo" src="${this.config.coin.logo}">
                     <div class="login-card-center-container">
                         <div class="login-card">
-                            <div class='corner-box' style="width:50px; height:50px; border-left:3px solid; border-top: 3px solid; float:left; margin-left:-50px;"></div>
+                            <!-- <div class='corner-box' style="width:50px; height:50px; border-left:3px solid; border-top: 3px solid; float:left; margin-left:-50px;"></div> -->
                             <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="loginContainerPages">
                                 <div page="welcome">
                                     <!-- <i style="visibility: hidden; float:right; padding:24px;">${this.config.coin.name} ${this.config.version}</i>
@@ -313,7 +313,7 @@ class LoginView extends connect(store)(LitElement) {
                                     <login-section class="section" id='loginSection'></login-section>
                                 </div>
                             </iron-pages>
-                            <div class='corner-box' style="width:50px; height:50px; border-right:3px solid; border-bottom: 3px solid; float:right; margin-right:-50px; margin-top:-50px;"></div>
+                            <!-- <div class='corner-box' style="width:50px; height:50px; border-right:3px solid; border-bottom: 3px solid; float:right; margin-right:-50px; margin-top:-50px;"></div> -->
                         </div>
                     </div>
                 </div>

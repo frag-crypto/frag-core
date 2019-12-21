@@ -18,9 +18,10 @@ export const routes = {
 
     registerUrl: async req => {
         // console.log('REGISTER URL REQUEST YASSSSS', req)
-        const { url, title, menus, icon, page, parent = false } = req.data
+        const { url, title, menus, icon, domain, page, parent = false } = req.data
         store.dispatch(doAddPluginUrl({
             url,
+            domain,
             title,
             menus,
             icon,

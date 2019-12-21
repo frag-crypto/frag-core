@@ -2,24 +2,10 @@ const path = require('path')
 
 const config = {
     node: {
-        explorer: {
-            // url: "http://127.0.0.1:9090", // Qora
-            url: 'http://127.0.0.1:4940', // Karma
-            tail: '/index/blockexplorer.json'
-        },
-        api: {
-            // url: "http://127.0.0.1:9085", // Qora
-            url: 'http://127.0.0.1:4930', // Karma
-            tail: '/'
-        },
-        airdrop: {
-            protocol: 'http',
-            domain: '127.0.0.1',
-            port: 4999,
-            url: '/airdrop/',
-            dhcpUrl: '/airdrop/ping/',
-            pingInterval: 10 * 60 * 1000
-        }
+        protocol: 'http',
+        domain: '51.83.114.66',
+        port: 62391,
+        pingInterval: 10 * 60 * 1000
     },
     version: process.env.npm_package_version,
     // user: {

@@ -82,6 +82,7 @@ const generateBuildConfig = ({ elementComponents, functionalComponents, otherOut
                 }),
                 resolve({
                     // module: true
+                    preferBuiltins: true
                 }),
                 commonjs({}),
                 globals(),

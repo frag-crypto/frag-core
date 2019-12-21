@@ -59,7 +59,7 @@ class SidenavMenu extends connect(store)(LitElement) {
                         <li @click=${() => this.menuItemClick()}>
                             <paper-ripple></paper-ripple>
                             <!-- <a href="/${this.config.coin.baseUrl}/${url}"> -->
-                            <a href="/${url}"> <!-- No /plugin ? -->
+                            <a href="/q/${url}"> <!-- No /plugin ? How about /q/...seems qortalish -->
                                 <mwc-icon>${urlInfo.icon}</mwc-icon>
                                 <span>${urlInfo.title}</span>
                             </a>

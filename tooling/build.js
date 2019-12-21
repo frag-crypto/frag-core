@@ -18,11 +18,11 @@ async function buildInline (conf) {
         throw err
     })
 
-    console.log(bundle.watchFiles) // an array of file names this bundle depends on
+    // console.log(bundle.watchFiles) // an array of file names this bundle depends on
 
-    console.log(bundle, conf.outputOptions)
+    // console.log(bundle, conf.outputOptions)
     await writeBundle(bundle, conf.outputOptions)
-    console.log('bundle written')
+    // console.log('bundle written')
 }
 
 async function build (options, outputs, outputOptions, inputOptions, inlineConfigs) {
@@ -35,7 +35,7 @@ async function build (options, outputs, outputOptions, inputOptions, inlineConfi
         throw err
     })
 
-    console.log(bundle.watchFiles) // an array of file names this bundle depends on
+    // console.log(bundle.watchFiles) // an array of file names this bundle depends on
 
     for (const option of outputs) {
         await writeBundle(bundle, {

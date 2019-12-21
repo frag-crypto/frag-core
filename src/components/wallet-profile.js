@@ -2,6 +2,9 @@ import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../store.js'
 // import download from '../api/deps/download.js'
+// import JSZip from 'jszip'
+// import saveAs from 'file-saver/src/FileSaver.js'
+import FileSaver from 'file-saver'
 import { UPDATE_NAME_STATUSES } from '../redux/user/user-actions.js'
 
 // import '@material/mwc-icon'
@@ -88,11 +91,10 @@ class WalletProfile extends connect(store)(LitElement) {
                 </div>
                 <div style="padding: 8px 0;">
                     <span id="accountName"
-                        title=${this.user.accountInfo.nameStatus !== UPDATE_NAME_STATUSES.LOADED ? 'Name is not yet registered. Waiting for network confirmation.' : 'Name is registered :)'}
+                        title=${this.user.accountInfo.nameStatus !== UPDATE_NAME_STATUSES.LOADED ? 'You are not minting' : 'Minting'}
                     >
                         <!-- No name set  -->
                         ${this.user.accountInfo.name}
-                        <paper-spinner-lite id="name-spinner" ?active=${this.user.accountInfo.nameStatus === UPDATE_NAME_STATUSES.LOADING}></paper-spinner-lite>
                         <!-- <mwc-icon style="float:right; top: -10px;">keyboard_arrow_down</mwc-icon> -->
                         <paper-icon-button
                             @click=${() => this.dialog.open()}
@@ -148,10 +150,10 @@ class WalletProfile extends connect(store)(LitElement) {
                     <hr>
                 </div>
                 <div id="profileList">
-                    <div id="nameDiv" style="position:relative;" @mouseup=${/* () => this.openSetName() */ ''}>
+                    <div id="nameDiv" style="position:relative;" @mouseup=${''}>
                         <span class="title">Name</span>
                         <br>
-                        ${/*this.name*/ true ? html`
+                        ${true ? html`
                              <span class="">${this.user.accountInfo.name}</span>
                             ` : html`
                             <span class="">Set name <mwc-icon style="float:right; margin-top:-6px;">call_made</mwc-icon></span>
@@ -166,7 +168,7 @@ class WalletProfile extends connect(store)(LitElement) {
                     <div id="nameDiv" style="position:relative;" @click=${() => this.downloadBackup()}>
                         <span class="title">Backup</span>
                         <br>
-                        <span class="">Download wallet backup <mwc-icon style="float:right; margin-top:-6px;">save_alt</mwc-icon></span>
+                        <span class="">Download wallet backup <mwc-icon style="float:right; margin-top:-2px; width:24px;">save_alt</mwc-icon></span>
                         <paper-ripple></paper-ripple>
                         <br><br>
                     </div>
@@ -235,12 +237,22 @@ class WalletProfile extends connect(store)(LitElement) {
     }
 
     downloadBackup () {
-        console.log('DOWNLAOD')
+        console.log('== DOWNLOAD ==')
         const state = store.getState()
         const data = state.user.storedWallets[state.app.selectedAddress.address]
         // 'application/json' - omit...
         const dataString = JSON.stringify(data)
         // return download(dataString, 'karma_backup.json')
+        console.log(dataString)
+        // const zip = new JSZip()
+        // zip.file(state.app.selectedAddress.address + '.json', dataString)
+
+        // zip.generateAsync({ type: 'blob' })
+        //     // .then(blob => FileSaver.saveAs(blob, `qortal_backup_${state.app.selectedAddress.address}.zip`))
+        //     .then(blob => saveAs(blob, `qortal_backup_${state.app.selectedAddress.address}.zip`))
+        const blob = new Blob([dataString], { type: 'text/plain;charset=utf-8' })
+        // const blob = new Blob([dataString], { type: 'application/json' })
+        FileSaver.saveAs(blob, `qortal_backup_${state.app.selectedAddress.address}.json`)
     }
 
     stateChanged (state) {

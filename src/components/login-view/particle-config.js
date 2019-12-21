@@ -16,7 +16,7 @@ export default config => {
                 polygon: { nb_sides: 6 }
             },
             opacity: {
-                value: 1,
+                value: 0.5,
                 random: true,
                 anim: {
                     enable: true,

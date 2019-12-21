@@ -31,6 +31,10 @@ class ShowPlugin extends connect(store)(LitElement) {
     <iframe src="${this.app.registeredUrls[this.url] ? `
                 ${window.location.protocol}//${window.location.hostname}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
             ` : `about:blank`}" id="showPluginFrame"></iframe>
+
+                        <iframe src="${this.app.registeredUrls[this.url] ? `
+                ${window.location.protocol}//${window.location.hostname}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
+            ` : 'about:blank'}" id="showPluginFrame"></iframe>
             */
     render () {
         // console.log(this.app.registeredUrls[this.url])
@@ -38,7 +42,7 @@ class ShowPlugin extends connect(store)(LitElement) {
         // Let's come back to this...
         return html`
             <iframe src="${this.app.registeredUrls[this.url] ? `
-                ${window.location.protocol}//${window.location.hostname}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
+                ${window.location.protocol}//${this.app.registeredUrls[this.url].domain}.${window.location.hostname}/${this.app.registeredUrls[this.url].page}
             ` : 'about:blank'}" id="showPluginFrame"></iframe>
         `
     }
@@ -72,8 +76,12 @@ class ShowPlugin extends connect(store)(LitElement) {
     stateChanged (state) {
         this.app = state.app
         // console.log(state.config.user)
-        this.pluginConfig = state.config.user.server.plugin
-        this.url = state.app.url.split('/')[2]
+        this.config = state.config
+        const split = state.app.url.split('/')
+        // ${ window.location.protocol }//${this.app.registeredUrls[this.url].url}.${window.location.hostname}:${window.location.port}
+        // this.url = split[1] === 'q' ? split[2] : 'about:blank'
+        // Need to add the port in too, in case it gets hosted not on port 80 or 443
+        this.url = split[1] === 'q' ? split[2] : '404'
     }
 }
 

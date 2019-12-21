@@ -13,7 +13,8 @@ const generateRollupConfig = (file, { outputDir, aliases }) => {
             input: file.input,
             plugins: [
                 resolve({
-                    jsnext: true
+                    // jsnext: true,
+                    preferBuiltins: true
                 }),
                 alias({
                     entries: Object.keys(aliases).map(find => {
@@ -27,7 +28,7 @@ const generateRollupConfig = (file, { outputDir, aliases }) => {
                 // eslint(),
                 progress(),
                 babel({
-                    exclude: 'node_modules/**',
+                    exclude: 'node_modules/**'
                 })
                 // uglify() // only would work if babel is transpiling to es5
             ]

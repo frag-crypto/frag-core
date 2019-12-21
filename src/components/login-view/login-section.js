@@ -55,7 +55,7 @@ class LoginSection extends connect(store)(LitElement) {
     constructor () {
         super()
         this.hasStoredWallets = Object.keys(store.getState().user.storedWallets).length > 0
-        this.selectedPage = this.hasStoredWallets ? 'wallets' : 'loginOptions'
+        this.selectedPage = this.hasStoredWallets ? 'storedWallet' : 'loginOptions'
         this.selectedWallet = {}
         this.loginErrorMessage = ''
         this.rememberMe = false
@@ -93,7 +93,7 @@ class LoginSection extends connect(store)(LitElement) {
                     border-top: 1px solid #eee;
                 }
                 .wallet {
-                    max-width: 300px;
+                    /* max-width: 300px; */
                     position: relative;
                     padding: 12px 24px;
                     cursor: pointer;
@@ -208,7 +208,8 @@ class LoginSection extends connect(store)(LitElement) {
                         </div>
 
                         <div page="storedWallet" id="walletsPage">
-                            <h1>Your accounts</h1>
+                            <h1 style="padding:0; padding-left:24px;">Your accounts</h1>
+                            <p style="margin:0; padding: 0 0 12px 24px;">Click your account to login with it</p>
                             <div id="wallets">
                                 ${(Object.entries(this.wallets || {}).length < 1) ? html`
                                     <p style="padding: 0 24px 12px 24px;">You need to create or save an account before you can log in!</p>
@@ -252,22 +253,13 @@ class LoginSection extends connect(store)(LitElement) {
                             <hr style="margin: 24px 48px;">
                             
                             <div style="display:flex;">
-                                <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">calendar_today</mwc-icon>
-                                <paper-input-container style="width:100%;" always-float-label="true" id="birthMonthContainer">
-                                    <label slot="label">Birth month</label>
-                                    <iron-input slot="input">
-                                        <select id="birthMonth">
-                                            ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => html`
-                                                <option value="${num}">${num}</option>
-                                            `)}
-                                        </select>
-                                    </iron-input>
-                                </paper-input-container>
-                            </div>
-                            
-                            <div style="display:flex;">
                                 <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
                                 <paper-input style="width:100%;" always-float-labell label="Pin" id="pin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
+                            </div>
+
+                            <div style="display:flex;">
+                                <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">vpn_key</mwc-icon>
+                                <paper-input style="width:100%;" always-float-labell label="Password" id="password" type="password"></paper-input>
                             </div>
 
                             <div style="text-align: right; color: var(--mdc-theme-error)">
@@ -317,7 +309,7 @@ class LoginSection extends connect(store)(LitElement) {
                 </div>
 
 
-                <div id="nav" style="padding-top:8px;">
+                <div id="nav" style="padding-top:8px; padding-bottom:8px;">
                     <a
                         href=""
                         style="color: var(--mdc-theme-secondary); padding-left:18px; line-height:30px;"
