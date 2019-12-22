@@ -43,6 +43,14 @@ let lastPassword = ''
 class CreateAccountSection extends connect(store)(LitElement) {
     static get properties () {
         return {
+            nextHidden: { type: Boolean, notify: true },
+            nextDisabled: { type: Boolean, notify: true },
+            nextText: { type: String, notify: true },
+            backHidden: { type: Boolean, notify: true },
+            backDisabled: { type: Boolean, notify: true },
+            backText: { type: String, notify: true },
+            hideNav: { type: Boolean, notify: true },
+
             selectedPage: { type: String },
             error: { type: Boolean },
             errorMessage: { type: String },
@@ -63,12 +71,16 @@ class CreateAccountSection extends connect(store)(LitElement) {
 
     constructor () {
         super()
+        this.nextText = 'Next'
+        this.backText = 'Back'
+        this.nextDisabled = true
+
         this.selectedPage = 'info'
         this.nextButtonText = 'Next'
         this.saveAccount = true
         this.hasSavedSeedphrase = false
         this.createAccountLoading = false
-        const welcomeMessage = 'Welcome to Karmaship'
+        const welcomeMessage = 'Welcome to Qortal'
         this.welcomeMessage = welcomeMessage
 
         this.pages = {
@@ -87,8 +99,11 @@ class CreateAccountSection extends connect(store)(LitElement) {
 
                     this.nextButtonText = 'Create'
                     this.selectPage('password')
+                    this.updateNext()
                 },
-                prev: () => { }
+                back: () => {
+                    this.navigate('welcome')
+                }
             },
             password: {
                 next: e => {
@@ -165,9 +180,9 @@ class CreateAccountSection extends connect(store)(LitElement) {
                             ripple.close()
                         })
                 },
-                prev: () => {
-                    this.nextButtonText = 'Next'
+                back: () => {
                     this.selectPage('info')
+                    this.updateNext()
                 }
             }
         }
@@ -207,9 +222,10 @@ class CreateAccountSection extends connect(store)(LitElement) {
                 }
                 #createAccountSection {
                     max-height: var(--window-height);
-                    max-width: 480px;
+                    max-width: 440px;
                     /* max-height: 500px; */
                     max-height:calc(100% - 100px);
+                    padding: 0 12px;
                 }
                 #createAccountPages {
                     flex-shrink:1;
@@ -254,6 +270,9 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     }
                 }
 
+                #infoContent p {
+                    text-align: justify;
+                }
                 #infoContent{
                     /* padding:12px; */
                 }
@@ -298,6 +317,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                             <!-- <p style="margin-bottom:0;">
                                 Below is a randomly generated seedphrase. You can regenerate it until you find one that you like. Please write it down and/or memorise it. You will need it in order to login to your account.
                             </p> -->
+                            <h3 style="text-align:center; margin-top: 0; font-weight: 100; font-family: 'Roboto Mono', monospace;">Create account</h3>
                             <p>
                                 Welcome to QORT, you will find it to be similar to that of an RPG game, you, as a minter on the QORT network (if you choose to become one) will have the chance to level your account up, giving you both more of the QORT block reward and also larger influence over the network in terms of voting on decisions for the platform. 
                             </p>
@@ -305,29 +325,32 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                 The first step, is to create your QORT account! Below, you will see a randomly generated ‘seedphrase’. This phrase is used as your private key generator for your blockchain account in QORT. Please take a screen shot or write down this phrase and save it somewhere safe. This is extremely important information for your QORT account.
                             </p>
 
-                            <div style="display: inline-block; padding:12px; width:calc(100% - 84px); margin-top:24px; border-bottom: 2px solid var(--mdc-theme-primary); border-top: 2px solid var(--mdc-theme-primary); border-radius:2px;">
-                                <random-sentence-generator
-                                    template="adverb verb the adjective noun and verb the adjective noun with the adjective noun"
-                                    id="randSentence"></random-sentence-generator>
-                                    <!--
-                                        --- --- --- --- --- --- --- --- --- --- --- -
-                                        Calculations
-                                        --- --- --- --- --- --- --- --- --- --- --- -
-                                        403 adjectives
-                                        60 interjections
-                                        243 adverbs
-                                        2353 nouns
-                                        3387 verbs
-                                        --- --- --- --- --- --- --- --- --- --- --- -
-                                        sooo 243*3387*403*2353*3387*403*2353*403*2353 ~ 2^92
-                                        --- --- --- --- --- --- --- --- --- --- --- -
-                                        -->
+                            <!-- border-bottom: 2px solid var(--mdc-theme-primary); border-top: 2px solid var(--mdc-theme-primary); -->
+                            <div style="border-radius: 4px; padding-top: 8px; background: rgba(3,169,244,0.1); margin-top: 24px;">
+                                <div style="display: inline-block; padding:12px; width:calc(100% - 84px);">
+                                    <random-sentence-generator
+                                        template="adverb verb the adjective noun and verb the adjective noun with the adjective noun"
+                                        id="randSentence"></random-sentence-generator>
+                                </div>
+                                        <!--
+                                            --- --- --- --- --- --- --- --- --- --- --- -
+                                            Calculations
+                                            --- --- --- --- --- --- --- --- --- --- --- -
+                                            403 adjectives
+                                            60 interjections
+                                            243 adverbs
+                                            2353 nouns
+                                            3387 verbs
+                                            --- --- --- --- --- --- --- --- --- --- --- -
+                                            sooo 243*3387*403*2353*3387*403*2353*403*2353 ~ 2^92
+                                            --- --- --- --- --- --- --- --- --- --- --- -
+                                            -->
+                                <paper-icon-button
+                                    icon="icons:autorenew"
+                                    style="top:-12px; margin:8px;"
+                                    @click=${() => this.shadowRoot.getElementById('randSentence').generate()}
+                                ></paper-icon-button>
                             </div>
-                            <paper-icon-button
-                                icon="icons:autorenew"
-                                style="top:-12px; margin:8px;"
-                                @click=${() => this.shadowRoot.getElementById('randSentence').generate()}
-                            ></paper-icon-button>
                             <br>
                              <!-- <div style="display:flex;">
                                 <mwc-icon style="padding: 20px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
@@ -339,7 +362,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                     style="color:var(--mdc-theme-on-surface); display:inline-flex; cursor: pointer;" >
                                     I have saved my seedphrase &nbsp;
                                     <paper-checkbox
-                                    @click=${e => { this.hasSavedSeedphrase = e.target.checked }} ?checked="${this.hasSavedSeedphrase}" iron-label-target></paper-checkbox>
+                                    @click=${e => { this.hasSavedSeedphrase = e.target.checked; this.updateNext() }} ?checked="${this.hasSavedSeedphrase}" iron-label-target></paper-checkbox>
                                 </iron-label>
                                 <!-- <paper-checkbox>I have saved my seedphrase!</paper-checkbox> -->
                             </div>
@@ -348,7 +371,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
 
                     <div page="password">
                         <div id="saveContent" class="section-content">
-                            <p>Your account is now ready to be created. It will be saved in this browser. If you do not want your new account to be saved in your browser you can uncheck the box below. You will still be able to login with your new account(after logging out), you'll just have to retype your seedphrase.</p>
+                            <p style="text-align: justify;">Your account is now ready to be created. It will be saved in this browser. If you do not want your new account to be saved in your browser you can uncheck the box below. You will still be able to login with your new account(after logging out), you'll just have to retype your seedphrase.</p>
                             <div style="display:flex;">
                                 <mwc-icon style="padding: 20px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
                                 <paper-input style="width:100%;" always-float-labell label="Pin" id="createPin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
@@ -376,25 +399,28 @@ class CreateAccountSection extends connect(store)(LitElement) {
                             ${this.errorMessage}` : ''}
                     </span>
                 </div>
-                <div id="nav">
-                    <mwc-button 
-                        ?disabled=${this.selectedPage === 'info'}
-                        @click=${() => this.pages[this.selectedPage].prev()}
-                        style="margin: 0 0 12px 12px;">
-                        <mwc-icon>keyboard_arrow_left</mwc-icon> Back 
-                    </mwc-button>
-                    <mwc-button 
-                        ?disabled=${!this.hasSavedSeedphrase}
-                        @click=${e => this.pages[this.selectedPage].next(e)}
-                        style="margin: 0 12px 12px 0; float:right;">
-                        ${this.nextButtonText} <mwc-icon>keyboard_arrow_right</mwc-icon>
-                    </mwc-button>
-                </div>
             </div>
 
             <!-- <loading-ripple id="loadingRipple" welcome-message="${this.welcomeMessage}"></loading-ripple> -->
         `
     }
+
+    /*
+            <div id="nav">
+                <mwc-button
+                    ?disabled=${this.selectedPage === 'info'}
+                    @click=${() => this.pages[this.selectedPage].prev()}
+                    style="margin: 0 0 12px 12px;">
+                    <mwc-icon>keyboard_arrow_left</mwc-icon> Back
+                </mwc-button>
+                <mwc-button
+                    ?disabled=${!this.hasSavedSeedphrase}
+                    @click=${e => this.pages[this.selectedPage].next(e)}
+                    style="margin: 0 12px 12px 0; float:right;">
+                    ${this.nextButtonText} <mwc-icon>keyboard_arrow_right</mwc-icon>
+                </mwc-button>
+            </div>
+            */
 
     firstUpdated () {
         // this.loadingRipple = this.shadowRoot.getElementById('loadingRipple')
@@ -423,6 +449,45 @@ class CreateAccountSection extends connect(store)(LitElement) {
         const oldPage = this.selectedPage
         this.selectedPage = newPage
         this._pageChange(newPage, oldPage)
+    }
+
+    updateNext () {
+        if (this.selectedPage === 'info') {
+            this.nextText = 'Next'
+            this.nextDisabled = !this.hasSavedSeedphrase
+        } else if (this.selectPage ==='password') {
+            this.nextDisabled = false
+            this.nextText = 'Create account'
+        }
+
+        this.updatedProperty()
+    }
+
+    back (e) {
+        this.pages[this.selectedPage].back(e)
+    }
+
+    next (e) {
+        this.pages[this.selectedPage].next(e)
+        // if (this.selectedPage === 'info') {
+        //     this.selectPage('password')
+        // }
+    }
+
+    updatedProperty () {
+        this.dispatchEvent(new CustomEvent('updatedProperty', {
+            detail: {},
+            bubbles: true,
+            composed: true
+        }))
+    }
+
+    navigate (page) {
+        this.dispatchEvent(new CustomEvent('navigate', {
+            detail: { page },
+            bubbles: true,
+            composed: true
+        }))
     }
 
     stateChanged (state) {

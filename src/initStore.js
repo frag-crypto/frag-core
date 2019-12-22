@@ -7,7 +7,7 @@ import './persistState.js'
 import { initApi } from '@frag/crypto'
 
 initApi(store)
-console.log(store)
+// console.log(store)
 
 const workerInitChecker = () => {
     const state = store.getState()

@@ -34,13 +34,23 @@ import ripple from '../../functional-components/loading-ripple.js'
 class LoginSection extends connect(store)(LitElement) {
     static get properties () {
         return {
+            nextHidden: { type: Boolean, notify: true },
+            nextDisabled: { type: Boolean, notify: true },
+            nextText: { type: String, notify: true },
+            backHidden: { type: Boolean, notify: true },
+            backDisabled: { type: Boolean, notify: true },
+            backText: { type: String, notify: true },
+            hideNav: { type: Boolean, notify: true },
+
             loginFunction: { type: Object },
             selectedWallet: { type: Object },
             selectedPage: { type: String },
             wallets: { type: Object },
             loginErrorMessage: { type: String },
             rememberMe: { type: Boolean },
-            hasStoredWallets: { type: Boolean }
+            hasStoredWallets: { type: Boolean },
+            showPasswordField: { type: Boolean },
+            showPinPages: { type: Array }
         }
     }
 
@@ -54,6 +64,9 @@ class LoginSection extends connect(store)(LitElement) {
 
     constructor () {
         super()
+        this.nextHidden = true
+        this.backText = 'Back'
+
         this.hasStoredWallets = Object.keys(store.getState().user.storedWallets).length > 0
         this.selectedPage = this.hasStoredWallets ? 'storedWallet' : 'loginOptions'
         this.selectedWallet = {}
@@ -76,6 +89,12 @@ class LoginSection extends connect(store)(LitElement) {
                 icon: 'lock'
             }
         ]
+        this.showPinPages = [
+            'phrase',
+            'seed',
+            'V1Seed',
+            'backedUpSeed'
+        ]
     }
 
     render () {
@@ -84,6 +103,7 @@ class LoginSection extends connect(store)(LitElement) {
                 #loginSection {
                     padding:0;
                     text-align:left;
+                    padding-top: 12px;
                 }
                 #wallets {
                     max-height: 400px;
@@ -118,7 +138,7 @@ class LoginSection extends connect(store)(LitElement) {
                 .login-option {
                     max-width: 300px;
                     position: relative;
-                    padding: 12px 24px;
+                    padding: 16px 24px 8px 24px;
                     cursor: pointer;
                     display: flex;
                 }
@@ -142,10 +162,10 @@ class LoginSection extends connect(store)(LitElement) {
                     padding-top:8px;
                 }
 
-                #unlockPage {
+                #unlockStoredPage {
                     padding: 24px;
                 }
-                #unlockPage mwc-icon {
+                #unlockStoredPage mwc-icon {
                     font-size:48px;
                 }
 
@@ -228,7 +248,7 @@ class LoginSection extends connect(store)(LitElement) {
                                 `)}
                             </div>
                         </div>
-                        <div page="phrase" id="existingSeedPage">
+                        <div page="phrase" id="phrasePage">
                             <div style="padding:24px;">
                                 <div style="display:flex;">
                                     <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
@@ -236,7 +256,7 @@ class LoginSection extends connect(store)(LitElement) {
                                 </div>
                             </div>
                         </div>
-                        <div page="seed" id="v1SeedPage">
+                        <div page="seed" id="seedPage">
                             <div style="padding:24px;">
                                 <div style="display:flex;">
                                     <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
@@ -244,51 +264,31 @@ class LoginSection extends connect(store)(LitElement) {
                                 </div>
                             </div>
                         </div>
-                        <div page="unlock" id="unlockPage">
+                        <div page="unlockStored" id="unlockStoredPage">
                             <div style="text-align:center;">
                                 <mwc-icon id='accountIcon' style=" padding-bottom:24px;">account_circle</mwc-icon>
                                 <br>
                                 <span style="font-size:14px; font-weight:600;">${this.selectedWallet.address0}</span>
                             </div>
-                            <hr style="margin: 24px 48px;">
-                            
-                            <div style="display:flex;">
-                                <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
-                                <paper-input style="width:100%;" always-float-labell label="Pin" id="pin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
-                            </div>
-
-                            <div style="display:flex;">
-                                <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">vpn_key</mwc-icon>
-                                <paper-input style="width:100%;" always-float-labell label="Password" id="password" type="password"></paper-input>
-                            </div>
-
-                            <div style="text-align: right; color: var(--mdc-theme-error)">
-                                ${this.loginErrorMessage}
-                            </div>
                         </div>
-
                     </iron-pages>
-                    <div>
-                        <iron-collapse style="padding-left:24px; padding-right:24px;" ?opened=${this.rememberMe}>
-                            <div style="display:flex;">
-                                <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
-                                <paper-input style="width:100%;" always-float-labell label="Pin" id="storagePin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
-                            </div>
-                            <div style="display:flex;">
-                                <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">calendar_today</mwc-icon>
-                                <paper-input-container style="width:100%;" always-float-label="true" id="storageBirthMonthContainer">
-                                    <label slot="label">Birth month</label>
-                                    <iron-input slot="input">
-                                        <select id="storageBirthMonth">
-                                            ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => html`
-                                                <option value="${num}">${num}</option>
-                                            `)}
-                                        </select>
-                                    </iron-input>
-                                </paper-input-container>
-                            </div>
-                        </iron-collapse>
-                        ${['v1Seed', 'existingSeed'].includes(this.selectedPage) ? html`
+
+                    <div style="display:flex;" ?hidden=${!(this.showPinPages.includes(this.selectedPage))}>
+                        <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
+                        <paper-input style="width:100%;" always-float-labell label="Pin" id="unlockStoredPin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
+                    </div>
+
+                    <iron-collapse style="padding-left:24px; padding-right:24px;" ?opened=${this.showPasswordField} id="passwordCollapse">
+                        <div style="display:flex;">
+                            <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">vpn_key</mwc-icon>
+                            <paper-input style="width:100%;" always-float-labell label="Password" id="unlockStoredPassword" type="password"></paper-input>
+                        </div>
+                    </iron-collapse>
+
+                    <div style="text-align: right; color: var(--mdc-theme-error)">
+                        ${this.loginErrorMessage}
+                    </div>
+                        ${['seed', 'phrase', 'backedUpSeed', 'V1Seed'].includes(this.selectedPage) ? html`
                             <!-- Remember me checkbox and fields-->
                             <div style="text-align:right; padding-right:8px; min-height:40px;">
                                 <p style="vertical-align: top; line-height: 40px; margin:0;">
@@ -304,21 +304,9 @@ class LoginSection extends connect(store)(LitElement) {
                 </div>
 
                 <!-- Passes this.selectedPage to trigger updates -->
-                <div style="margin-left:24px; margin-right:24px;" ?hidden=${!(this.loginOptionIsSelected(this.selectedPage) &&  (this.hasStoredWallets || this.selectedPage !== 'storedWallet'))}>
+                <div style="margin-left:24px; margin-right:24px;" ?hidden=${!(this.loginOptionIsSelected(this.selectedPage) && (this.hasStoredWallets || this.selectedPage !== 'storedWallet'))}>
                     <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
                 </div>
-
-
-                <div id="nav" style="padding-top:8px; padding-bottom:8px;">
-                    <a
-                        href=""
-                        style="color: var(--mdc-theme-secondary); padding-left:18px; line-height:30px;"
-                        ?hidden=${this.selectedPage === 'loginOptions'}
-                        @click=${() => { this.selectedPage = 'loginOptions' }}
-                    >Sign in options</a>
-                </div>
-
-                <!-- <loading-ripple id="loadingRipple"></loading-ripple> -->
             </div>
         `
     }
@@ -330,7 +318,7 @@ class LoginSection extends connect(store)(LitElement) {
 
     selectWallet (wallet) {
         this.selectedWallet = wallet
-        this.selectedPage = 'unlock'
+        this.selectedPage = 'unlockStored'
     }
 
     stateChanged (state) {
@@ -347,9 +335,9 @@ class LoginSection extends connect(store)(LitElement) {
             },
             get storedWallet () {
                 const wallet = this.selectedWallet
-                const birthMonth = this.shadowRoot.querySelector('#birthMonth').value
                 const pin = this.shadowRoot.querySelector('#pin').value
-                const password = pin + '' + birthMonth
+                const password = this.shadowRoot.querySelector('#password').value
+                // const password = pin + '' + birthMonth
                 return {
                     wallet,
                     password
@@ -421,6 +409,26 @@ class LoginSection extends connect(store)(LitElement) {
         // }).then(() => this.cleanup()).catch(e => {
         //     this.loginErrorMessage = e
         // })
+    }
+
+    back () {
+        if (['seed', 'phrase', 'storedWallet'].includes(this.selectedPage)) {
+            this.selectedPage = 'loginOptions'
+        } else if (this.selectedPage === 'loginOptions') {
+            this.navigate('welcome')
+        } else if (this.selectedPage === 'unlockStored') {
+            this.selectedPage = 'storedWallet'
+        }
+    }
+
+    next () {}
+
+    navigate (page) {
+        this.dispatchEvent(new CustomEvent('navigate', {
+            detail: { page },
+            bubbles: true,
+            composed: true
+        }))
     }
 
     cleanup () {

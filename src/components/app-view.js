@@ -50,7 +50,7 @@ class AppView extends connect(store)(LitElement) {
                 --app-drawer-width: 260px;;
             }
 
-            app-drawer-layout:not([narrow]) [.menu-toggle-button] {
+            app-drawer-layout:not([narrow]) [drawer-toggle]:not(sidenav-menu) {
                 display: none;
             }
 
@@ -74,8 +74,8 @@ class AppView extends connect(store)(LitElement) {
         <style>
 
         </style>
-        < !--style="height: var(--window-height);" -- >
-        <app-drawer-layout responsive-width='${getComputedStyle(document.body).getPropertyValue('--layout - breakpoint - desktop')}' fullbleed >
+        <!--style="height: var(--window-height);" -->
+        <app-drawer-layout responsive-width='${getComputedStyle(document.body).getPropertyValue('--layout-breakpoint-desktop')}' fullbleed >
             <app-drawer swipe-open slot="drawer" id="appdrawer">
                 <app-header-layout>
 
@@ -95,7 +95,8 @@ class AppView extends connect(store)(LitElement) {
 
                         <div main-title>
                             <span class="qora-title">
-                                &nbsp;${this.config.coin.name}
+                                <img src="${this.config.coin.logo}" style="height:32px; padding-left:12px;">
+                                <!-- &nbsp;${this.config.coin.name} -->
                             </span>
 
                             <small>

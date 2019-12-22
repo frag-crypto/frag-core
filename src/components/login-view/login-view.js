@@ -20,12 +20,15 @@ import '@polymer/paper-spinner/paper-spinner-lite.js'
 // import particleJS from 'particle.js'
 import './particle.js'
 
+import './welcome-page.js'
 import './create-account-section.js'
 import './login-section.js'
 
 import getParticleConfig from './particle-config.js'
 
 window.reduxStore = store
+
+const animationDuration = 0.7 // Seconds
 
 // import { MDCTextField } from '@material/textfield'
 // const textField = new MDCTextField(document.querySelector('.mdc-text-field'))
@@ -38,7 +41,8 @@ class LoginView extends connect(store)(LitElement) {
             pages: { type: Object },
             rippleIsOpen: { type: Boolean },
             config: { type: Object },
-            rippleLoadingMessage: { type: String }
+            rippleLoadingMessage: { type: String },
+            selectedPageElement: { }
         }
     }
 
@@ -51,12 +55,14 @@ class LoginView extends connect(store)(LitElement) {
     }
 
     getPreSelectedPage () {
-        return (store.getState().user.storedWallets && Object.entries(store.getState().user.storedWallets || {}).length > 0) ? 'login' : 'welcome'
+        // return (store.getState().user.storedWallets && Object.entries(store.getState().user.storedWallets || {}).length > 0) ? 'login' : 'welcome'
+        return 'welcome'
     }
 
     constructor () {
         super()
         this.selectedPage = this.getPreSelectedPage()
+        this.selectedPageElement = {}
         this.rippleIsOpen = false
         this.pages = {
             welcome: 0,
@@ -81,12 +87,45 @@ class LoginView extends connect(store)(LitElement) {
             })
             console.log(part)
         }).catch(e => console.error(e))
+
+        const loginContainerPages = this.shadowRoot.querySelector('#loginContainerPages')
+        const loginCard = this.shadowRoot.querySelector('#login-card')
+        const navigate = e => {
+            this.selectPage(e.detail.page)
+        }
+        const updatedProperty = e => {
+            // ...
+            const selectedPageElement = this.selectedPageElement
+            this.selectedPageElement = {}
+            setTimeout(() => { this.selectedPageElement = selectedPageElement }, 1) // Yuck
+        }
+        loginContainerPages.addEventListener('selected-item-changed', () => {
+            // Undefined is the remove step...
+            if (!loginContainerPages.selectedItem) {
+                // Remove the old... if it was. Not entirely sure it's needed
+                if (this.selectedPageElement.removeEventListener) {
+                    this.selectedPageElement.removeEventListener('navigate', navigate)
+                    this.selectedPageElement.removeEventListener('updatedProperty', updatedProperty)
+                }
+                this.selectedPageElement = {}
+                loginCard.classList.remove('animated')
+                loginCard.className += ' animated'
+            } else {
+                setTimeout(() => {
+                    // reference the new
+                    this.selectedPageElement = loginContainerPages.selectedItem
+                    // and listen to it
+                    this.selectedPageElement.addEventListener('navigate', navigate)
+                    this.selectedPageElement.addEventListener('updatedProperty', updatedProperty)
+                    setTimeout(() => loginCard.classList.remove('animated'), animationDuration * 1000)
+                }, 1) // Make it async so that it actually notices the object reassignment up above... I feel like there's a better way but I'm a n00b
+            }
+        })
     }
 
     render () {
         return html`
             <style>
-            
                 canvas {
                     display: block;
                     vertical-align: bottom;
@@ -152,8 +191,16 @@ class LoginView extends connect(store)(LitElement) {
                 .login-card {
                     min-width: 340px;
                     /* background: var(--mdc-theme-surface); */
+                    background: var(--mdc-theme-background);
+                    border-bottom: 2px solid var(--mdc-theme-primary);
+                    border-top: 2px solid var(--mdc-theme-primary);
                     text-align:center;
                     z-index:0;
+
+                    box-shadow: var(--shadow-4);
+                    padding: 12px;
+                    border: 0;
+                    border-radius: 4px;
                 }
                 .login-card p {
                     margin-top: 0;
@@ -164,18 +211,20 @@ class LoginView extends connect(store)(LitElement) {
                     margin-bottom:12px;
                     font-size:64px;
                 }
-                .login-card [page="welcome"] mwc-button {
-                    margin: 6px;
-                    width: 90%;
-                    max-width:90vw;
-                    margin: 4px;
-                }
                 .login-card iron-pages {
                     height:100%;
                 }
                 .backButton {
                     padding-top:18px;
                     text-align:center;
+                }
+                #login-pages-nav {
+                    text-align: left;
+                    /* padding-bottom:8px; */
+                    padding: 12px 12px 8px 12px;
+                }
+                #nav-next {
+                    float: right;
                 }
                 @media only screen and (min-width: ${getComputedStyle(document.body).getPropertyValue('--layout-breakpoint-tablet')}) {
                     /* Desktop/tablet */
@@ -217,102 +266,62 @@ class LoginView extends connect(store)(LitElement) {
                 @keyframes fade {
                     from {
                         opacity: 0;
-                        transform: translateX(-20%)
+                        transform: translateX(-20%);
                     }
                     to {
                         opacity: 1;
-                        transform: translateX(0)
+                        transform: translateX(0);
                     }
                 }
-                iron-pages .animated {
-                    animation-duration: 0.6s;
-                    animation-name: fade;
+                @keyframes grow-up {
+                    from {
+                        overflow:hidden;
+                        max-height:0;
+                    }
+                    to {
+                        overflow:hidden;
+                        max-height:var(--window-height);
+                    }
+                }
+                iron-pages .animated, .animated {
+                    animation-duration: ${animationDuration}s;
+                    animation-name: grow-up;
                 }
                 div[page] > paper-icon-button {
                     margin:12px;
                 }
-                .hideme { 
-                    visibility:none;
-                }
                 .corner-box {
                     border-color: var(--mdc-theme-primary) !important;
                 }
+                [hidden] {
+                    visibility: hidden;
+                    display: none;
+                }
             </style>
 
-            <!-- particles.js container -->
-            <!-- <div id="particles-js"></div> -->
-             <!-- stats - count particles --> 
-            <!-- <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script> -->
-            
-            
             <div class="login-page" ?hidden=${this.loggedIn}>
                 <div id="particles-js"></div>
                 <div class="login-card-container">
                     <img class="qortal-logo" src="${this.config.coin.logo}">
                     <div class="login-card-center-container">
-                        <div class="login-card">
+                        <div class="login-card" id="login-card">
                             <!-- <div class='corner-box' style="width:50px; height:50px; border-left:3px solid; border-top: 3px solid; float:left; margin-left:-50px;"></div> -->
                             <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="loginContainerPages">
-                                <div page="welcome">
-                                    <!-- <i style="visibility: hidden; float:right; padding:24px;">${this.config.coin.name} ${this.config.version}</i>
-                                    <br>
-                                    <br> -->
-                                    <!-- <h1>Karma</h1> -->
-                                    <!-- <img src="${this.config.coin.logo}" style="max-width: 300px; width:60%;"> -->
-                                    <!-- <p>Enter the Karmaconomy</p> -->
-
-                                    <br><br><br>
-                                    <mwc-button
-                                        @click=${() => this.selectPage('create-account')}
-                                        
-                                        raised
-                                        style="border-top:0; border-bottom:0;"
-                                    >
-                                    <!--outlined -->
-                                        Create account
-                                    </mwc-button>
-                                    <mwc-button
-                                        @click=${() => this.selectPage('login')}
-                                    >
-                                        Login
-                                    </mwc-button>
-                                    <!-- <div style="text-align: right; padding:12px;">
-                                        <br>
-                                        <p style="margin:0; font-size: 0.9rem">Karmaship, LLC [alpha build v2.0]</p>
-                                        <p style="font-size: 0.9rem"><i><small>Rewarding real life experiences</small></i></p>
-                                    </div> -->
-                                    <!-- <login-welcome-page selected-page="{{selectedPage}}"></login-welcome-page> -->
-                                    <br><br><br><br>
-                                </div>
-                                
-                                <div page="create-account" style="text-align:left">
-                                    <!-- <paper-icon-button
-                                        icon="icons:arrow-back"
-                                        @click=${() => this.selectPage('welcome')}
-                                    ></paper-icon-button> -->
-                                    <div class="backButton">
-                                        <mwc-button
-                                            @click=${() => this.selectPage('welcome')}
-                                        ><mwc-icon>keyboard_arrow_left</mwc-icon> Login</mwc-button>
-                                    </div>
-                                    <br>
-                                    <create-account-section class="section" id="createAccountSection"></create-account-section>
-                                </div>
-                                
-                                <div page="login">
-                                    <!-- <paper-icon-button
-                                        icon="icons:arrow-back"
-                                        @click=${() => this.selectPage('welcome')}
-                                    ></paper-icon-button> -->
-                                    <div class="backButton">
-                                        <mwc-button
-                                            @click=${() => this.selectPage('welcome')}
-                                        ><mwc-icon>keyboard_arrow_left</mwc-icon> Create account</mwc-button>
-                                    </div>
-                                    <br>
-                                    <login-section class="section" id='loginSection'></login-section>
-                                </div>
+                                <!-- Instead make the page fire a page change event, catch it and respond -->
+                                <welcome-page page="welcome"></welcome-page>
+                                <create-account-section page="create-account"></create-account-section>
+                                <login-section page="login"></login-section>
                             </iron-pages>
+                            <div id="login-pages-nav" ?hidden="${this.selectedPageElement.hideNav}">
+                                <mwc-button @click=${e => this.selectedPageElement.back(e)} id="nav-back" ?hidden="${this.selectedPageElement.backHidden}" ?disabled="${this.selectedPageElement.backDisabled}">
+                                    <mwc-icon>keyboard_arrow_left</mwc-icon>${this.selectedPageElement.backText}
+                                </mwc-button>
+
+                                <mwc-button @click=${e => this.selectedPageElement.next(e)} id="nav-next" ?hidden="${this.selectedPageElement.nextHidden}" ?disabled="${this.selectedPageElement.nextDisabled}">
+                                    ${this.selectedPageElement.nextText}<mwc-icon>keyboard_arrow_right</mwc-icon>
+                                </mwc-button>
+                            </div>
+
                             <!-- <div class='corner-box' style="width:50px; height:50px; border-right:3px solid; border-bottom: 3px solid; float:right; margin-right:-50px; margin-top:-50px;"></div> -->
                         </div>
                     </div>
@@ -326,6 +335,7 @@ class LoginView extends connect(store)(LitElement) {
         this.selectedPage = newPage
         this._pageChange(newPage, oldPage)
     }
+    // Doesn't actually do anything now
 
     _pageChange (newPage, oldPage) {
         if (!this.shadowRoot.querySelector('#loginContainerPages') || !newPage) {
@@ -335,7 +345,7 @@ class LoginView extends connect(store)(LitElement) {
         // Run the animation on the newly selected page
         const newIndex = this.pages[newPage]
         if (!pages[newIndex].className.includes('animated')) {
-            pages[newIndex].className += ' animated'
+            // pages[newIndex].className += ' animated'
         }
 
         if (typeof oldPage !== 'undefined') {
@@ -346,139 +356,10 @@ class LoginView extends connect(store)(LitElement) {
         }
     }
 
-    _backToWelcome () {
-        this.selectedPage = 'welcome'
-    }
-
-    // _loginClick (e) {
-    //     logIn()
-    // }
-
     stateChanged (state) {
         this.loggedIn = state.app.loggedIn
         this.config = state.config
     }
-
-    // loginAnimation (rippleOrigin) {
-    //     const rippleWrapper = this.shadowRoot.getElementById('rippleWrapper')
-    //     const ripple = this.shadowRoot.getElementById('ripple')
-    //     const rippleContentWrapper = this.shadowRoot.getElementById('rippleContentWrapper')
-
-    //     // Position the center of the ripple
-    //     // console.dir(rippleWrapper)
-    //     // console.log(rippleOrigin)
-    //     rippleWrapper.style.top = rippleOrigin.y + 'px'
-    //     rippleWrapper.style.left = rippleOrigin.x + 'px'
-    //     rippleContentWrapper.style.marginTop = -rippleOrigin.y + 'px'
-    //     rippleContentWrapper.style.marginLeft = -rippleOrigin.x + 'px'
-
-    //     ripple.classList.add('activating')
-
-    //     const transitionEventNames = ['transitionend', 'webkitTransitionEnd', 'oTransitionEnd', 'MSTransitionEnd']
-
-    //     const closeRipple = () => {
-    //         return new Promise((resolve, reject) => {
-    //             let rippleClosed = false
-    //             const rippleClosedEvent = e => {
-    //                 if (!rippleClosed) {
-    //                     rippleClosed = true
-    //                     transitionEventNames.forEach(name => ripple.removeEventListener(name, rippleClosedEvent))
-    //                     // Reset the ripple
-    //                     ripple.classList.remove('activating')
-    //                     ripple.classList.remove('activating-done')
-    //                     ripple.classList.remove('disabling')
-    //                     this.rippleIsOpen = false
-    //                     resolve()
-    //                 }
-    //             }
-
-    //             ripple.classList.add('disabling')
-    //             transitionEventNames.forEach(name => ripple.addEventListener(name, rippleClosedEvent))
-    //         })
-    //     }
-
-    //     return new Promise((resolve, reject) => {
-    //         this.rippleIsOpen = false
-    //         const transitionedEvent = () => {
-    //             // First time
-    //             if (!this.rippleIsOpen) {
-    //                 ripple.classList.add('activating-done')
-    //                 transitionEventNames.forEach(name => ripple.removeEventListener(name, transitionedEvent))
-    //                 resolve(closeRipple)
-    //             }
-    //             this.rippleIsOpen = true
-    //         }
-    //         transitionEventNames.forEach(name => ripple.addEventListener(name, transitionedEvent))
-    //     })
-    // }
-
-    // /*
-    // NEED TO CHANGE THIS TO LISTENING TO STATE, WAITING FOR REDUX TO SAY, BUSY_LOGGING_IN = TRUE, WITH SOME X,Y VALUES, AND THEN RIPPLE AND UPDATE INFO FROM THERE. THIS IS CURRENTLY AN... ANTIPATTERN (MAYBE LOL)
-    // */
-    // async login (rippleOrigin, params) {
-    //     const closeRipple = await this.loginAnimation(rippleOrigin)
-    //     try {
-    //         const wallet = await createWallet(this, params)
-    //         store.dispatch(doLogin(wallet, params.pin))
-    //         const addressColors = this.config.styles.theme.addressColors
-    //         const addresses = wallet.addresses.map(address => {
-    //             address.color = addressColors[address.nonce % addressColors.length]
-
-    //             const hexSplit = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(address.color)
-    //             const rgb = hexSplit.map(color => {
-    //                 return parseInt(color, 16) / 255
-    //             }).map(color => {
-    //                 return color <= 0.03928 ? color / 12.92 : Math.pow((color + 0.055) / 1.055, 2.4)
-    //             })
-    //             const luminance = 0.2126 * rgb[1] + 0.7152 * rgb[2] + 0.0722 * rgb[3]
-
-    //             address.textColor = luminance > 0.179 ? 'dark' : 'light'
-
-    //             return address
-    //         })
-
-    //         store.dispatch(doSelectAddress(addresses[0]))
-    //         // console.log('params', params)
-    //         if (params.save) {
-    //             // Check if the seed is already saved
-    //             if (!this.config.savedWallets || !this.config.savedWallets[wallet._addresses[0].address]) {
-    //                 // Snackbar
-    //                 this.rippleLoadingMessage = 'Encrypting seed for storage'
-    //                 // console.log(this.rippleLoadingMessage)
-    //                 const saveSeedData = await generateSaveWalletData(wallet, params.pin + params.birthMonth, this.config.crypto.kdfThreads)
-    //                 store.dispatch(doStoreWallet(saveSeedData))
-    //             } else {
-    //                 // Snackbar to say already saved
-    //             }
-    //         }
-    //         closeRipple()
-    //         this.cleanup()
-    //     } catch (e) {
-    //         return new Promise((resolve, reject) => {
-    //             const ripple = this.shadowRoot.getElementById('ripple')
-    //             const transitionEventNames = ['transitionend', 'webkitTransitionEnd', 'oTransitionEnd', 'MSTransitionEnd']
-    //             let rippleClosed = false
-    //             ripple.classList.add('error')
-    //             ripple.classList.remove('activating')
-    //             ripple.classList.remove('activating-done')
-    //             const rippleClosedEvent = e => {
-    //                 if (!rippleClosed) {
-    //                     rippleClosed = true
-    //                     transitionEventNames.forEach(name => ripple.removeEventListener(name, rippleClosedEvent))
-    //                     // Reset the ripple
-    //                     ripple.classList.remove('error')
-    //                     this.rippleIsOpen = false
-    //                     resolve()
-    //                 }
-    //             }
-    //             transitionEventNames.forEach(name => ripple.addEventListener(name, rippleClosedEvent))
-    //         }).then(() => {
-    //             throw e
-    //         })
-    //         // alert(e)
-    //     }
-    //     return 'success'
-    // }
 
     cleanup () {
         this.selectedPage = 'welcome'

@@ -45,7 +45,7 @@ class LoadingRipple extends LitElement {
                 --ripple-activating-transition: transform 0.3s cubic-bezier(0.6, 0.0, 1, 1), opacity 0.3s cubic-bezier(0.6, 0.0, 1, 1);
                 --ripple-disable-transition: opacity 0.5s ease;
             }
-            #ripple{
+            #ripple {
                 border-radius:50%;
                 border-width:0;
                 margin-left:-100vmax;
@@ -53,7 +53,7 @@ class LoadingRipple extends LitElement {
                 height:200vmax;
                 width:200vmax;
                 overflow:hidden;
-                background: var(--mdc-theme-secondary);
+                background: var(--mdc-theme-primary);
                 transform: scale(0);
                 overflow:hidden;
             }
@@ -186,6 +186,14 @@ class LoadingRipple extends LitElement {
 window.customElements.define('loading-ripple', LoadingRipple)
 
 const rippleNode = document.createElement('loading-ripple')
+rippleNode.id = 'ripple-node'
 rippleNode.loadingMessage = ''
 rippleElement = document.body.appendChild(rippleNode)
+setTimeout(() => {
+    const ripple = document.getElementById('ripple-node')
+    const mainApp = document.getElementById('main-app')
+    const shadow = mainApp.shadowRoot
+    console.log(shadow)
+    rippleElement = shadow.appendChild(ripple)
+}, 500) // Should just keep checking for the main-app and it's shadow and then append once it's there
 export default rippleElement

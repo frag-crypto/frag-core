@@ -65,9 +65,12 @@ const createRoutes = config => [
         path: '/getConfig',
         handler: (request, h) => {
             const response = {
-                config
+                config: {
+                    ...config
+                }
             }
-            delete response.config.tls
+            delete response.config.user.tls // VERY IMPORTANT
+            delete response.config.build // meh
             return JSON.stringify(response)
         }
     }

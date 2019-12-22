@@ -43,7 +43,9 @@ export const routes = {
         // console.log(req.data)
         // console.log(api.request)
         // console.log(req)
-        return api.request[req.data.type](req.data)
+        const url = req.data.url
+        delete req.data.url
+        return api.request(url, req.data)
     },
 
     addresses: async req => {
