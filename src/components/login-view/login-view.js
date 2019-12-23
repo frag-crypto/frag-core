@@ -23,6 +23,7 @@ import './particle.js'
 import './welcome-page.js'
 import './create-account-section.js'
 import './login-section.js'
+import './show-address.js'
 
 import getParticleConfig from './particle-config.js'
 
@@ -299,7 +300,8 @@ class LoginView extends connect(store)(LitElement) {
                 }
             </style>
 
-            <div class="login-page" ?hidden=${this.loggedIn}>
+            <!-- <div class="login-page" ?hidden=${this.loggedIn}> -->
+            <div class="login-page">
                 <div id="particles-js"></div>
                 <div class="login-card-container">
                     <img class="qortal-logo" src="${this.config.coin.logo}">
@@ -311,6 +313,7 @@ class LoginView extends connect(store)(LitElement) {
                                 <welcome-page page="welcome"></welcome-page>
                                 <create-account-section page="create-account"></create-account-section>
                                 <login-section page="login"></login-section>
+                                <show-address page="show-address"></show-address>
                             </iron-pages>
                             <div id="login-pages-nav" ?hidden="${this.selectedPageElement.hideNav}">
                                 <mwc-button @click=${e => this.selectedPageElement.back(e)} id="nav-back" ?hidden="${this.selectedPageElement.backHidden}" ?disabled="${this.selectedPageElement.backDisabled}">
@@ -331,30 +334,30 @@ class LoginView extends connect(store)(LitElement) {
     }
 
     selectPage (newPage) {
-        const oldPage = this.selectedPage
+        // const oldPage = this.selectedPage
         this.selectedPage = newPage
-        this._pageChange(newPage, oldPage)
+        // this._pageChange(newPage, oldPage)
     }
     // Doesn't actually do anything now
+    // So let's comment it!
+    // _pageChange (newPage, oldPage) {
+    //     if (!this.shadowRoot.querySelector('#loginContainerPages') || !newPage) {
+    //         return
+    //     }
+    //     const pages = this.shadowRoot.querySelector('#loginContainerPages').children
+    //     // Run the animation on the newly selected page
+    //     const newIndex = this.pages[newPage]
+    //     if (!pages[newIndex].className.includes('animated')) {
+    //         // pages[newIndex].className += ' animated'
+    //     }
 
-    _pageChange (newPage, oldPage) {
-        if (!this.shadowRoot.querySelector('#loginContainerPages') || !newPage) {
-            return
-        }
-        const pages = this.shadowRoot.querySelector('#loginContainerPages').children
-        // Run the animation on the newly selected page
-        const newIndex = this.pages[newPage]
-        if (!pages[newIndex].className.includes('animated')) {
-            // pages[newIndex].className += ' animated'
-        }
-
-        if (typeof oldPage !== 'undefined') {
-            const oldIndex = this.pages[oldPage]
-            // Stop the animation of hidden pages
-            // pages[oldIndex].className = pages[oldIndex].className.split(' animated').join('');
-            pages[oldIndex].classList.remove('animated')
-        }
-    }
+    //     if (typeof oldPage !== 'undefined') {
+    //         const oldIndex = this.pages[oldPage]
+    //         // Stop the animation of hidden pages
+    //         // pages[oldIndex].className = pages[oldIndex].className.split(' animated').join('');
+    //         pages[oldIndex].classList.remove('animated')
+    //     }
+    // }
 
     stateChanged (state) {
         this.loggedIn = state.app.loggedIn

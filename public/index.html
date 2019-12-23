@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html lang="en-us">
     <head>
+        <script>this.customElements || document.write('<script src="//unpkg.com/document-register-element"><\x2fscript>');</script>
+        <script src="//unpkg.com/@ungap/custom-elements-builtin"></script>
+
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="Description" content="Cryptocurrency wallet">
-
+        
+        <link rel="apple-touch-icon" sizes="57x57" href="/img/favicon/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="/img/favicon/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/img/favicon/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/img/favicon/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="/img/favicon/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/img/favicon/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="/img/favicon/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+        <link rel="manifest" href="/img/favicon/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="/img/favicon/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
+        
         <style>
             html, body {
                 margin: 0;
@@ -14,6 +35,7 @@
         <link rel="stylesheet" href="/build/styles.bundle.css">
         <link rel="stylesheet" href="/font/material-icons.css">
         <title>Frag's UI</title>
+
 
         <script>
             // Let's not spend time on this right now. Initial load is quick, just be happy with that for now
@@ -29,11 +51,11 @@
 
         <!-- Trash browser polyfills -->
         <script>
-            if (typeof Promise === 'undefined') document.write('<script src="/node_modules/bluebird/js/browser/bluebird.core.js"><\/script>');
-            if (typeof fetch === 'undefined') document.write('<script src="/node_modules/whatwg-fetch/dist/fetch.umd.js"><\/script>');
+            if (typeof Promise === 'undefined') document.write('<script src="/bluebird/js/browser/bluebird.core.js"><\/script>');
+            if (typeof fetch === 'undefined') document.write('<script src="/whatwg-fetch/dist/fetch.umd.js"><\/script>');
         </script>
-        <!-- <script nomodulee src="/node_modules/systemjs/dist/s.js"></script> -->
-        <script nomodule src="/src/libraries/s.js"></script>
+        <script nomodule src="/systemjs/dist/s.js"></script>
+        <!-- <script nomodule src="/src/libraries/s.js"></script> -->
     </head>
 
     <body>
@@ -49,9 +71,10 @@
         <script>
             /* https://github.com/webcomponents/webcomponentsjs#using-webcomponents-loaderjs */
             window.WebComponents = window.WebComponents || {}
-            window.WebComponents.root = '/node_modules/@webcomponents/webcomponentsjs/'
+            window.WebComponents.root = '/webcomponentsjs/'
         </script>
-        <!-- <script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script> -->
+        <!-- <script src="/webcomponentsjs/webcomponents-loader.js"></script> -->
+        <!-- <script src="/webcomponentsjs/webcomponents-bundle.js"></script> -->
 
         <!-- Dynamic import polyfill, for lazy loading -->
         <!-- <script type="module" src="https://unpkg.com/dimport?module" data-main="/build/es6/main.js"></script> -->

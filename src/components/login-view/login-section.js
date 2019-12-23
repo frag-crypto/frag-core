@@ -14,10 +14,12 @@ import '@polymer/paper-ripple'
 import '@polymer/iron-collapse'
 // import '@polymer/paper-spinner/paper-spinner-lite.js'
 // import '@polymer/iron-flex-layout/iron-flex-layout-classes.js'
+import '@vaadin/vaadin-upload'
+// import '@vaadin/vaadin-upload/theme/material/vaadin-upload.js'
 
 import { doLogin, doSelectAddress } from '../../redux/app/app-actions.js'
 // import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
-import { doUpdateAccountName } from '../../redux/user/user-actions.js'
+// import { doUpdateAccountName } from '../../redux/user/user-actions.js'
 // import { createWallet } from '../../qora/createWallet.js'
 // import { createWallet } from '../../api/createWallet.js'
 // import { createWallet } from 'frag-qora-crypto'
@@ -50,7 +52,8 @@ class LoginSection extends connect(store)(LitElement) {
             rememberMe: { type: Boolean },
             hasStoredWallets: { type: Boolean },
             showPasswordField: { type: Boolean },
-            showPinPages: { type: Array }
+            showPinPages: { type: Array },
+            backedUpWalletJSON: { type: Object }
         }
     }
 
@@ -76,24 +79,33 @@ class LoginSection extends connect(store)(LitElement) {
             {
                 page: 'phrase',
                 linkText: 'Seedphrase',
-                icon: 'vpn_key'
+                icon: 'short_text'
             },
             {
                 page: 'storedWallet',
                 linkText: 'Saved account',
                 icon: 'save'
             },
-            {
-                page: 'seed',
-                linkText: 'V1 seed',
-                icon: 'lock'
-            }
+            // {
+            //     page: 'seed',
+            //     linkText: 'V1 seed',
+            //     icon: 'lock'
+            // },
+            // {
+            //     page: 'backedUpSeed',
+            //     linkText: 'Qortal wallet backup',
+            //     icon: 'insert_drive_file'
+            // }
         ]
         this.showPinPages = [
             'phrase',
             'seed',
-            'V1Seed',
-            'backedUpSeed'
+            'backedUpSeed',
+            'unlockStored'
+        ]
+        this.showPasswordPages = [
+            'backedUpSeed',
+            'unlockStored'
         ]
     }
 
@@ -148,7 +160,8 @@ class LoginSection extends connect(store)(LitElement) {
                     margin-top: -2px;
                 }
                 *[hidden] { 
-                    display:none;
+                    display:none !important;
+                    visibility: hidden;
                 }
                 h1 {
                     padding: 24px;
@@ -182,17 +195,6 @@ class LoginSection extends connect(store)(LitElement) {
                         max-width: 100%;
                     }
                 }
-
-                #birthMonthContainer, #storageBirthMonthContainer {
-                    --paper-input-container-underline: {
-                        display: none;
-                        visibility: hidden;
-                    }
-                }
-                #birthMonthContainer select, #storageBirthMonthContainer select {
-                    padding:8px;
-                    width:100%;
-                }
                 .backButton {
                     padding:14px;
                     text-align:left;
@@ -211,7 +213,7 @@ class LoginSection extends connect(store)(LitElement) {
             
             <div id="loginSection">
                 <div id="pagesContainer">
-                    <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="createAccountPages">
+                    <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="loginPages">
                         <div page="loginOptions">
                             <h3>How would you like to login?</h3>
                             ${this.loginOptions.map(({ page, linkText, icon }) => html`
@@ -248,14 +250,16 @@ class LoginSection extends connect(store)(LitElement) {
                                 `)}
                             </div>
                         </div>
+
                         <div page="phrase" id="phrasePage">
                             <div style="padding:24px;">
                                 <div style="display:flex;">
-                                    <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
+                                    <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">short_text</mwc-icon>
                                     <paper-input style="width:100%;" label="Seedphrase" id="existingSeedPhraseInput" type="password"></paper-input>
                                 </div>
                             </div>
                         </div>
+
                         <div page="seed" id="seedPage">
                             <div style="padding:24px;">
                                 <div style="display:flex;">
@@ -264,6 +268,7 @@ class LoginSection extends connect(store)(LitElement) {
                                 </div>
                             </div>
                         </div>
+
                         <div page="unlockStored" id="unlockStoredPage">
                             <div style="text-align:center;">
                                 <mwc-icon id='accountIcon' style=" padding-bottom:24px;">account_circle</mwc-icon>
@@ -271,32 +276,43 @@ class LoginSection extends connect(store)(LitElement) {
                                 <span style="font-size:14px; font-weight:600;">${this.selectedWallet.address0}</span>
                             </div>
                         </div>
+
+                        <div page="backedUpSeed">
+                            <vaadin-upload id="backedUpSeedUpload" noooooo-auto style="padding-left:24px; padding-right:24px;" max-files="1" accept="application/json">
+                                <mwc-button slot="add-button"><mwc-icon>cloud_upload</mwc-icon>&nbsp; Upload backup</mwc-button>
+                                <div slot="drop-label-icon"></div>
+                                <p slot="drop-label">
+                                    Drag and drop back up here
+                                </p>
+                            </vaadin-upload>
+                        </div>
+
                     </iron-pages>
 
-                    <div style="display:flex;" ?hidden=${!(this.showPinPages.includes(this.selectedPage))}>
+                    <div style="padding-left:24px; padding-right:24px; display:flex;" ?hidden=${!this.showPinPages.includes(this.selectedPage)}>
                         <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
-                        <paper-input style="width:100%;" always-float-labell label="Pin" id="unlockStoredPin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
+                        <paper-input style="width:100%;" always-float-labell label="Pin" id="pin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
                     </div>
 
-                    <iron-collapse style="padding-left:24px; padding-right:24px;" ?opened=${this.showPasswordField} id="passwordCollapse">
+                    <iron-collapse style="padding-left:24px; padding-right:24px;" ?opened=${this.showPasswordField || this.showPasswordPages.includes(this.selectedPage)} id="passwordCollapse">
                         <div style="display:flex;">
                             <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">vpn_key</mwc-icon>
-                            <paper-input style="width:100%;" always-float-labell label="Password" id="unlockStoredPassword" type="password"></paper-input>
+                            <paper-input style="width:100%;" always-float-labell label="Password" id="password" type="password"></paper-input>
                         </div>
                     </iron-collapse>
 
                     <div style="text-align: right; color: var(--mdc-theme-error)">
                         ${this.loginErrorMessage}
                     </div>
-                        ${['seed', 'phrase', 'backedUpSeed', 'V1Seed'].includes(this.selectedPage) ? html`
+                        ${['seed', 'phrase', 'V1Seed'].includes(this.selectedPage) ? html`
                             <!-- Remember me checkbox and fields-->
-                            <div style="text-align:right; padding-right:8px; min-height:40px;">
+                            <div hidden style="text-align:right; padding-right:8px; min-height:40px;">
                                 <p style="vertical-align: top; line-height: 40px; margin:0;">
                                     <label
                                     for="storeCheckbox"
                                     @click=${() => this.shadowRoot.getElementById('storeCheckbox').click()}
                                     >Save in this browser</label>
-                                    <mwc-checkbox id="storeCheckbox" style="margin-bottom:-12px;" @click=${e => { this.rememberMe = !e.target.checked }} ?checked="${this.rememberMe}"></mwc-checkbox>
+                                    <mwc-checkbox id="storeCheckbox" style="margin-bottom:-12px;" @click=${e => { this.showPasswordField = !e.target.checked }} ?checked="${this.showPasswordField}"></mwc-checkbox>
                                 </p>
                             </div>
                         ` : ''}
@@ -304,16 +320,68 @@ class LoginSection extends connect(store)(LitElement) {
                 </div>
 
                 <!-- Passes this.selectedPage to trigger updates -->
-                <div style="margin-left:24px; margin-right:24px;" ?hidden=${!(this.loginOptionIsSelected(this.selectedPage) && (this.hasStoredWallets || this.selectedPage !== 'storedWallet'))}>
-                    <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
-                </div>
+
             </div>
         `
     }
+    /*
+
+                <div style="margin-left:24px; margin-right:24px;" ?hidden=${!(this.loginOptionIsSelected(this.selectedPage) && (this.hasStoredWallets || this.selectedPage !== 'storedWallet'))}>
+                    <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
+                </div>
+    */
 
     firstUpdated () {
         // this.loadingRipple = this.shadowRoot.getElementById('loadingRipple')
         this.loadingRipple = ripple // Just cause I'm lazy...
+
+        const upload = this.shadowRoot.querySelector('#backedUpSeedUpload')
+        upload.addEventListener('max-files-reached-changed', () => {
+            console.log('FILE CHANGED')
+            const file = upload.files[0]
+            console.log(file)
+        })
+
+        upload.addEventListener('upload-before', e => {
+            e.preventDefault()
+            const fr = new FileReader()
+            const file = e.detail.file
+
+            const err = errMessage => {
+                upload.files = [{
+                    name: file.name,
+                    progress: 100,
+                    error: fr.error.message
+                }]
+            }
+
+            fr.onload = () => {
+                if (fr.error) err(fr.error.message)
+                const res = fr.result
+                try {
+                    this.backedUpWalletJSON = JSON.parse(res)
+                    upload.files = [{
+                        name: file.name,
+                        progress: 100,
+                        complete: true
+                    }]
+                } catch (e) {
+                    err(e.message)
+                }
+                console.log(fr)
+            }
+            fr.readAsText(file)
+        })
+        const pages = this.shadowRoot.querySelector('#loginPages')
+        pages.addEventListener('selected-item-changed', () => {
+            if (!pages.selectedItem) {
+                // ...
+            } else {
+                this.updateNext()
+                this.shadowRoot.querySelector('#password').value = ''
+                this.shadowRoot.querySelector('#pin').value = ''
+            }
+        })
     }
 
     selectWallet (wallet) {
@@ -329,13 +397,13 @@ class LoginSection extends connect(store)(LitElement) {
 
     get walletSources () {
         return {
-            get seed () {
+            seed: () => {
                 const seed = this.shadowRoot.querySelector('#v1SeedInput').value
                 return seed
             },
-            get storedWallet () {
+            storedWallet: () => {
                 const wallet = this.selectedWallet
-                const pin = this.shadowRoot.querySelector('#pin').value
+                // const pin = this.shadowRoot.querySelector('#pin').value
                 const password = this.shadowRoot.querySelector('#password').value
                 // const password = pin + '' + birthMonth
                 return {
@@ -343,44 +411,52 @@ class LoginSection extends connect(store)(LitElement) {
                     password
                 }
             },
-            phrase () {
+            phrase: () => {
                 const seedPhrase = this.shadowRoot.querySelector('#existingSeedPhraseInput').value
                 return seedPhrase
+            },
+            backedUpSeed: () => {
+                return this.backedUpWalletJSON
             }
         }
     }
 
-    loginOptionIsSelected () {
-        return this.loginOptions.map(op => op.page).includes(this.selectedPage)
+    loginOptionIsSelected (type) {
+        return this.loginOptions.map(op => op.page).includes(type)
     }
 
     login (e) {
-        const type = this.selectedPage
-        if (!this.loginOptionIsSelected()) {
+        const type = this.selectedPage === 'unlockStored' ? 'storedWallet' : this.selectedPage
+        console.log(type, this.selectedPage)
+        if (!this.loginOptionIsSelected(type)) {
             throw new Error('Login option not selected page')
         }
+
+        const pin = this.shadowRoot.querySelector('#pin').value
+
         // First decrypt...
         this.loadingRipple.open({
             x: e.clientX,
             y: e.clientY
         })
-            .then(type => {
-                const source = this.walletSources[type]
+            .then(() => {
+                const source = this.walletSources[type]()
                 return createWallet(type, source, status => {
                     this.loadingRipple.loadingMessage = status
                 })
             })
             .then(wallet => {
-                store.dispatch(doLogin(wallet, password))
+                store.dispatch(doLogin(wallet, pin))
                 console.log(wallet)
                 store.dispatch(doSelectAddress(wallet.addresses[0]))
+                this.navigate('show-address')
                 // store.dispatch(doUpdateAccountInfo({ name: store.getState().user.storedWallets[wallet.addresses[0].address].name }))
                 const storedWallets = store.getState().user.storedWallets
                 const walletAddress = storedWallets[wallet.addresses[0].address]
                 // STORAGEEEE
                 if (walletAddress) {
-                    const expectedName = storedWallets[wallet.addresses[0].address].name
-                    store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, false))
+                    // const expectedName = storedWallets[wallet.addresses[0].address].name
+                    // store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, false))
                     if (this.rememberMe && type !== 'storedWallet') {
                         //
                     }
@@ -412,7 +488,7 @@ class LoginSection extends connect(store)(LitElement) {
     }
 
     back () {
-        if (['seed', 'phrase', 'storedWallet'].includes(this.selectedPage)) {
+        if (['seed', 'phrase', 'storedWallet', 'backedUpSeed'].includes(this.selectedPage)) {
             this.selectedPage = 'loginOptions'
         } else if (this.selectedPage === 'loginOptions') {
             this.navigate('welcome')
@@ -421,7 +497,30 @@ class LoginSection extends connect(store)(LitElement) {
         }
     }
 
-    next () {}
+    next (e) {
+        this.login(e)
+    }
+
+    updateNext () {
+        if (['phrase', 'seed', 'backedUpSeed', 'unlockStored'].includes(this.selectedPage)) {
+            this.nextText = 'Login'
+            this.nextHidden = false
+            // Should enable/disable the next button based on whether or not pin/password are inputted
+        } else if (['storedWallet', 'loginOptions'].includes(this.selectedPage)) {
+            this.nextHidden = true
+            this.nextText = 'Next'
+        }
+
+        this.updatedProperty()
+    }
+
+    updatedProperty () {
+        this.dispatchEvent(new CustomEvent('updatedProperty', {
+            detail: {},
+            bubbles: true,
+            composed: true
+        }))
+    }
 
     navigate (page) {
         this.dispatchEvent(new CustomEvent('navigate', {
@@ -433,7 +532,7 @@ class LoginSection extends connect(store)(LitElement) {
 
     cleanup () {
         this.wallet = {}
-        this.shadowRoot.querySelector('#birthMonth').value = ''
+        this.shadowRoot.querySelector('#password').value = ''
         this.shadowRoot.querySelector('#pin').value = ''
         this.selectedPage = 'wallets'
     }

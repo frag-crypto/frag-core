@@ -3,7 +3,7 @@ import thunk from 'redux-thunk'
 
 import reducers from './redux/reducers.js'
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-
+console.log(composeEnhancers)
 export const store = createStore(
     reducers,
     composeEnhancers(

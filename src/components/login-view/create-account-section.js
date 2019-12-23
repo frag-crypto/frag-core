@@ -156,6 +156,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
 
                             store.dispatch(doLogin(wallet, password))
                             store.dispatch(doSelectAddress(wallet.addresses[0]))
+                            this.navigate('show-address')
                             this.cleanup()
                             // return this.loadingRipple.fade()
                             return ripple.fade()

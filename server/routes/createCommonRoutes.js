@@ -38,6 +38,44 @@ const createRoutes = config => [
     },
     {
         method: 'GET',
+        path: '/webcomponentsjs/{param*}',
+        handler: {
+            directory: {
+                path: path.join(__dirname, '../../node_modules/@webcomponents/webcomponentsjs/'),
+                redirectToSlash: true,
+                index: true
+            }
+        }
+    },
+    {
+        method: 'GET',
+        path: '/bluebird/{param*}',
+        handler: {
+            directory: {
+                path: path.join(__dirname, '../../node_modules/bluebird/'), redirectToSlash: true, index: true
+            }
+        }
+    },
+    {
+        method: 'GET',
+        path: '/whatwg-fetch/{param*}',
+        handler: {
+            directory: {
+                path: path.join(__dirname, '../../node_modules/whatwg-fetch/'), redirectToSlash: true, index: true
+            }
+        }
+    },
+    {
+        method: 'GET',
+        path: '/systemjs/{param*}',
+        handler: {
+            directory: {
+                path: path.join(__dirname, '../../node_modules/systemjs/'), redirectToSlash: true, index: true
+            }
+        }
+    },
+    {
+        method: 'GET',
         path: '/font/{param*}',
         handler: {
             directory: {
