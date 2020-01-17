@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../../store.js'
+import { Base58 } from '@frag/crypto'
 
 import '@material/mwc-button'
 import '@material/mwc-icon'
@@ -18,7 +19,8 @@ class ShowAddress extends connect(store)(LitElement) {
             backText: { type: String, notify: true },
             hideNav: { type: Boolean, notify: true },
             wallet: { },
-            user: { }
+            user: { },
+            pubicKey: { }
         }
     }
 
@@ -28,6 +30,11 @@ class ShowAddress extends connect(store)(LitElement) {
         this.user = {
             accountInfo: {}
         }
+        this.pubicKey = ''
+    }
+
+    updatePublicKey () {
+        this.pubicKey = Base58.encode(this.wallet.addresses[0].keyPair.publicKey)
     }
 
     firstUpdate () {
@@ -48,6 +55,9 @@ class ShowAddress extends connect(store)(LitElement) {
                     background: rgba(0,0,0,0.1);
                     border-radius: 4px;
                 }
+                span {
+                    font-family: "Roboto mono", monospace;
+                }
                 [hidden] {
                     visibility: hidden;
                     display: none;
@@ -60,8 +70,13 @@ class ShowAddress extends connect(store)(LitElement) {
         return html`
             <div>
                 <h3> Welcome to your Qortal account </h3>
+                <br>
+                <span>Address: </span>
                 <h4>${this.wallet.addresses[0].address}</h4>
+                <span>Public Key: </span>
+                <h4>${Base58.encode(this.wallet.addresses[0].keyPair.publicKey)}</h4>
                 <mwc-button @click=${() => this.download()} ?hidden=${!this.user.storedWallets[this.app.selectedAddress.address]}><mwc-icon>cloud_download</mwc-icon> &nbsp;Download backup</mwc-button>
+                <br>
             </div>
         `
     }

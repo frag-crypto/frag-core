@@ -59,6 +59,11 @@ const generateBuildConfig = ({ elementComponents, functionalComponents, otherOut
 
         },
         inputOptions: {
+            onwarn: (warning, rollupWarn) => {
+                if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+                    rollupWarn(warning)
+                }
+            },
             // core input options
             // external,
             input: {

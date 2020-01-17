@@ -11,6 +11,11 @@ const generateRollupConfig = (file, { outputDir, aliases }) => {
     return {
         inputOptions: {
             input: file.input,
+            onwarn: (warning, rollupWarn) => {
+                if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+                    rollupWarn(warning);
+                }
+            },
             plugins: [
                 resolve({
                     // jsnext: true,
