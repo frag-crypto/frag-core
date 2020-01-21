@@ -54,7 +54,8 @@ export const routes = {
                 address: address.address,
                 color: address.color,
                 nonce: address.nonce,
-                textColor: address.textColor
+                textColor: address.textColor,
+                base58PublicKey: address.base58PublicKey
             }
         })
     },

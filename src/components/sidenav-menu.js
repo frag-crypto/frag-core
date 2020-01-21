@@ -34,7 +34,7 @@ class SidenavMenu extends connect(store)(LitElement) {
                     color: var(--mdc-theme-on-surface);
                     display: block;
                     padding-left:24px;
-                    width: 100%;
+                    width: auto;
                 }
                 ul#sideNavMenu li a mwc-icon {
                     vertical-align: top;

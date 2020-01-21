@@ -74,7 +74,7 @@ class ShowAddress extends connect(store)(LitElement) {
                 <span>Address: </span>
                 <h4>${this.wallet.addresses[0].address}</h4>
                 <span>Public Key: </span>
-                <h4>${Base58.encode(this.wallet.addresses[0].keyPair.publicKey)}</h4>
+                <h4>${Base58.encode(this.wallet.addresses[0].base58PublicKey)}</h4>
                 <mwc-button @click=${() => this.download()} ?hidden=${!this.user.storedWallets[this.app.selectedAddress.address]}><mwc-icon>cloud_download</mwc-icon> &nbsp;Download backup</mwc-button>
                 <br>
             </div>

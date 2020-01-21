@@ -5,7 +5,8 @@ const config = {
         protocol: 'http',
         domain: '51.83.114.66',
         port: 62391,
-        pingInterval: 10 * 60 * 1000
+        pingInterval: 10 * 60 * 1000,
+        enableManagement: true
     },
     version: process.env.npm_package_version,
     // user: {

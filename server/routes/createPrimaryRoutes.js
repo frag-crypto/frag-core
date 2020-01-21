@@ -78,6 +78,7 @@ const createPrimaryRoutes = (config, plugins) => {
                         // protocol :// path:port / blockexplorer.json?addr=Qwqfdweqfdwefwef
                         // const url = request.url.href.slice(7)// Chop out "/proxy/"
                         const url = request.url.pathname.slice(7) + request.url.search// Chop out "/proxy/"
+                        if (url.includes('/admin/') && !config.user.enableManagement) return { uri: '' }
                         // let url = remote.url + "/" + request.url.href.replace('/' + remote.path + '/', '')
                         // console.log(url)
                         // console.log(request)

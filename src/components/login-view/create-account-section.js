@@ -323,7 +323,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                 Welcome to QORT, you will find it to be similar to that of an RPG game, you, as a minter on the QORT network (if you choose to become one) will have the chance to level your account up, giving you both more of the QORT block reward and also larger influence over the network in terms of voting on decisions for the platform. 
                             </p>
                             <p style="margin-bottom:0;">
-                                The first step, is to create your QORT account! Below, you will see a randomly generated ‘seedphrase’. This phrase is used as your private key generator for your blockchain account in QORT. Please take a screen shot or write down this phrase and save it somewhere safe. This is extremely important information for your QORT account.
+                                The first step, is to create your QORT account! Below, you will see a randomly generated ‘seedphrase’. This phrase is used as your private key generator for your blockchain account in QORT. Please write this phrase down and save it somewhere safe. This is extremely important information for your QORT account.
                             </p>
 
                             <!-- border-bottom: 2px solid var(--mdc-theme-primary); border-top: 2px solid var(--mdc-theme-primary); -->

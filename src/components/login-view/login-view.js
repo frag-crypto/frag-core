@@ -300,8 +300,9 @@ class LoginView extends connect(store)(LitElement) {
                 }
             </style>
 
-            <!-- <div class="login-page" ?hidden=${this.loggedIn}> -->
-            <div class="login-page">
+                <!-- These are to enable/disable the actual logging in... can just leave it on the show-address page.   -->
+            <div class="login-page" ?hidden=${this.loggedIn}>
+            <!-- <div class="login-page"> -->
                 <div id="particles-js"></div>
                 <div class="login-card-container">
                     <img class="qortal-logo" src="${this.config.coin.logo}">
