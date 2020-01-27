@@ -159,13 +159,13 @@ class LoginView extends connect(store)(LitElement) {
                 .login-card-container {
                     max-width:1240px;
                     max-height:var(--window-height);
-
+/* 
                     padding-right: 15px;
-                    padding-left: 15px;
+                    padding-left: 15px; */
                     margin-right: auto;
                     margin-left: auto;
 
-                    width: calc(100vw - 30px);
+                    width: calc(100vw);
                 }
 
                 .qortal-logo {
@@ -184,6 +184,9 @@ class LoginView extends connect(store)(LitElement) {
                     height: var(--window-height);
                     overflow:hidden;
                 }
+                #loginContainerPages {
+                    display:inline;
+                }
                 #loginContainerPages [page] {
                     /* background: var(--mdc-theme-surface); */
                     background: none;
@@ -198,8 +201,9 @@ class LoginView extends connect(store)(LitElement) {
                     text-align:center;
                     z-index:0;
 
-                    box-shadow: var(--shadow-4);
-                    padding: 12px;
+                    /* box-shadow: var(--shadow-4); */
+                    /* padding: 12px; */
+                    padding:0;
                     border: 0;
                     border-radius: 4px;
                 }
@@ -231,6 +235,7 @@ class LoginView extends connect(store)(LitElement) {
                     /* Desktop/tablet */
                     .login-card {
                         /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
+                        max-width:460px;
                     }
                     #loginContainerPages [page] {
                         /* border: 1px solid var(--mdc-theme-on-surface); */
@@ -244,6 +249,10 @@ class LoginView extends connect(store)(LitElement) {
                 }
                 @media only screen and (max-width: ${getComputedStyle(document.body).getPropertyValue('--layout-breakpoint-tablet')}) {
                     /* Mobile */
+                    .qortal-logo {
+                        display:none;
+                        visibility:hidden;
+                    }
                     .login-page {
                         background: var(--mdc-theme-surface);
                     }
@@ -257,10 +266,6 @@ class LoginView extends connect(store)(LitElement) {
                     .backButton {
                         text-align: left;
                         padding-left:12px;
-                    }
-                    .section {
-                        height: calc(var(--window-height) - 60px);
-                        display:block;
                     }
                 }
 

@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 
 import '@material/mwc-button'
+// import '../../libraries/wc-typed-js.js'
 
 class WelcomePage extends LitElement {
     static get properties () {
@@ -49,23 +50,54 @@ class WelcomePage extends LitElement {
                 <!-- <h1>Karma</h1> -->
                 <!-- <img src="${this.config.coin.logo}" style="max-width: 300px; width:60%;"> -->
                 <!-- <p>Enter the Karmaconomy</p> -->
+
+
+
+                            <wc-typed-js
+                strings="smart contracts, a decentralized trade portal, the future, Qortal."
+                smartBackspace="true"
+                backDelay="1000"
+                backSpeed="30"
+                @complete=${e => {
+                    console.log('poinis', e.detail.typed)
+                    e.detail.typed.options.showCursor = false
+                    delete e.detail.typed.cursor
+                }}
+                style="height:60px;">
+                <h2 style="font-weight:100; font-family: 'Roboto mono', monospace; white-space: nowrap; float:right;">Welcome to <span class="typing"></span></h2>
+            </wc-typed-js>
     */
 
     render () {
-        return html`            
-            <div class='welcome-page'>
-                <mwc-button
-                    @click=${() => this.navigate('create-account')}
-                    raised
-                    style="border-top:0; border-bottom:0;"
-                >
-                    <!--outlined -->
-                    Create account
-                </mwc-button>
+        return html`
+            <style>
+                #mobile-logo {
+                    
+                }
+                 @media only screen and (min-width: ${getComputedStyle(document.body).getPropertyValue('--layout-breakpoint-tablet')}) {
+                    /* Desktop/tablet */
+                    #mobile-logo{
+                        display:hidden;
+                        visibility:none;
+                    }
+                 }
+            </style>
+            <div class='welcome-page' style="overflow:hidden;">
+                <div id="mobile-logo">
+
+                </div>
                 <mwc-button
                     @click=${() => this.navigate('login')}
                 >
                     Login
+                </mwc-button>
+                <mwc-button
+                    @click=${() => this.navigate('create-account')}
+                    outlined
+                    style="border-top:0; border-bottom:0;"
+                >
+                    <!--outlined -->
+                    Create account
                 </mwc-button>
                 <!-- <div style="text-align: right; padding:12px;">
                     <br>

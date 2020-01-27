@@ -13,15 +13,18 @@ import { doStoreWallet } from '../../redux/user/user-actions.js'
 // import { registerUsername } from 'frag-qora-crypto'
 
 // import { logIn } from '../../actions/app-actions.js'
-import '@polymer/iron-pages'
 import '@material/mwc-button'
-// import '@material/mwc-checkbox'
-import '@polymer/paper-checkbox/paper-checkbox.js'
-import '@polymer/iron-label/iron-label.js'
+import '@material/mwc-checkbox'
 import '@material/mwc-icon'
 import '@material/mwc-formfield'
+// import '@material/mwc-checkbox'
+// import '@polymer/paper-checkbox/paper-checkbox.js'
+
+import '@polymer/iron-pages'
+import '@polymer/iron-label/iron-label.js'
 import '@polymer/paper-input/paper-input-container.js'
 import '@polymer/paper-input/paper-input.js'
+
 import 'random-sentence-generator'
 
 // import './loading-ripple.js'
@@ -208,6 +211,14 @@ class CreateAccountSection extends connect(store)(LitElement) {
         this.saveAccount = true
         this.createAccountLoading = false
     }
+    /*
+                               <iron-label
+                                    style="color:var(--mdc-theme-on-surface); display:inline-flex; cursor: pointer;" >
+                                    I have saved my seedphrase &nbsp;
+                                    <paper-checkbox
+                                    @click=${e => { this.hasSavedSeedphrase = e.target.checked; this.updateNext() }} ?checked="${this.hasSavedSeedphrase}" iron-label-target></paper-checkbox>
+                                </iron-label>
+    */
 
     render () {
         return html`
@@ -222,11 +233,12 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     flex-direction: column;
                 }
                 #createAccountSection {
-                    max-height: var(--window-height);
+                    max-height: calc(var(--window-height) - 56px);
                     max-width: 440px;
                     /* max-height: 500px; */
                     max-height:calc(100% - 100px);
                     padding: 0 12px;
+                    overflow-y:auto;
                 }
                 #createAccountPages {
                     flex-shrink:1;
@@ -254,12 +266,19 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     /* Mobile */
                     #createAccountSection {
                         /* max-height: calc(var(--window-height) - 204px); */
-                        max-height: calc(var(--window-height) - 38px);
+                        /* max-height: calc(var(--window-height) - 38px); */
                         /* height: calc(var(--window-height) - 38px); */
                         /* max-width:var(--layout-breakpoint-tablet); */
                         max-width: 100%;
-                        height:100%;
+                        /* height:100%; */
+                        height: calc(var(--window-height) - 56px);
                     }
+
+                    #infoContent{
+                        height:auto;
+                        min-height: calc(var(--window-height) - 96px)
+                    }
+
                     /* #tosContent { */
                     /* .section-content {
                         max-height:calc(var(--window-height) - 166px);
@@ -273,9 +292,6 @@ class CreateAccountSection extends connect(store)(LitElement) {
 
                 #infoContent p {
                     text-align: justify;
-                }
-                #infoContent{
-                    /* padding:12px; */
                 }
                 @keyframes fade {
                     from {
@@ -352,22 +368,19 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                     @click=${() => this.shadowRoot.getElementById('randSentence').generate()}
                                 ></paper-icon-button>
                             </div>
-                            <br>
                              <!-- <div style="display:flex;">
                                 <mwc-icon style="padding: 20px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
                                 <paper-input style="width:100%;" id="seedPhrase" always-float-labell label="Repeat seed phrase"></paper-input>
                             </div> -->
-                            <br>
-                            <div style="text-align:right;">
-                                <iron-label 
-                                    style="color:var(--mdc-theme-on-surface); display:inline-flex; cursor: pointer;" >
-                                    I have saved my seedphrase &nbsp;
-                                    <paper-checkbox
-                                    @click=${e => { this.hasSavedSeedphrase = e.target.checked; this.updateNext() }} ?checked="${this.hasSavedSeedphrase}" iron-label-target></paper-checkbox>
-                                </iron-label>
+                        </div>
+                        <div style="text-align:right; vertical-align: top; line-height: 40px; margin:0;">
+                                <label
+                                    for="hasSavedSeedphraseCheckbox"
+                                    @click=${() => this.shadowRoot.getElementById('hasSavedSeedphraseCheckbox').click()}
+                                    >I have saved my seedphrase</label>
+                                    <mwc-checkbox id="hasSavedSeedphraseCheckbox" @click=${e => { this.hasSavedSeedphrase = !e.target.checked; this.updateNext() }} ?checked=${this.hasSavedSeedphrase}></mwc-checkbox>
                                 <!-- <paper-checkbox>I have saved my seedphrase!</paper-checkbox> -->
                             </div>
-                        </div>
                     </div>
 
                     <div page="password">

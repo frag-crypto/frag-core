@@ -6,6 +6,7 @@ import { store } from '../../store.js'
 import '@polymer/iron-pages'
 import '@material/mwc-button'
 import '@material/mwc-checkbox'
+import '@material/mwc-textfield'
 import '@material/mwc-icon'
 import '@material/mwc-formfield'
 import '@polymer/paper-input/paper-input-container.js'
@@ -91,11 +92,11 @@ class LoginSection extends connect(store)(LitElement) {
             //     linkText: 'V1 seed',
             //     icon: 'lock'
             // },
-            // {
-            //     page: 'backedUpSeed',
-            //     linkText: 'Qortal wallet backup',
-            //     icon: 'insert_drive_file'
-            // }
+            {
+                page: 'backedUpSeed',
+                linkText: 'Qortal wallet backup',
+                icon: 'insert_drive_file'
+            }
         ]
         this.showPinPages = [
             'phrase',
@@ -127,7 +128,7 @@ class LoginSection extends connect(store)(LitElement) {
                 .wallet {
                     /* max-width: 300px; */
                     position: relative;
-                    padding: 12px 24px;
+                    padding: 12px;
                     cursor: pointer;
                     display: flex;
                 }
@@ -150,7 +151,7 @@ class LoginSection extends connect(store)(LitElement) {
                 .login-option {
                     max-width: 300px;
                     position: relative;
-                    padding: 16px 24px 8px 24px;
+                    padding: 16px 0 8px 12px;
                     cursor: pointer;
                     display: flex;
                 }
@@ -191,6 +192,9 @@ class LoginSection extends connect(store)(LitElement) {
                         overflow-y:auto;
                         overflow-x:hidden;
                     }
+                    #loginSection {
+                        height: calc(var(--window-height) - 56px);
+                    }
                     .wallet {
                         max-width: 100%;
                     }
@@ -213,7 +217,7 @@ class LoginSection extends connect(store)(LitElement) {
             
             <div id="loginSection">
                 <div id="pagesContainer">
-                    <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="loginPages">
+                    <iron-pages style="padding: 0;" selected="${this.selectedPage}" attr-for-selected="page" id="loginPages">
                         <div page="loginOptions">
                             <h3>How would you like to login?</h3>
                             ${this.loginOptions.map(({ page, linkText, icon }) => html`
@@ -230,8 +234,10 @@ class LoginSection extends connect(store)(LitElement) {
                         </div>
 
                         <div page="storedWallet" id="walletsPage">
-                            <h1 style="padding:0; padding-left:24px;">Your accounts</h1>
-                            <p style="margin:0; padding: 0 0 12px 24px;">Click your account to login with it</p>
+                            <div style="padding-left:12px;">
+                                <h1 style="padding:0;">Your accounts</h1>
+                                <p style="margin:0; padding: 0 0 12px 0;">Click your account to login with it</p>
+                            </div>
                             <div id="wallets">
                                 ${(Object.entries(this.wallets || {}).length < 1) ? html`
                                     <p style="padding: 0 24px 12px 24px;">You need to create or save an account before you can log in!</p>
@@ -252,10 +258,11 @@ class LoginSection extends connect(store)(LitElement) {
                         </div>
 
                         <div page="phrase" id="phrasePage">
-                            <div style="padding:24px;">
+                            <div style="padding:0;">
                                 <div style="display:flex;">
-                                    <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">short_text</mwc-icon>
-                                    <paper-input style="width:100%;" label="Seedphrase" id="existingSeedPhraseInput" type="password"></paper-input>
+                                    <!-- <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">short_text</mwc-icon> -->
+                                    <mwc-textfield icon="short_text" style="width:100%;" label="Seedphrase" id="existingSeedPhraseInput" type="password"></mwc-textfield>
+                                    <!-- <paper-input style="width:100%;" label="Seedphrase" id="existingSeedPhraseInput" type="password"></paper-input> -->
                                 </div>
                             </div>
                         </div>
@@ -263,8 +270,9 @@ class LoginSection extends connect(store)(LitElement) {
                         <div page="seed" id="seedPage">
                             <div style="padding:24px;">
                                 <div style="display:flex;">
-                                    <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
-                                    <paper-input style="width:100%;" label="V1 Seed" id="v1SeedInput" type="password"></paper-input>
+                                    <!-- <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon> -->
+                                    <mwc-textfield style="width:100%;" label="V1 Seed" id="v1SeedInput" type="password"></mwc-textfield>
+                                    <!-- <paper-input style="width:100%;" label="V1 Seed" id="v1SeedInput" type="password"></paper-input> -->
                                 </div>
                             </div>
                         </div>
@@ -273,7 +281,7 @@ class LoginSection extends connect(store)(LitElement) {
                             <div style="text-align:center;">
                                 <mwc-icon id='accountIcon' style=" padding-bottom:24px;">account_circle</mwc-icon>
                                 <br>
-                                <span style="font-size:14px; font-weight:600;">${this.selectedWallet.address0}</span>
+                                <span style="font-size:14px; font-weight:100; font-family: 'Roboto Mono', monospace;">${this.selectedWallet.address0}</span>
                             </div>
                         </div>
 
@@ -289,15 +297,17 @@ class LoginSection extends connect(store)(LitElement) {
 
                     </iron-pages>
 
-                    <div style="padding-left:24px; padding-right:24px; display:flex;" ?hidden=${!this.showPinPages.includes(this.selectedPage)}>
-                        <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
-                        <paper-input style="width:100%;" always-float-labell label="Pin" id="pin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
+                    <div style="padding-left:0 24px; display:flex;" ?hidden=${!this.showPinPages.includes(this.selectedPage)}>
+                        <!-- <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon> -->
+                        <mwc-textfield icon="lock" pattern="[0-9]*" style="width:100%;" maxLength="4" label="Pin" id="pin" type="password"></mwc-textfield>
+                        <!-- <paper-input style="width:100%;" always-float-labell label="Pin" id="pin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input> -->
                     </div>
 
-                    <iron-collapse style="padding-left:24px; padding-right:24px;" ?opened=${this.showPasswordField || this.showPasswordPages.includes(this.selectedPage)} id="passwordCollapse">
+                    <iron-collapse style="" ?opened=${this.showPasswordField || this.showPasswordPages.includes(this.selectedPage)} id="passwordCollapse">
                         <div style="display:flex;">
-                            <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">vpn_key</mwc-icon>
-                            <paper-input style="width:100%;" always-float-labell label="Password" id="password" type="password"></paper-input>
+                            <!-- <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">vpn_key</mwc-icon> -->
+                            <mwc-textfield icon="vpn_key" style="width:100%;" label="Password" id="password" type="password"></mwc-textfield>
+                            <!-- <paper-input style="width:100%;" always-float-labell label="Password" id="password" type="password"></paper-input> -->
                         </div>
                     </iron-collapse>
 
