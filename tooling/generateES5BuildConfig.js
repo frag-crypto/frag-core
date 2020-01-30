@@ -1,7 +1,7 @@
 const babel = require('rollup-plugin-babel')
 // const eslint = require('rollup-plugin-eslint')
 const resolve = require('rollup-plugin-node-resolve')
-const uglify = require('rollup-plugin-uglify').uglify
+// const uglify = require('rollup-plugin-uglify').uglify
 const commonjs = require('rollup-plugin-commonjs')
 const progress = require('rollup-plugin-progress')
 const path = require('path')

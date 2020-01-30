@@ -91,11 +91,11 @@ class LoginSection extends connect(store)(LitElement) {
                 linkText: 'Saved account',
                 icon: 'save'
             },
-            // {
-            //     page: 'seed',
-            //     linkText: 'V1 seed',
-            //     icon: 'lock'
-            // },
+            {
+                page: 'seed',
+                linkText: 'Qora seed',
+                icon: 'clear_all'
+            },
             {
                 page: 'backedUpSeed',
                 linkText: 'Qortal wallet backup',
