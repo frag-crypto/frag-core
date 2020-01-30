@@ -15,7 +15,6 @@ import '@material/mwc-icon'
 
 import '@polymer/iron-pages'
 import '@polymer/paper-icon-button/paper-icon-button.js'
-import '@polymer/paper-spinner/paper-spinner-lite.js'
 
 // import particleJS from 'particle.js'
 import './particle.js'
@@ -226,7 +225,7 @@ class LoginView extends connect(store)(LitElement) {
                 #login-pages-nav {
                     text-align: left;
                     /* padding-bottom:8px; */
-                    padding: 12px 12px 8px 12px;
+                    padding: 12px 0 8px 0;
                 }
                 #nav-next {
                     float: right;

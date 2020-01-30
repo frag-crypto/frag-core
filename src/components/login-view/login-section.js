@@ -3,20 +3,19 @@ import { connect } from 'pwa-helpers'
 import { store } from '../../store.js'
 
 // import { logIn } from '../../actions/app-actions.js'
-import '@polymer/iron-pages'
 import '@material/mwc-button'
 import '@material/mwc-checkbox'
 import '@material/mwc-textfield'
 import '@material/mwc-icon'
+import '@material/mwc-dialog'
 import '@material/mwc-formfield'
+
+import '@polymer/iron-pages'
 import '@polymer/paper-input/paper-input-container.js'
 import '@polymer/paper-input/paper-input.js'
 import '@polymer/paper-ripple'
 import '@polymer/iron-collapse'
-// import '@polymer/paper-spinner/paper-spinner-lite.js'
-// import '@polymer/iron-flex-layout/iron-flex-layout-classes.js'
-import '@vaadin/vaadin-upload'
-// import '@vaadin/vaadin-upload/theme/material/vaadin-upload.js'
+import '@polymer/paper-spinner/paper-spinner-lite.js'
 
 import { doLogin, doSelectAddress } from '../../redux/app/app-actions.js'
 // import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
@@ -26,6 +25,8 @@ import { doLogin, doSelectAddress } from '../../redux/app/app-actions.js'
 // import { createWallet } from 'frag-qora-crypto'
 import { createWallet } from '@frag/crypto'
 
+import snackbar from '../../functional-components/snackbar.js'
+import '../../custom-elements/frag-file-input.js'
 // import ripple from '../loading-ripple.js'
 import ripple from '../../functional-components/loading-ripple.js'
 
@@ -53,8 +54,9 @@ class LoginSection extends connect(store)(LitElement) {
             rememberMe: { type: Boolean },
             hasStoredWallets: { type: Boolean },
             showPasswordField: { type: Boolean },
-            showPinPages: { type: Array },
-            backedUpWalletJSON: { type: Object }
+            backedUpWalletJSON: { type: Object },
+
+            backedUpSeedLoading: { type: Boolean }
         }
     }
 
@@ -71,11 +73,13 @@ class LoginSection extends connect(store)(LitElement) {
         this.nextHidden = true
         this.backText = 'Back'
 
+        this.backedUpSeedLoading = false
         this.hasStoredWallets = Object.keys(store.getState().user.storedWallets).length > 0
         this.selectedPage = this.hasStoredWallets ? 'storedWallet' : 'loginOptions'
         this.selectedWallet = {}
         this.loginErrorMessage = ''
         this.rememberMe = false
+
         this.loginOptions = [
             {
                 page: 'phrase',
@@ -98,14 +102,8 @@ class LoginSection extends connect(store)(LitElement) {
                 icon: 'insert_drive_file'
             }
         ]
-        this.showPinPages = [
-            'phrase',
-            'seed',
-            'backedUpSeed',
-            'unlockStored'
-        ]
         this.showPasswordPages = [
-            'backedUpSeed',
+            'unlockBackedUpSeed',
             'unlockStored'
         ]
     }
@@ -117,6 +115,8 @@ class LoginSection extends connect(store)(LitElement) {
                     padding:0;
                     text-align:left;
                     padding-top: 12px;
+                    --paper-spinner-color: var(--mdc-theme-primary);
+                    --paper-spinner-stroke-width: 2px;
                 }
                 #wallets {
                     max-height: 400px;
@@ -204,8 +204,6 @@ class LoginSection extends connect(store)(LitElement) {
                     text-align:left;
                 }
                 iron-pages h3{
-                    padding-right: 24px;
-                    padding-left: 24px;
                     color: #333;
                     font-family: "Roboto mono", monospace;
                     font-weight: 300;
@@ -286,22 +284,20 @@ class LoginSection extends connect(store)(LitElement) {
                         </div>
 
                         <div page="backedUpSeed">
-                            <vaadin-upload id="backedUpSeedUpload" noooooo-auto style="padding-left:24px; padding-right:24px;" max-files="1" accept="application/json">
-                                <mwc-button slot="add-button"><mwc-icon>cloud_upload</mwc-icon>&nbsp; Upload backup</mwc-button>
-                                <div slot="drop-label-icon"></div>
-                                <p slot="drop-label">
-                                    Drag and drop back up here
-                                </p>
-                            </vaadin-upload>
+                            ${!this.backedUpSeedLoading ? html`
+                                <h3>Upload your qortal backup</h3>
+                                <!-- (qortal_backup_Q123456789abcdefghkjkmnpqrs.json) -->
+                                <frag-file-input accept=".zip,.json" @file-read-success="${e => this.loadBackup(e.detail.result)}"></frag-file-input>
+                            ` : html`
+                                <paper-spinner-lite active style="display: block; margin: 0 auto;"></paper-spinner-lite>
+                            `}
+                        </div>
+
+                        <div page="unlockBackedUpSeed">
+                            <h3>Decrypt backup</h3>
                         </div>
 
                     </iron-pages>
-
-                    <div style="padding-left:0 24px; display:flex;" ?hidden=${!this.showPinPages.includes(this.selectedPage)}>
-                        <!-- <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon> -->
-                        <mwc-textfield icon="lock" pattern="[0-9]*" style="width:100%;" maxLength="4" label="Pin" id="pin" type="password"></mwc-textfield>
-                        <!-- <paper-input style="width:100%;" always-float-labell label="Pin" id="pin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input> -->
-                    </div>
 
                     <iron-collapse style="" ?opened=${this.showPasswordField || this.showPasswordPages.includes(this.selectedPage)} id="passwordCollapse">
                         <div style="display:flex;">
@@ -345,43 +341,6 @@ class LoginSection extends connect(store)(LitElement) {
         // this.loadingRipple = this.shadowRoot.getElementById('loadingRipple')
         this.loadingRipple = ripple // Just cause I'm lazy...
 
-        const upload = this.shadowRoot.querySelector('#backedUpSeedUpload')
-        upload.addEventListener('max-files-reached-changed', () => {
-            console.log('FILE CHANGED')
-            const file = upload.files[0]
-            console.log(file)
-        })
-
-        upload.addEventListener('upload-before', e => {
-            e.preventDefault()
-            const fr = new FileReader()
-            const file = e.detail.file
-
-            const err = errMessage => {
-                upload.files = [{
-                    name: file.name,
-                    progress: 100,
-                    error: fr.error.message
-                }]
-            }
-
-            fr.onload = () => {
-                if (fr.error) err(fr.error.message)
-                const res = fr.result
-                try {
-                    this.backedUpWalletJSON = JSON.parse(res)
-                    upload.files = [{
-                        name: file.name,
-                        progress: 100,
-                        complete: true
-                    }]
-                } catch (e) {
-                    err(e.message)
-                }
-                console.log(fr)
-            }
-            fr.readAsText(file)
-        })
         const pages = this.shadowRoot.querySelector('#loginPages')
         pages.addEventListener('selected-item-changed', () => {
             if (!pages.selectedItem) {
@@ -389,7 +348,6 @@ class LoginSection extends connect(store)(LitElement) {
             } else {
                 this.updateNext()
                 this.shadowRoot.querySelector('#password').value = ''
-                this.shadowRoot.querySelector('#pin').value = ''
             }
         })
     }
@@ -405,6 +363,36 @@ class LoginSection extends connect(store)(LitElement) {
         this.hasStoredWallets = this.wallets.length > 0
     }
 
+    loadBackup (file) {
+        let error = ''
+        let pf
+        this.selectedPage = 'unlockBackedUpSeed'
+
+        try {
+            pf = JSON.parse(file)
+        } catch (e) {
+            this.loginErrorMessage = 'Backup must be valid JSON'
+        }
+
+        try {
+            const requiredFields = ['address0', 'salt', 'iv', 'version', 'encryptedSeed', 'mac', 'kdfThreads']
+            for (const field of requiredFields) {
+                if (!(field in pf)) throw field + ' not found in JSON'
+            }
+        } catch (e) {
+            error = e
+        }
+
+        if (error !== '') {
+            snackbar.add({
+                labelText: error
+            })
+            this.selectedPage = 'backedUpSeed'
+            return
+        }
+        this.backedUpWalletJSON = pf
+    }
+
     get walletSources () {
         return {
             seed: () => {
@@ -413,9 +401,8 @@ class LoginSection extends connect(store)(LitElement) {
             },
             storedWallet: () => {
                 const wallet = this.selectedWallet
-                // const pin = this.shadowRoot.querySelector('#pin').value
-                const password = this.shadowRoot.querySelector('#password').value
-                // const password = pin + '' + birthMonth
+                // const password = this.shadowRoot.querySelector('#password').value
+                const password = this.shadowRoot.getElementById('password').value
                 return {
                     wallet,
                     password
@@ -426,7 +413,12 @@ class LoginSection extends connect(store)(LitElement) {
                 return seedPhrase
             },
             backedUpSeed: () => {
-                return this.backedUpWalletJSON
+                const wallet = this.backedUpWalletJSON
+                const password = this.shadowRoot.getElementById('password').value
+                return {
+                    password,
+                    wallet
+                }
             }
         }
     }
@@ -436,13 +428,12 @@ class LoginSection extends connect(store)(LitElement) {
     }
 
     login (e) {
-        const type = this.selectedPage === 'unlockStored' ? 'storedWallet' : this.selectedPage
-        console.log(type, this.selectedPage)
+        let type = this.selectedPage === 'unlockStored' ? 'storedWallet' : this.selectedPage
+        type = type === 'unlockBackedUpSeed' ? 'backedUpSeed' : type
+
         if (!this.loginOptionIsSelected(type)) {
             throw new Error('Login option not selected page')
         }
-
-        const pin = this.shadowRoot.querySelector('#pin').value
 
         // First decrypt...
         this.loadingRipple.open({
@@ -456,7 +447,7 @@ class LoginSection extends connect(store)(LitElement) {
                 })
             })
             .then(wallet => {
-                store.dispatch(doLogin(wallet, pin))
+                store.dispatch(doLogin(wallet))
                 console.log(wallet)
                 store.dispatch(doSelectAddress(wallet.addresses[0]))
                 this.navigate('show-address')
@@ -482,19 +473,6 @@ class LoginSection extends connect(store)(LitElement) {
                 console.error(e)
                 return this.loadingRipple.close()
             })
-        // this.loginFunction({
-        //     x: e.clientX,
-        //     y: e.clientY
-        // }, {
-        //     save: false,
-        //     sourceType: 'storedWallet',
-        //     source: {
-        //         wallet,
-        //         password: pin + '' + birthMonth
-        //     }
-        // }).then(() => this.cleanup()).catch(e => {
-        //     this.loginErrorMessage = e
-        // })
     }
 
     back () {
@@ -504,6 +482,8 @@ class LoginSection extends connect(store)(LitElement) {
             this.navigate('welcome')
         } else if (this.selectedPage === 'unlockStored') {
             this.selectedPage = 'storedWallet'
+        } else if (this.selectedPage === 'unlockBackedUpSeed') {
+            this.selectedPage = 'backedUpSeed'
         }
     }
 
@@ -512,11 +492,11 @@ class LoginSection extends connect(store)(LitElement) {
     }
 
     updateNext () {
-        if (['phrase', 'seed', 'backedUpSeed', 'unlockStored'].includes(this.selectedPage)) {
+        if (['phrase', 'seed', 'unlockStored', 'unlockBackedUpSeed'].includes(this.selectedPage)) {
             this.nextText = 'Login'
             this.nextHidden = false
-            // Should enable/disable the next button based on whether or not pin/password are inputted
-        } else if (['storedWallet', 'loginOptions'].includes(this.selectedPage)) {
+            // Should enable/disable the next button based on whether or not password are inputted
+        } else if (['storedWallet', 'loginOptions', 'backedUpSeed'].includes(this.selectedPage)) {
             this.nextHidden = true
             this.nextText = 'Next'
         }
@@ -543,7 +523,6 @@ class LoginSection extends connect(store)(LitElement) {
     cleanup () {
         this.wallet = {}
         this.shadowRoot.querySelector('#password').value = ''
-        this.shadowRoot.querySelector('#pin').value = ''
         this.selectedPage = 'wallets'
     }
 }

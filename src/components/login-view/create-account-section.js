@@ -12,8 +12,11 @@ import { doStoreWallet } from '../../redux/user/user-actions.js'
 // import { registerUsername } from '../../api/registerUsername.js'
 // import { registerUsername } from 'frag-qora-crypto'
 
+import snackbar from '../../functional-components/snackbar.js'
+
 // import { logIn } from '../../actions/app-actions.js'
 import '@material/mwc-button'
+import '@material/mwc-icon-button'
 import '@material/mwc-checkbox'
 import '@material/mwc-icon'
 import '@material/mwc-formfield'
@@ -27,19 +30,7 @@ import '@polymer/paper-input/paper-input.js'
 
 import 'random-sentence-generator'
 
-// import './loading-ripple.js'
-// import ripple from '../loading-ripple.js'
 import ripple from '../../functional-components/loading-ripple.js'
-// import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
-// import { doUpdateAccountName } from '../../redux/user/user-actions.js'
-
-// import '@polymer/paper-spinner/paper-spinner-lite.js'
-// import '@polymer/iron-flex-layout/iron-flex-layout-classes.js'
-
-// import '@polymer/iron-pages'
-// import '@polymer/paper-icon-button/paper-icon-button.js'
-// import { MDCTextField } from '@material/textfield'
-// const textField = new MDCTextField(document.querySelector('.mdc-text-field'))
 
 let lastPassword = ''
 
@@ -112,31 +103,27 @@ class CreateAccountSection extends connect(store)(LitElement) {
                 next: e => {
                     // Create account and login :)
                     this.createAccountLoading = true
-
-                    const pin = this.shadowRoot.getElementById('createPin').value
                     const password = this.shadowRoot.getElementById('password').value
                     console.log(this.shadowRoot.getElementById('password'))
 
-                    if (!(pin.length === 4)) {
-                        this.error = true
-                        this.errorMessage = 'Please enter a 4 digit pin'
+                    if (password === '') {
+                        snackbar.add({
+                            labelText: 'Please enter a password',
+                            dismiss: true
+                        })
                         return
                     }
 
-                    if (password === '') {
-                        this.error = true
-                        this.errorMessage = 'Please enter a password'
-                    }
-
                     if (password.length < 8 && lastPassword !== password) {
-                        this.error = true
-                        this.errorMessage = 'Your password is less than 8 characters! This is not recommended. You can press login again to ignore this warning.'
+                        snackbar.add({
+                            labelText: 'Your password is less than 8 characters! This is not recommended. You can press login again to ignore this warning.',
+                            dismiss: true
+                        })
                         lastPassword = password
                         return
                     }
 
                     const seedPhrase = this.shadowRoot.getElementById('randSentence').parsedString
-                    // const password = this.shadowRoot.getElementById('createPin').value + this.shadowRoot.getElementById('birthMonth').value
 
                     // this.loadingRipple.welcomeMessage = welcomeMessage + ', ' + username
                     ripple.welcomeMessage = welcomeMessage
@@ -176,8 +163,12 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                 })
                         })
                         .catch(e => {
-                            this.error = true
-                            this.errorMessage = e
+                            snackbar.add({
+                                labelText: e,
+                                dismiss: true
+                            })
+                            // this.error = true
+                            // this.errorMessage = e
                             console.error('== Error == \n', e)
                             store.dispatch(doLogout())
                             // this.loadingRipple.close()
@@ -201,7 +192,6 @@ class CreateAccountSection extends connect(store)(LitElement) {
 
     cleanup () { // Practically the constructor...what a waste
         this.shadowRoot.getElementById('randSentence').generate()
-        this.shadowRoot.getElementById('createPin').value = ''
         this.shadowRoot.getElementById('password').value = ''
         this.hasSavedSeedphrase = false
         this.selectPage('info')
@@ -211,14 +201,6 @@ class CreateAccountSection extends connect(store)(LitElement) {
         this.saveAccount = true
         this.createAccountLoading = false
     }
-    /*
-                               <iron-label
-                                    style="color:var(--mdc-theme-on-surface); display:inline-flex; cursor: pointer;" >
-                                    I have saved my seedphrase &nbsp;
-                                    <paper-checkbox
-                                    @click=${e => { this.hasSavedSeedphrase = e.target.checked; this.updateNext() }} ?checked="${this.hasSavedSeedphrase}" iron-label-target></paper-checkbox>
-                                </iron-label>
-    */
 
     render () {
         return html`
@@ -273,17 +255,10 @@ class CreateAccountSection extends connect(store)(LitElement) {
                         /* height:100%; */
                         height: calc(var(--window-height) - 56px);
                     }
-
                     #infoContent{
                         height:auto;
                         min-height: calc(var(--window-height) - 96px)
                     }
-
-                    /* #tosContent { */
-                    /* .section-content {
-                        max-height:calc(var(--window-height) - 166px);
-                        min-height:calc(var(--window-height) - 166px);
-                    } */
                     #nav {
                         flex-shrink:0;
                         padding-top:8px;
@@ -310,15 +285,6 @@ class CreateAccountSection extends connect(store)(LitElement) {
 
                 paper-input {
                     --paper-input-container-input-color: var(--mdc-theme-on-surface);
-                }
-
-                paper-checkbox {
-                    --paper-checkbox-checked-color: var(--mdc-theme-primary);
-                    --paper-checkbox-checked-ink-color: var(--mdc-theme-primary);
-                    --paper-checkbox-unchecked-color: var(--mdc-theme-on-surface);
-                    --paper-checkbox-unchecked-ink-color: var(--mdc-theme-on-surface);
-                    --paper-checkbox-label-color: var(--mdc-theme-on-surface);
-                    --paper-checkbox-vertical-align: top;
                 }
 
                 paper-icon-button {
@@ -374,70 +340,34 @@ class CreateAccountSection extends connect(store)(LitElement) {
                             </div> -->
                         </div>
                         <div style="text-align:right; vertical-align: top; line-height: 40px; margin:0;">
-                                <label
-                                    for="hasSavedSeedphraseCheckbox"
-                                    @click=${() => this.shadowRoot.getElementById('hasSavedSeedphraseCheckbox').click()}
-                                    >I have saved my seedphrase</label>
-                                    <mwc-checkbox id="hasSavedSeedphraseCheckbox" @click=${e => { this.hasSavedSeedphrase = !e.target.checked; this.updateNext() }} ?checked=${this.hasSavedSeedphrase}></mwc-checkbox>
-                                <!-- <paper-checkbox>I have saved my seedphrase!</paper-checkbox> -->
-                            </div>
+                            <label
+                                for="hasSavedSeedphraseCheckbox"
+                                @click=${() => this.shadowRoot.getElementById('hasSavedSeedphraseCheckbox').click()}
+                                >I have saved my seedphrase</label>
+                                <mwc-checkbox id="hasSavedSeedphraseCheckbox" @click=${e => { this.hasSavedSeedphrase = !e.target.checked; this.updateNext() }} ?checked=${this.hasSavedSeedphrase}></mwc-checkbox>
+                        </div>
                     </div>
 
                     <div page="password">
                         <div id="saveContent" class="section-content">
+                            <h3>Save in browser</h3>
                             <p style="text-align: justify;">Your account is now ready to be created. It will be saved in this browser. If you do not want your new account to be saved in your browser you can uncheck the box below. You will still be able to login with your new account(after logging out), you'll just have to retype your seedphrase.</p>
-                            <div style="display:flex;">
-                                <mwc-icon style="padding: 20px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
-                                <paper-input style="width:100%;" always-float-labell label="Pin" id="createPin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
-                            </div>
                             <div style="display:flex;" ?hidden=${!this.saveAccount}>
                                 <mwc-icon style="padding: 20px; padding-left:0; padding-top: 28px;">vpn_key</mwc-icon>
                                 <paper-input style="width:100%;" label="Password" id="password" type="password"></paper-input>
                             </div>
-                            <div style="text-align:right; padding-right:8px; min-height:40px;">
-                                <iron-label
-                                    style="color:var(--mdc-theme-primary); display:inline-flex; cursor: pointer;" >
-                                    Save in this browser &nbsp;
-                                    <paper-checkbox
-                                    @click=${e => { this.saveAccount = e.target.checked }} ?checked="${this.saveAccount}" iron-label-target></paper-checkbox>
-                                </iron-label>
+                            <div style="text-align:right; vertical-align: top; line-height: 40px; margin:0;">
+                                <label
+                                    for="saveInBrowserCheckbox"
+                                    @click=${() => this.shadowRoot.getElementById('saveInBrowserCheckbox').click()}
+                                    >Save in this browser</label>
+                                    <mwc-checkbox id="saveInBrowserCheckbox" @click=${e => { this.saveAccount = !e.target.checked }} ?checked=${this.saveAccount}></mwc-checkbox>
                             </div>
                         </div>
                     </div>
                 </iron-pages>
-                <div id="errorMessage" style="height:24px; line-height:24px; vertical-align:top; color: var(--mdc-theme-error); text-align:right; padding: 0 16px; padding-bottom:6px;">
-                   
-                    <span style="margin-top:-4px;height:24px;">
-                        ${this.error ? html`
-                             <mwc-icon style="line-height:24px; vertical-align: top; margin-top:-2px;">block</mwc-icon>
-                            ${this.errorMessage}` : ''}
-                    </span>
-                </div>
             </div>
-
-            <!-- <loading-ripple id="loadingRipple" welcome-message="${this.welcomeMessage}"></loading-ripple> -->
         `
-    }
-
-    /*
-            <div id="nav">
-                <mwc-button
-                    ?disabled=${this.selectedPage === 'info'}
-                    @click=${() => this.pages[this.selectedPage].prev()}
-                    style="margin: 0 0 12px 12px;">
-                    <mwc-icon>keyboard_arrow_left</mwc-icon> Back
-                </mwc-button>
-                <mwc-button
-                    ?disabled=${!this.hasSavedSeedphrase}
-                    @click=${e => this.pages[this.selectedPage].next(e)}
-                    style="margin: 0 12px 12px 0; float:right;">
-                    ${this.nextButtonText} <mwc-icon>keyboard_arrow_right</mwc-icon>
-                </mwc-button>
-            </div>
-            */
-
-    firstUpdated () {
-        // this.loadingRipple = this.shadowRoot.getElementById('loadingRipple')
     }
 
     _pageChange (newPage, oldPage) {
