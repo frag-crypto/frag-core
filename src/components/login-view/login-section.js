@@ -102,9 +102,12 @@ class LoginSection extends connect(store)(LitElement) {
                 icon: 'insert_drive_file'
             }
         ]
+
+        this.showPasswordCheckboxPages = ['seed', 'phrase', 'V1Seed']
         this.showPasswordPages = [
-            'unlockBackedUpSeed',
-            'unlockStored'
+            // ...this.showPasswordCheckboxPages,
+            'storedWallet',
+            'unlockBackedUpSeed'
         ]
     }
 
@@ -232,13 +235,13 @@ class LoginSection extends connect(store)(LitElement) {
                         </div>
 
                         <div page="storedWallet" id="walletsPage">
-                            <div style="padding-left:12px;">
+                            <div style="padding-left:0;">
                                 <h1 style="padding:0;">Your accounts</h1>
                                 <p style="margin:0; padding: 0 0 12px 0;">Click your account to login with it</p>
                             </div>
                             <div id="wallets">
                                 ${(Object.entries(this.wallets || {}).length < 1) ? html`
-                                    <p style="padding: 0 24px 12px 24px;">You need to create or save an account before you can log in!</p>
+                                    <p style="padding: 0 0 6px 0;">You need to create or save an account before you can log in!</p>
                                 ` : ''}
                                 ${Object.entries(this.wallets || {}).map(wallet => html`
                                     <div class="wallet" @click=${() => this.selectWallet(wallet[1])}>
@@ -266,10 +269,10 @@ class LoginSection extends connect(store)(LitElement) {
                         </div>
 
                         <div page="seed" id="seedPage">
-                            <div style="padding:24px;">
+                            <div>
                                 <div style="display:flex;">
                                     <!-- <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon> -->
-                                    <mwc-textfield style="width:100%;" label="V1 Seed" id="v1SeedInput" type="password"></mwc-textfield>
+                                    <mwc-textfield style="width:100%;" icon="clear_all" label="Qora seed" id="v1SeedInput" type="password"></mwc-textfield>
                                     <!-- <paper-input style="width:100%;" label="V1 Seed" id="v1SeedInput" type="password"></paper-input> -->
                                 </div>
                             </div>
@@ -299,7 +302,7 @@ class LoginSection extends connect(store)(LitElement) {
 
                     </iron-pages>
 
-                    <iron-collapse style="" ?opened=${this.showPasswordField || this.showPasswordPages.includes(this.selectedPage)} id="passwordCollapse">
+                    <iron-collapse style="" ?opened=${(this.showPasswordField && this.showPasswordCheckboxPages.includes(this.selectedPage)) || (this.showPasswordPages.includes(this.selectedPage) && (this.wallets || {}).length < 1) || this.selectedPage === 'unlockBackedUpSeed'} id="passwordCollapse">
                         <div style="display:flex;">
                             <!-- <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">vpn_key</mwc-icon> -->
                             <mwc-textfield icon="vpn_key" style="width:100%;" label="Password" id="password" type="password"></mwc-textfield>
@@ -310,9 +313,9 @@ class LoginSection extends connect(store)(LitElement) {
                     <div style="text-align: right; color: var(--mdc-theme-error)">
                         ${this.loginErrorMessage}
                     </div>
-                        ${['seed', 'phrase', 'V1Seed'].includes(this.selectedPage) ? html`
+                        ${this.showPasswordCheckboxPages.includes(this.selectedPage) ? html`
                             <!-- Remember me checkbox and fields-->
-                            <div hidden style="text-align:right; padding-right:8px; min-height:40px;">
+                            <div style="text-align:right; min-height:40px;">
                                 <p style="vertical-align: top; line-height: 40px; margin:0;">
                                     <label
                                     for="storeCheckbox"
@@ -401,6 +404,7 @@ class LoginSection extends connect(store)(LitElement) {
             },
             storedWallet: () => {
                 const wallet = this.selectedWallet
+                console.log(wallet)
                 // const password = this.shadowRoot.querySelector('#password').value
                 const password = this.shadowRoot.getElementById('password').value
                 return {
@@ -414,6 +418,7 @@ class LoginSection extends connect(store)(LitElement) {
             },
             backedUpSeed: () => {
                 const wallet = this.backedUpWalletJSON
+                console.log(wallet)
                 const password = this.shadowRoot.getElementById('password').value
                 return {
                     password,
@@ -523,7 +528,8 @@ class LoginSection extends connect(store)(LitElement) {
     cleanup () {
         this.wallet = {}
         this.shadowRoot.querySelector('#password').value = ''
-        this.selectedPage = 'wallets'
+        this.hasStoredWallets = Object.keys(store.getState().user.storedWallets).length > 0
+        this.selectedPage = this.hasStoredWallets ? 'storedWallet' : 'loginOptions'
     }
 }
 

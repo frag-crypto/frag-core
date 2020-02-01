@@ -4,6 +4,7 @@ import { doAddPluginUrl } from '../redux/app/app-actions.js'
 // import * as api from '../api/api.js'
 import * as api from '@frag/crypto'
 const createTransaction = api.createTransaction
+const processTransaction = api.processTransaction
 // import { createTransaction } from '../api/createTransaction.js'
 // import { createTransaction } from '@frag/crypto'
 
@@ -67,7 +68,25 @@ export const routes = {
 
     transaction: async req => {
         // One moment please...this requires templates in the transaction classes
-        return createTransaction(req.data.type, store.getState().app.wallet._addresses[req.data.nonce].keyPair, req.data.params)
+        let response
+        try {
+            const txBytes = createTransaction(req.data.type, store.getState().app.wallet._addresses[req.data.nonce].keyPair, req.data.params)
+            console.log(api, txBytes)
+            const res = await processTransaction(txBytes)
+            console.log(res)
+            response = {
+                success: true,
+                data: res
+            }
+        } catch (e) {
+            console.error(e)
+            console.error(e.message)
+            response = {
+                success: false,
+                message: e.message
+            }
+        }
+        return response
     },
 
     username: async req => {

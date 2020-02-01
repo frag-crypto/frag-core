@@ -9,7 +9,8 @@ let config = require('./config.js')
 
 const checkKeys = (storeObj, newObj) => {
     for (const key in newObj) {
-        if (!storeObj.hasOwnProperty(key)) return
+        if (!Object.prototype.hasOwnProperty.call(storeObj, key)) return
+        // if (!storeObj.hasOwnProperty(key)) return
 
         if (typeof newObj[key] === 'object') {
             storeObj[key] = checkKeys(storeObj[key], newObj[key])

@@ -365,6 +365,7 @@ class LoginView extends connect(store)(LitElement) {
     // }
 
     stateChanged (state) {
+        if (this.loggedIn && !state.app.loggedIn) this.cleanup()
         this.loggedIn = state.app.loggedIn
         this.config = state.config
     }
