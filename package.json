@@ -15,10 +15,10 @@
         "lint": "eslint src"
     },
     "dependencies": {
-        "@hapi/glue": "^6.2.0",
         "electron": "^7.1.11",
         "electron-builder": "^22.3.2",
         "electron-updater": "^4.2.0",
+        "@hapi/glue": "^6.2.0",
         "h2o2": "^8.1.2",
         "hapi": "^18.0.0",
         "hostile": "^1.3.2",

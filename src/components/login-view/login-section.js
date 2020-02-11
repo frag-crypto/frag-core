@@ -18,6 +18,7 @@ import '@polymer/iron-collapse'
 import '@polymer/paper-spinner/paper-spinner-lite.js'
 
 import { doLogin, doSelectAddress } from '../../redux/app/app-actions.js'
+import { doStoreWallet } from '../../redux/user/user-actions.js'
 // import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
 // import { doUpdateAccountName } from '../../redux/user/user-actions.js'
 // import { createWallet } from '../../qora/createWallet.js'
@@ -302,7 +303,7 @@ class LoginSection extends connect(store)(LitElement) {
 
                     </iron-pages>
 
-                    <iron-collapse style="" ?opened=${(this.showPasswordField && this.showPasswordCheckboxPages.includes(this.selectedPage)) || (this.showPasswordPages.includes(this.selectedPage) && (this.wallets || {}).length < 1) || this.selectedPage === 'unlockBackedUpSeed'} id="passwordCollapse">
+                    <iron-collapse style="" ?opened=${(this.showPasswordField && this.showPasswordCheckboxPages.includes(this.selectedPage)) || (this.showPasswordPages.includes(this.selectedPage) && (this.wallets || {}).length < 1) || this.selectedPage === 'unlockBackedUpSeed' || this.selectedPage === 'unlockStored'} id="passwordCollapse">
                         <div style="display:flex;">
                             <!-- <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">vpn_key</mwc-icon> -->
                             <mwc-textfield icon="vpn_key" style="width:100%;" label="Password" id="password" type="password"></mwc-textfield>
@@ -450,28 +451,30 @@ class LoginSection extends connect(store)(LitElement) {
                 return createWallet(type, source, status => {
                     this.loadingRipple.loadingMessage = status
                 })
-            })
-            .then(wallet => {
-                store.dispatch(doLogin(wallet))
-                console.log(wallet)
-                store.dispatch(doSelectAddress(wallet.addresses[0]))
-                this.navigate('show-address')
-                // store.dispatch(doUpdateAccountInfo({ name: store.getState().user.storedWallets[wallet.addresses[0].address].name }))
-                const storedWallets = store.getState().user.storedWallets
-                const walletAddress = storedWallets[wallet.addresses[0].address]
-                // STORAGEEEE
-                if (walletAddress) {
-                    // const expectedName = storedWallets[wallet.addresses[0].address].name
-                    // store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, false))
-                    if (this.rememberMe && type !== 'storedWallet') {
-                        //
-                    }
-                }
-                this.cleanup()
-                return this.loadingRipple.fade()
-            })
-            .then(() => {
-
+                    .then(wallet => {
+                        store.dispatch(doLogin(wallet))
+                        console.log(wallet)
+                        store.dispatch(doSelectAddress(wallet.addresses[0]))
+                        this.navigate('show-address')
+                        // store.dispatch(doUpdateAccountInfo({ name: store.getState().user.storedWallets[wallet.addresses[0].address].name }))
+                        const storedWallets = store.getState().user.storedWallets
+                        const walletAddress = storedWallets[wallet.addresses[0].address]
+                        // STORAGEEEE
+                        if (walletAddress) {
+                            // const expectedName = storedWallets[wallet.addresses[0].address].name
+                            // store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, false))
+                            if (this.rememberMe && type !== 'storedWallet') {
+                                //
+                                store.dispatch(doStoreWallet(wallet, source.password, '' /* username */, () => {
+                                    // console.log('STATUS UPDATE <3')
+                                    // this.loadingRipple.loadingMessage = status
+                                    ripple.loadingMessage = status
+                                })).catch(err => console.error(err))
+                            }
+                        }
+                        this.cleanup()
+                        return this.loadingRipple.fade()
+                    })
             })
             .catch(e => {
                 this.loginErrorMessage = e
