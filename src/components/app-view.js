@@ -101,7 +101,7 @@ class AppView extends connect(store)(LitElement) {
 
                             <small>
                                 <!-- <i>{{ route.path }}#{{ hashRoute.path }}</i> -->
-                                    </small>
+                            </small>
                         </div>
 
                         <template is="dom-repeat" items="{{topMenuItems}}">

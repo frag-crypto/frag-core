@@ -106,21 +106,23 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     const password = this.shadowRoot.getElementById('password').value
                     console.log(this.shadowRoot.getElementById('password'))
 
-                    if (password === '') {
-                        snackbar.add({
-                            labelText: 'Please enter a password',
-                            dismiss: true
-                        })
-                        return
-                    }
+                    if (this.saveAccount) {
+                        if (password === '') {
+                            snackbar.add({
+                                labelText: 'Please enter a password',
+                                dismiss: true
+                            })
+                            return
+                        }
 
-                    if (password.length < 8 && lastPassword !== password) {
-                        snackbar.add({
-                            labelText: 'Your password is less than 8 characters! This is not recommended. You can press login again to ignore this warning.',
-                            dismiss: true
-                        })
-                        lastPassword = password
-                        return
+                        if (password.length < 8 && lastPassword !== password) {
+                            snackbar.add({
+                                labelText: 'Your password is less than 8 characters! This is not recommended. You can press login again to ignore this warning.',
+                                dismiss: true
+                            })
+                            lastPassword = password
+                            return
+                        }
                     }
 
                     const seedPhrase = this.shadowRoot.getElementById('randSentence').parsedString
@@ -147,12 +149,11 @@ class CreateAccountSection extends connect(store)(LitElement) {
                             store.dispatch(doLogin(wallet, password))
                             store.dispatch(doSelectAddress(wallet.addresses[0]))
                             this.navigate('show-address')
-                            this.cleanup()
                             // return this.loadingRipple.fade()
                             return ripple.fade()
                             // Save account after user is logged in...for good UX
                                 .then(() => {
-                                    console.log(this.saveAccount)
+                                    console.log(this, this.saveAccount)
                                     if (!this.saveAccount) return
                                     return store.dispatch(doStoreWallet(wallet, password, '' /* username */, () => {
                                         // console.log('STATUS UPDATE <3')
@@ -162,6 +163,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                     // ^^ Don't want this one to break logging
                                 })
                         })
+                        .then(() => this.cleanup())
                         .catch(e => {
                             snackbar.add({
                                 labelText: e,
@@ -198,8 +200,8 @@ class CreateAccountSection extends connect(store)(LitElement) {
         this.error = false
         this.errorMessage = ''
         this.nextButtonText = 'Next'
-        this.saveAccount = true
         this.createAccountLoading = false
+        this.saveAccount = true
     }
 
     render () {
@@ -360,7 +362,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                 <label
                                     for="saveInBrowserCheckbox"
                                     @click=${() => this.shadowRoot.getElementById('saveInBrowserCheckbox').click()}
-                                    >Save in this browser</label>
+                                    >Save in this browserrrr</label>
                                     <mwc-checkbox id="saveInBrowserCheckbox" @click=${e => { this.saveAccount = !e.target.checked }} ?checked=${this.saveAccount}></mwc-checkbox>
                             </div>
                         </div>

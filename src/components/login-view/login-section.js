@@ -54,7 +54,7 @@ class LoginSection extends connect(store)(LitElement) {
             loginErrorMessage: { type: String },
             rememberMe: { type: Boolean },
             hasStoredWallets: { type: Boolean },
-            showPasswordField: { type: Boolean },
+            saveInBrowser: { type: Boolean },
             backedUpWalletJSON: { type: Object },
 
             backedUpSeedLoading: { type: Boolean }
@@ -105,11 +105,6 @@ class LoginSection extends connect(store)(LitElement) {
         ]
 
         this.showPasswordCheckboxPages = ['seed', 'phrase', 'V1Seed', 'unlockBackedUpSeed']
-        this.showPasswordPages = [
-            // ...this.showPasswordCheckboxPages,
-            'storedWallet',
-            'unlockBackedUpSeed'
-        ]
     }
 
     render () {
@@ -215,6 +210,9 @@ class LoginSection extends connect(store)(LitElement) {
                 #pagesContainer {
                     max-height: calc(var(--window-height) - 184px);
                 }
+                .checkboxLabel:hover{
+                    cursor: pointer;
+                }
             </style>
             
             <div id="loginSection">
@@ -302,8 +300,8 @@ class LoginSection extends connect(store)(LitElement) {
                         </div>
 
                     </iron-pages>
-
-                    <iron-collapse style="" ?opened=${(this.showPasswordField && this.showPasswordCheckboxPages.includes(this.selectedPage)) || (this.showPasswordPages.includes(this.selectedPage) && (this.wallets || {}).length < 1) || this.selectedPage === 'unlockBackedUpSeed' || this.selectedPage === 'unlockStored'} id="passwordCollapse">
+                    <!-- (this.saveInBrowser && this.showPasswordCheckboxPages.includes(this.selectedPage)) || (this.showPasswordPages.includes(this.selectedPage) && (this.wallets || {}).length < 1) || this.selectedPage === 'unlockBackedUpSeed' || this.selectedPage === 'unlockStored' -->
+                    <iron-collapse style="" ?opened=${this.showPassword(this.selectedPage)} id="passwordCollapse">
                         <div style="display:flex;">
                             <!-- <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">vpn_key</mwc-icon> -->
                             <mwc-textfield icon="vpn_key" style="width:100%;" label="Password" id="password" type="password" @keyup=${e => this.keyupEnter(e, e => this.emitNext(e))}></mwc-textfield>
@@ -320,9 +318,10 @@ class LoginSection extends connect(store)(LitElement) {
                                 <p style="vertical-align: top; line-height: 40px; margin:0;">
                                     <label
                                     for="storeCheckbox"
+                                    class="checkboxLabel"
                                     @click=${() => this.shadowRoot.getElementById('storeCheckbox').click()}
                                     >Save in this browser</label>
-                                    <mwc-checkbox id="storeCheckbox" style="margin-bottom:-12px;" @click=${e => { this.showPasswordField = !e.target.checked }} ?checked="${this.showPasswordField}"></mwc-checkbox>
+                                    <mwc-checkbox id="storeCheckbox" style="margin-bottom:-12px;" @click=${e => { this.saveInBrowser = !e.target.checked }} ?checked="${this.saveInBrowser}"></mwc-checkbox>
                                 </p>
                             </div>
                         ` : ''}
@@ -410,6 +409,27 @@ class LoginSection extends connect(store)(LitElement) {
         this.backedUpWalletJSON = pf
     }
 
+    showPassword (selectedPage) {
+        return (
+            this.saveInBrowser && [
+                'storedWallet',
+                'unlockBackedUpSeed',
+                'seed',
+                'phrase'
+            ].includes(selectedPage)
+        ) ||
+        (
+            [
+                'unlockBackedUpSeed',
+                'unlockStored'
+            ].includes(selectedPage)
+        )
+        //  ||
+        // (
+        //     selectedPage === 'storedWallet' && (this.wallets || {}).length < 1
+        // )
+    }
+
     get walletSources () {
         return {
             seed: () => {
@@ -471,7 +491,7 @@ class LoginSection extends connect(store)(LitElement) {
                         const walletAddress = storedWallets[wallet.addresses[0].address]
                         // STORAGEEEE
                         console.log(walletAddress, this.rememberMe, type)
-                        if (walletAddress) {
+                        if (!walletAddress) {
                             // const expectedName = storedWallets[wallet.addresses[0].address].name
                             // store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, false))
                             if (this.rememberMe && type !== 'storedWallet') {

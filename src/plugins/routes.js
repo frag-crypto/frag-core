@@ -75,7 +75,7 @@ export const routes = {
             // const txBytes = createTransaction(req.data.type, store.getState().app.wallet._addresses[req.data.nonce].keyPair, req.data.params)
             const tx = createTransaction(req.data.type, store.getState().app.wallet._addresses[req.data.nonce].keyPair, req.data.params)
             console.log(api, tx, tx.signedBytes)
-            // await requestTransactionDialog.requestTransaction(tx)
+            await requestTransactionDialog.requestTransaction(tx)
             const res = await processTransaction(tx.signedBytes)
             console.log(res)
             response = {

@@ -21,7 +21,8 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
                 --mdc-theme-primary: var(--mdc-theme-error)
             }
             #txInfo {
-                text-align:left
+                text-align:left;
+                max-width:520px;
             }
 
             .buttons {
@@ -53,7 +54,7 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
             <paper-dialog id="james" modal>
                 <h2>Transaction request</h2>
                 <div id="txInfo">
-                    ${this.transaction.template}
+                    ${this.txInfo}
                 </div>
                 <div class="buttons">
                     <mwc-button class='decline' @click=${e => this.decline(e)} dialog-dismiss>Decline</mwc-button>
@@ -70,7 +71,7 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
     requestTransaction (transaction) {
         this.shadowRoot.getElementById('james').open()
         this.transaction = transaction
-        this.txInfo = transaction.template
+        this.txInfo = transaction.render(html)
         console.log(this.txInfo)
         return new Promise((resolve, reject) => {
             this._resolve = resolve
@@ -85,17 +86,17 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
     }
 
     decline (e) {
-        this._resolve({
-            success: false,
-            reason: 'User declined transaction'
-        })
+        // this._resolve({
+        //     success: false,
+        //     reason: 'User declined transaction'
+        // })
         // or...?
         // this._reject({
         //     success: false,
         //     reason: 'User declined transaction'
         // })
         // Or just
-        // this._reject('User declined transaction')
+        this._reject(new Error('User declined transaction'))
     }
 }
 

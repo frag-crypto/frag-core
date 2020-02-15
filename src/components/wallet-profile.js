@@ -10,9 +10,13 @@ import { UPDATE_NAME_STATUSES } from '../redux/user/user-actions.js'
 // import '@material/mwc-icon'
 import '@polymer/paper-icon-button/paper-icon-button.js'
 import '@polymer/iron-icons/iron-icons.js'
-import '@polymer/paper-dialog'
+// import '@polymer/paper-dialog'
 import '@polymer/paper-toast'
 import '@polymer/paper-spinner/paper-spinner-lite'
+
+import '@material/mwc-button'
+import '@material/mwc-dialog'
+import '@material/mwc-icon-button'
 
 class WalletProfile extends connect(store)(LitElement) {
     static get properties () {
@@ -96,104 +100,96 @@ class WalletProfile extends connect(store)(LitElement) {
                         <!-- No name set  -->
                         ${this.user.accountInfo.name}
                         <!-- <mwc-icon style="float:right; top: -10px;">keyboard_arrow_down</mwc-icon> -->
-                        <paper-icon-button
-                            @click=${() => this.dialog.open()}
+                        <mwc-icon-button 
                             style="float:right; top: 0px;"
-                            icon="icons:more-vert"></paper-icon-button>
+                            @click=${() => this.dialog.show()}
+                            icon="info"></mwc-icon-button>
+                        <!-- <paper-icon-button
+                            
+                            style="float:right; top: 0px;"
+                            icon="icons:info"></paper-icon-button> -->
                     </span>
                     <p id="address">${this.wallet.addresses[0].address}</p>
                 </div>
             </div>
 
-            <paper-dialog id="profileDialog" with-backdrop>
+            <!-- <paper-dialog id="profileDialog" with-backdrop> -->
+            <mwc-dialog id="profileDialog">
+                <div>
                 <!-- Gets moved to documnet.body so we need to put styles here -->
-                <style>
-                    /* Dialog styles */
-                    #dialogAccountIcon {
-                        font-size:76px;
-                        color: var(--mdc-theme-primary);
-                    }
+                    <style>
+                        /* Dialog styles */
+                        #dialogAccountIcon {
+                            font-size:76px;
+                            color: var(--mdc-theme-primary);
+                        }
 
-                    h1 {
-                        font-weight: 100;
-                    }
+                        h1 {
+                            font-weight: 100;
+                        }
 
-                    span {
-                        font-size: 18px;
-                        word-break: break-all;
-                    }
-                    .title {
-                        font-weight:600;
-                        font-size:12px;
-                        line-height: 32px;
-                        opacity: 0.66;
-                    }
-                    #profileList {
-                        padding:0;
-                    }
-                    #profileList > * {
-                        padding-left:24px;
-                        padding-right:24px;
-                    }
-                    #nameDiv:hover, #backupDiv:hover {
-                        cursor: pointer;
-                    }
-                    .red-button {
-                        /* --mdc-theme-on-primary: var(--mdc-theme-error); */
-                        --mdc-theme-primary: var(--mdc-theme-error);
-                    }
-                </style>
-
-                <div style="text-align:center">
-                    <mwc-icon id="dialogAccountIcon">account_circle</mwc-icon>
-                    <h1>Profile</h1>
-                    <hr>
-                </div>
-                <div id="profileList">
-                    ${// so that i can comment lol
-/*
-                        <div id="nameDiv" style="position:relative;" @mouseup=${''}>
-                        <span class="title">Name</span>
+                        span {
+                            font-size: 18px;
+                            word-break: break-all;
+                        }
+                        .title {
+                            font-weight:600;
+                            font-size:12px;
+                            line-height: 32px;
+                            opacity: 0.66;
+                        }
+                        #profileList {
+                            padding:0;
+                        }
+                        #profileList > * {
+                            /* padding-left:24px;
+                            padding-right:24px; */
+                        }
+                        #nameDiv:hover, #backupDiv:hover {
+                            cursor: pointer;
+                        }
+                        .red-button {
+                            /* --mdc-theme-on-primary: var(--mdc-theme-error); */
+                            --mdc-theme-primary: var(--mdc-theme-error);
+                        }
+                    </style>
+                    <div style="text-align:center">
+                        <mwc-icon id="dialogAccountIcon">account_circle</mwc-icon>
+                        <h1>Profile</h1>
+                        <hr>
+                    </div>
+                    <div id="profileList">
+                        <span class="title">Address</span>
                         <br>
+                        <div><span class="">${this.wallet.addresses[0].address}</span></div>
                         ${true ? html`
-                             <span class="">${this.user.accountInfo.name}</span>
-                            ` : html`
-                            <span class="">Set name <mwc-icon style="float:right; margin-top:-6px;">call_made</mwc-icon></span>
+                            <span class="title">Qora address</span>
+                            <br>
+                            <div><span class="">Qabcdefghijklmnop</span></div>
+                            <span class="title">Burned Qora amount</span>
+                            <br>
+                            <div><span class="">17 000</span></div>
+                        ` : ''}
+                        <br>
+                        <span class="title">Public key</span>
+                        <br>
+                        <div><span class="">${this.wallet.addresses[0].base58PublicKey}</span></div>
+                        <br>
+                        <div id="backupDiv" style="position:relative;" @click=${() => this.downloadBackup()}>
+                            <span class="title">Backup</span>
+                            <br>
+                            <span class="">Download wallet backup <mwc-icon style="float:right; margin-top:-2px; width:24px; overflow:hidden;">cloud_download</mwc-icon></span>
                             <paper-ripple></paper-ripple>
-                        `}
-                        <br><br>
-                    </div>
-                        */ ''}
-                    <span class="title">Address</span>
-                    <br>
-                    <div><span class="">${this.wallet.addresses[0].address}</span></div>
-                    ${true ? html`
-                        <span class="title">Qora address</span>
-                        <br>
-                        <div><span class="">Qabcdefghijklmnop</span></div>
-                        <span class="title">Burned Qora amount</span>
-                        <br>
-                        <div><span class="">17 000</span></div>
-                    ` : ''}
-                    <br>
-                    <span class="title">Public key</span>
-                    <br>
-                    <div><span class="">${this.wallet.addresses[0].base58PublicKey}</span></div>
-                    <br>
-                    <div id="backupDiv" style="position:relative;" @click=${() => this.downloadBackup()}>
-                        <span class="title">Backup</span>
-                        <br>
-                        <span class="">Download wallet backup <mwc-icon style="float:right; margin-top:-2px; width:24px;">save_alt</mwc-icon></span>
-                        <paper-ripple></paper-ripple>
-                        <br><br>
+                            <br><br>
+                        </div>
                     </div>
                 </div>
-                <div class="buttons">
-                    <mwc-button dialog-confirm>Close</mwc-button>
-                </div>
-            </paper-dialog>
+                <mwc-button slot="primaryAction" dialogAction="close">Close</mwc-button>
+            </mwc-dialog>
+            <!-- </paper-dialog> -->
 
-            <paper-dialog style="width:400px;" id="setNameDialog" with-backdrop>
+            <!-- <paper-dialog style="width:400px;" id="setNameDialog" with-backdrop> -->
+            <mwc-dialog id="setNameDialog">
                 <h1 style="font-size: 24px; padding-top: 6px;">Set name</h1>
 
                 <p style="margin-bottom:0;">
@@ -202,12 +198,10 @@ class WalletProfile extends connect(store)(LitElement) {
                 </p>
                 <paper-input @input=${e => { this.newName = e.target.value }} style="margin-top:0;" label="Name" type="text"></paper-input>
 
-                <div class="buttons">
-                    <mwc-button dialog-dismiss class="red-button">Cancel</mwc-button>
-                    <!-- dialog-confirm -->
-                    <mwc-button class="confirm" @click=${() => this._setName()}>Go</mwc-button>
-                </div>
-            </paper-dialog>
+                <mwc-button slot="primaryAction" class="confirm" @click=${() => this._setName()}>Go</mwc-button>
+                <mwc-button slot="secondaryAction" dialogAction="close" class="red-button">Cancel</mwc-button>
+            </mwc-dialog>
+            <!-- </paper-dialog> -->
 
             <paper-toast id="toast" horizontal-align="right" vertical-align="top" vertical-offset="64"></paper-toast>
 
@@ -217,7 +211,7 @@ class WalletProfile extends connect(store)(LitElement) {
     openSetName () {
         if (this.name) return
         if (this.setNameInProgress) return
-        this.setNameDialog.open()
+        this.setNameDialog.show()
     }
 
     _setName () {
@@ -225,7 +219,7 @@ class WalletProfile extends connect(store)(LitElement) {
         this.dialog.close()
         this.toast.text = 'Name has been set. It may take a few minutes to show.'
         this.toast.duration = 6000
-        this.toast.open()
+        this.toast.show()
         this.setNameInProgress = true
         setTimeout(() => {
             this.setNameInProgress = false
