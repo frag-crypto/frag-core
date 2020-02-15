@@ -104,7 +104,7 @@ class LoginSection extends connect(store)(LitElement) {
             }
         ]
 
-        this.showPasswordCheckboxPages = ['seed', 'phrase', 'V1Seed']
+        this.showPasswordCheckboxPages = ['seed', 'phrase', 'V1Seed', 'unlockBackedUpSeed']
         this.showPasswordPages = [
             // ...this.showPasswordCheckboxPages,
             'storedWallet',
@@ -306,7 +306,7 @@ class LoginSection extends connect(store)(LitElement) {
                     <iron-collapse style="" ?opened=${(this.showPasswordField && this.showPasswordCheckboxPages.includes(this.selectedPage)) || (this.showPasswordPages.includes(this.selectedPage) && (this.wallets || {}).length < 1) || this.selectedPage === 'unlockBackedUpSeed' || this.selectedPage === 'unlockStored'} id="passwordCollapse">
                         <div style="display:flex;">
                             <!-- <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">vpn_key</mwc-icon> -->
-                            <mwc-textfield icon="vpn_key" style="width:100%;" label="Password" id="password" type="password"></mwc-textfield>
+                            <mwc-textfield icon="vpn_key" style="width:100%;" label="Password" id="password" type="password" @keyup=${e => this.keyupEnter(e, e => this.emitNext(e))}></mwc-textfield>
                             <!-- <paper-input style="width:100%;" always-float-labell label="Password" id="password" type="password"></paper-input> -->
                         </div>
                     </iron-collapse>
@@ -367,6 +367,19 @@ class LoginSection extends connect(store)(LitElement) {
         this.hasStoredWallets = this.wallets.length > 0
     }
 
+    keyupEnter (e, action) {
+        if (e.keyCode === 13) {
+            e.preventDefault()
+            action(e)
+        }
+    }
+
+    emitNext (e) {
+        this.dispatchEvent(new CustomEvent('next', {
+            detail: {}
+        }))
+    }
+
     loadBackup (file) {
         let error = ''
         let pf
@@ -381,7 +394,7 @@ class LoginSection extends connect(store)(LitElement) {
         try {
             const requiredFields = ['address0', 'salt', 'iv', 'version', 'encryptedSeed', 'mac', 'kdfThreads']
             for (const field of requiredFields) {
-                if (!(field in pf)) throw field + ' not found in JSON'
+                if (!(field in pf)) throw new Error(field + ' not found in JSON')
             }
         } catch (e) {
             error = e
@@ -405,7 +418,6 @@ class LoginSection extends connect(store)(LitElement) {
             },
             storedWallet: () => {
                 const wallet = this.selectedWallet
-                console.log(wallet)
                 // const password = this.shadowRoot.querySelector('#password').value
                 const password = this.shadowRoot.getElementById('password').value
                 return {
@@ -419,7 +431,6 @@ class LoginSection extends connect(store)(LitElement) {
             },
             backedUpSeed: () => {
                 const wallet = this.backedUpWalletJSON
-                console.log(wallet)
                 const password = this.shadowRoot.getElementById('password').value
                 return {
                     password,
@@ -453,20 +464,20 @@ class LoginSection extends connect(store)(LitElement) {
                 })
                     .then(wallet => {
                         store.dispatch(doLogin(wallet))
-                        console.log(wallet)
                         store.dispatch(doSelectAddress(wallet.addresses[0]))
                         this.navigate('show-address')
                         // store.dispatch(doUpdateAccountInfo({ name: store.getState().user.storedWallets[wallet.addresses[0].address].name }))
                         const storedWallets = store.getState().user.storedWallets
                         const walletAddress = storedWallets[wallet.addresses[0].address]
                         // STORAGEEEE
+                        console.log(walletAddress, this.rememberMe, type)
                         if (walletAddress) {
                             // const expectedName = storedWallets[wallet.addresses[0].address].name
                             // store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, false))
                             if (this.rememberMe && type !== 'storedWallet') {
                                 //
+                                console.log('==== STORING THE WALLET ====')
                                 store.dispatch(doStoreWallet(wallet, source.password, '' /* username */, () => {
-                                    // console.log('STATUS UPDATE <3')
                                     // this.loadingRipple.loadingMessage = status
                                     ripple.loadingMessage = status
                                 })).catch(err => console.error(err))
@@ -497,6 +508,11 @@ class LoginSection extends connect(store)(LitElement) {
 
     next (e) {
         this.login(e)
+    }
+
+    // clicks next for parent
+    clickNext () {
+
     }
 
     updateNext () {

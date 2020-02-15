@@ -49,7 +49,7 @@ class MainApp extends connect(store)(LitElement) {
     //  ?hidden=${!this.loggedIn}
     render () {
         return html`
-            <app-styles></app-styles>
+            <!-- <app-styles></app-styles> -->
             <!-- Core layout goes here? Then the log out button can go alongside the log out button...and scale down to it? -->
             <!-- No. login-view will go inside of app-view. Theme, plugin loading, and maybe the web workers will go here. -->
             

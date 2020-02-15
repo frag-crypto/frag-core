@@ -76,16 +76,12 @@ class LoginView extends connect(store)(LitElement) {
         // this.shadowRoot.getElementById('createAccountSection').loginFunction = (...args) => this.login(...args)
         // this.shadowRoot.getElementById('loginSection').loginFunction = (...args) => this.login(...args)
         stateAwait(state => {
-            console.log('==========!!!!!=============')
-            console.log(state.config.styles.theme.colors.primary)
             return 'primary' in state.config.styles.theme.colors
         }).then(() => {
             const particleDiv = this.shadowRoot.querySelector('#particles-js')
             const part = new particlesJS(particleDiv, getParticleConfig(this.config), (c) => {
-                console.log('yeeeee')
-                console.log(c)
+                //
             })
-            console.log(part)
         }).catch(e => console.error(e))
 
         const loginContainerPages = this.shadowRoot.querySelector('#loginContainerPages')
@@ -315,10 +311,10 @@ class LoginView extends connect(store)(LitElement) {
                             <!-- <div class='corner-box' style="width:50px; height:50px; border-left:3px solid; border-top: 3px solid; float:left; margin-left:-50px;"></div> -->
                             <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="loginContainerPages">
                                 <!-- Instead make the page fire a page change event, catch it and respond -->
-                                <welcome-page page="welcome"></welcome-page>
-                                <create-account-section page="create-account"></create-account-section>
-                                <login-section page="login"></login-section>
-                                <show-address page="show-address"></show-address>
+                                <welcome-page @next=${e => this.selectedPageElement.next(e)} page="welcome"></welcome-page>
+                                <create-account-section @next=${e => this.selectedPageElement.next(e)} page="create-account"></create-account-section>
+                                <login-section @next=${e => this.selectedPageElement.next(e)} page="login"></login-section>
+                                <show-address @next=${e => this.selectedPageElement.next(e)} page="show-address"></show-address>
                             </iron-pages>
                             <div id="login-pages-nav" ?hidden="${this.selectedPageElement.hideNav}">
                                 <mwc-button @click=${e => this.selectedPageElement.back(e)} id="nav-back" ?hidden="${this.selectedPageElement.backHidden}" ?disabled="${this.selectedPageElement.backDisabled}">

@@ -42,7 +42,6 @@
             // Let's not spend time on this right now. Initial load is quick, just be happy with that for now
             // Check that service workers are registered
             // if ('serviceWorker' in navigator) {
-            //     console.log('let\'s register')
             //     // Use the window load event to keep the page load performant
             //     window.addEventListener('load', () => {
             //         navigator.serviceWorker.register('/src/service-worker.js');
@@ -60,6 +59,8 @@
     </head>
 
     <body>
+        <!-- styles all dialogs etc too -->
+        <app-styles></app-styles>
         <main>
             <noscript>
                 You need to enable JavaScript to run this app. 😞

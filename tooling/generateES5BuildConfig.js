@@ -13,13 +13,14 @@ const generateRollupConfig = (file, { outputDir, aliases }) => {
             input: file.input,
             onwarn: (warning, rollupWarn) => {
                 if (warning.code !== 'CIRCULAR_DEPENDENCY') {
-                    rollupWarn(warning);
+                    rollupWarn(warning)
                 }
             },
             plugins: [
                 resolve({
                     // jsnext: true,
-                    preferBuiltins: true
+                    preferBuiltins: true// ,
+                    // dedupe: ['lit-element']
                 }),
                 alias({
                     entries: Object.keys(aliases).map(find => {
@@ -36,7 +37,9 @@ const generateRollupConfig = (file, { outputDir, aliases }) => {
                     exclude: 'node_modules/**'
                 })
                 // uglify() // only would work if babel is transpiling to es5
-            ]
+            ],
+            external: ['crypto']// ,
+            // preserveSymlinks: true
         },
         outputOptions: {
             // name: 'main', // for external calls (need exports)
@@ -44,7 +47,8 @@ const generateRollupConfig = (file, { outputDir, aliases }) => {
             file: path.join(outputDir, file.output),
             format: 'umd', // was umd
             // plugins: pluginOptions,
-            name: 'worker'
+            name: 'worker',
+            sourcemap: true
         }
     }
 }

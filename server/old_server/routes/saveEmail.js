@@ -20,8 +20,8 @@ function databaseInitialize () {
 
 // example method with any bootstrap logic to run after database initialized
 function runProgramLogic () {
-    var entryCount = db.getCollection('emails').count()
-    console.log('number of entries in database : ' + entryCount)
+    // var entryCount = db.getCollection('emails').count()
+    // console.log('number of entries in database : ' + entryCount)
 }
 
 module.exports = (email) => {

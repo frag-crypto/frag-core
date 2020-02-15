@@ -8,7 +8,6 @@ routes.push(
         path: '/plugins/{path*}',
         handler: (request, h) => {
             const filePath = Path.join(__dirname, '../../', config.server.plugins.directory, request.params.path)
-            console.log(filePath)
             const response = h.file(filePath)
             response.header('Access-Control-Allow-Origin', config.server.plugins.domain + ':' + config.server.plugins.port) // Should be
             return response

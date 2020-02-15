@@ -3,6 +3,8 @@ import { doAddPluginUrl } from '../redux/app/app-actions.js'
 // import * as api from '../qora/api.js'
 // import * as api from '../api/api.js'
 import * as api from '@frag/crypto'
+import { requestTransactionDialog } from '../functional-components/confirm-transaction-dialog.js'
+
 const createTransaction = api.createTransaction
 const processTransaction = api.processTransaction
 // import { createTransaction } from '../api/createTransaction.js'
@@ -70,9 +72,11 @@ export const routes = {
         // One moment please...this requires templates in the transaction classes
         let response
         try {
-            const txBytes = createTransaction(req.data.type, store.getState().app.wallet._addresses[req.data.nonce].keyPair, req.data.params)
-            console.log(api, txBytes)
-            const res = await processTransaction(txBytes)
+            // const txBytes = createTransaction(req.data.type, store.getState().app.wallet._addresses[req.data.nonce].keyPair, req.data.params)
+            const tx = createTransaction(req.data.type, store.getState().app.wallet._addresses[req.data.nonce].keyPair, req.data.params)
+            console.log(api, tx, tx.signedBytes)
+            // await requestTransactionDialog.requestTransaction(tx)
+            const res = await processTransaction(tx.signedBytes)
             console.log(res)
             response = {
                 success: true,

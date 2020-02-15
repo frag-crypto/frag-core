@@ -22,7 +22,6 @@ setInterval(() => {
 
 const checkName = async name => {
     const dbLookup = pendingRegisteredNames.find({ name })
-    console.log(dbLookup)
     if (dbLookup.length > 0) {
         return {
             success: false,
@@ -31,10 +30,7 @@ const checkName = async name => {
     }
 
     const url = apiNode.url + apiNode.tail + 'names/' + name
-    console.log(url)
     const nameInfo = await fetch(url).then(res => res.json())
-    console.log('b')
-    console.log(nameInfo)
     if (nameInfo.owner) {
         return {
             success: false,

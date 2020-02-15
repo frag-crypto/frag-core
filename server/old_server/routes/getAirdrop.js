@@ -12,12 +12,10 @@ const airdropBaseUrl = airdropNode.protocol + '://' + airdropNode.domain + ':' +
 
 const claimAirdrop = address => {
     const url = airdropBaseUrl + airdropNode.url + address
-    console.log(url)
     return fetch(url).then(response => response.json())
 }
 
 const getAirdrop = async (name, address) => {
-    console.log(name, address)
     const check = await checkName(name)
     if (!check.success) {
         return check
@@ -27,7 +25,6 @@ const getAirdrop = async (name, address) => {
     try {
         airdrop = await claimAirdrop(address)
     } catch (e) {
-        console.log(e)
         return {
             success: false,
             errorMessage: e
@@ -40,8 +37,6 @@ const getAirdrop = async (name, address) => {
             errorMessage: airdrop.error
         }
     }
-
-    console.log(airdrop)
 
     pendingRegisteredNames.insert({
         name,

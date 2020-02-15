@@ -9,8 +9,6 @@ const addChatToServer = require('./routes/chat.js')
 // const QORA_CONFIG = require("../config.js")
 const config = require('../config/config-loader.js')
 
-// console.log(config.server.primary.host)
-
 async function start () {
     const primaryServer = new ServerFactory(primaryRoutes, config.server.primary.host, config.server.primary.port, config.tls.enabled ? config.tls.options : void 0)
     primaryServer.startServer()

@@ -37,7 +37,9 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
 
     constructor () {
         super()
-
+        this.transaction = {
+            template: html`Awaiting transaction info`
+        }
         this.txInfo = html``
         listenForRequest(args => this.requestTransaction(args))
     }
@@ -51,7 +53,7 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
             <paper-dialog id="james" modal>
                 <h2>Transaction request</h2>
                 <div id="txInfo">
-                    ${this.txInfo}
+                    ${this.transaction.template}
                 </div>
                 <div class="buttons">
                     <mwc-button class='decline' @click=${e => this.decline(e)} dialog-dismiss>Decline</mwc-button>
@@ -67,7 +69,9 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
 
     requestTransaction (transaction) {
         this.shadowRoot.getElementById('james').open()
-        this.txInfo = transaction.render()
+        this.transaction = transaction
+        this.txInfo = transaction.template
+        console.log(this.txInfo)
         return new Promise((resolve, reject) => {
             this._resolve = resolve
             this._reject = reject
@@ -85,6 +89,13 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
             success: false,
             reason: 'User declined transaction'
         })
+        // or...?
+        // this._reject({
+        //     success: false,
+        //     reason: 'User declined transaction'
+        // })
+        // Or just
+        // this._reject('User declined transaction')
     }
 }
 

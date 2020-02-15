@@ -167,6 +167,14 @@ class WalletProfile extends connect(store)(LitElement) {
                     <span class="title">Address</span>
                     <br>
                     <div><span class="">${this.wallet.addresses[0].address}</span></div>
+                    ${true ? html`
+                        <span class="title">Qora address</span>
+                        <br>
+                        <div><span class="">Qabcdefghijklmnop</span></div>
+                        <span class="title">Burned Qora amount</span>
+                        <br>
+                        <div><span class="">17 000</span></div>
+                    ` : ''}
                     <br>
                     <span class="title">Public key</span>
                     <br>

@@ -43,7 +43,6 @@ const createPluginRoutes = (config, plugins) => {
 
 
             //     // const filePath = path.join(__dirname, '../../', config.user.server.plugin.directory, plugin + '/' + request.params.path)
-            //     // console.log(filePath)
             //     // const response = h.file(filePath)
             //     // Why do we need cors...?
             //     // response.header('Access-Control-Allow-Origin', config.server.plugins.domain + ':' + config.server.plugins.port) // Should be

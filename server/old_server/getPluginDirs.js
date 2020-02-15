@@ -15,7 +15,6 @@ const getPluginDirs = async () => {
     let directories = listings.filter(listing => listing)
 
     directories = await Promise.all(directories.map(dir => {
-        console.log(dir)
         return readFile(path.join(pluginDir, dir, '/main.js'))
             .then(file => {
                 return dir
@@ -29,7 +28,5 @@ const getPluginDirs = async () => {
 }
 // const plugins = new getPlugins();
 // plugins.getPlugins();
-//
-// console.log(plugins.plugins);
 
 module.exports = getPluginDirs

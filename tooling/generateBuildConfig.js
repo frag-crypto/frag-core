@@ -56,7 +56,7 @@ const generateBuildConfig = ({ elementComponents, functionalComponents, otherOut
             }
         ],
         outputOptions: {
-
+            sourcemap: true
         },
         inputOptions: {
             onwarn: (warning, rollupWarn) => {
@@ -87,7 +87,8 @@ const generateBuildConfig = ({ elementComponents, functionalComponents, otherOut
                 }),
                 resolve({
                     // module: true
-                    preferBuiltins: true
+                    preferBuiltins: true// ,
+                    // dedupe: ['lit-element']
                 }),
                 commonjs({}),
                 globals(),
@@ -106,12 +107,14 @@ const generateBuildConfig = ({ elementComponents, functionalComponents, otherOut
                     output: options.sassOutputDir
                 })
             ],
+            external: ['crypto'],
 
             context: 'window',
 
             manualChunks: {
                 // 'lit-element': ['lit-element']
-            }
+            }// ,
+            // preserveSymlinks: true
         },
         options: {
             outputDir: options.outputDir
