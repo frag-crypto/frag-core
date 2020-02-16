@@ -170,17 +170,15 @@ class WalletProfile extends connect(store)(LitElement) {
                             <br>
                             <div><span class="">17 000</span></div>
                         ` : ''}
-                        <br>
                         <span class="title">Public key</span>
                         <br>
                         <div><span class="">${this.wallet.addresses[0].base58PublicKey}</span></div>
-                        <br>
                         <div id="backupDiv" style="position:relative;" @click=${() => this.downloadBackup()}>
                             <span class="title">Backup</span>
                             <br>
                             <span class="">Download wallet backup <mwc-icon style="float:right; margin-top:-2px; width:24px; overflow:hidden;">cloud_download</mwc-icon></span>
                             <paper-ripple></paper-ripple>
-                            <br><br>
+                            <br>
                         </div>
                     </div>
                 </div>

@@ -12,6 +12,7 @@ import { stateAwait } from '../../stateAwait.js'
 
 import '@material/mwc-button'
 import '@material/mwc-icon'
+import '@material/mwc-fab'
 
 import '@polymer/iron-pages'
 import '@polymer/paper-icon-button/paper-icon-button.js'
@@ -25,6 +26,8 @@ import './login-section.js'
 import './show-address.js'
 
 import getParticleConfig from './particle-config.js'
+
+import settings from '../../functional-components/settings-page.js'
 
 window.reduxStore = store
 
@@ -304,6 +307,7 @@ class LoginView extends connect(store)(LitElement) {
             <div class="login-page" ?hidden=${this.loggedIn}>
             <!-- <div class="login-page"> -->
                 <div id="particles-js"></div>
+                <mwc-fab icon="settings" style="position:fixed; right:24px; bottom:24px;" @click=${() => settings.show()}></mwc-fab>
                 <div class="login-card-container">
                     <img class="qortal-logo" src="${this.config.coin.logo}">
                     <div class="login-card-center-container">

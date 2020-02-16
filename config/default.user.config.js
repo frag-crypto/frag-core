@@ -1,9 +1,26 @@
 const path = require('path')
 
 const config = {
+    // New
+    knownNodes: [
+        {
+            protocol: 'http',
+            port: 62391,
+            domain: '127.0.0.1'
+        },
+        {
+            protocol: 'http',
+            domain: '51.83.114.66',
+            port: 62391
+        }
+    ],
+    nodeSettings: {
+        pingInterval: 10 * 60 * 1000,
+    },
+    // End new
     node: {
         protocol: 'http',
-        domain: '51.83.114.66',
+        domain: '127.0.0.1',
         port: 62391,
         pingInterval: 10 * 60 * 1000,
         enableManagement: true
