@@ -14,6 +14,13 @@ const createPrimaryRoutes = (config, plugins) => {
     routes.push(
         {
             method: 'GET',
+            path: '/',
+            handler: (request, reply) => {
+                return reply.redirect('/q/wallet/')
+            }
+        },
+        {
+            method: 'GET',
             path: '/{path*}',
             handler: {
                 file: {
