@@ -1,4 +1,6 @@
 export const LOAD_CONFIG_FROM_API = 'LOAD_CONFIG_FROM_API'
+export const SET_NODE = 'SET_NODE'
+export const ADD_NODE = 'ADD_NODE'
 
 const configUrl = '/getConfig'
 
@@ -23,6 +25,19 @@ const loadConfigFromAPI = (status, payload) => {
     return {
         type: LOAD_CONFIG_FROM_API,
         status,
+        payload
+    }
+}
+
+export const doSetNode = (nodeIndex) => {
+    return (dispatch, getState) => {
+        dispatch(setNode(nodeIndex))
+    }
+}
+
+const setNode = (payload) => {
+    return {
+        type: SET_NODE,
         payload
     }
 }

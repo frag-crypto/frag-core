@@ -6,7 +6,7 @@ const platform = require('os').platform()
 const Glue = require('@hapi/glue') // Hapi composer
 
 const Inert = require('inert') // For serving static files
-const h2o2 = require('h2o2') // Proxy
+// const h2o2 = require('h2o2') // Proxy
 
 const hostile = require('hostile')
 
@@ -68,7 +68,7 @@ const createServer = (config, plugins) => {
         register: {
             plugins: [
                 Inert,
-                h2o2,
+                // h2o2,
                 {
                     // plugin: './primaryServer',
                     plugin: createPrimaryServerFromConfig(config, plugins),

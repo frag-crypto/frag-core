@@ -1158,6 +1158,21 @@
     "@material/feature-targeting" "5.0.0-canary.a1a0deb3e.0"
     "@material/theme" "5.0.0-canary.a1a0deb3e.0"
 
+"@material/fab@=5.0.0-canary.a1a0deb3e.0":
+  version "5.0.0-canary.a1a0deb3e.0"
+  resolved "https://registry.yarnpkg.com/@material/fab/-/fab-5.0.0-canary.a1a0deb3e.0.tgz#94c8f3ae9a8b2776e402031a77700207dceaa873"
+  integrity sha512-MqpBj5WMSNYlhXiF68FpD88bS0vRoxRDU5fvlrKII9mbOE5g1yFh3uN+PYjyZk5prYayVqqS3Vy8lEjwDAdX+A==
+  dependencies:
+    "@material/animation" "5.0.0-canary.a1a0deb3e.0"
+    "@material/elevation" "5.0.0-canary.a1a0deb3e.0"
+    "@material/feature-targeting" "5.0.0-canary.a1a0deb3e.0"
+    "@material/ripple" "5.0.0-canary.a1a0deb3e.0"
+    "@material/rtl" "5.0.0-canary.a1a0deb3e.0"
+    "@material/shape" "5.0.0-canary.a1a0deb3e.0"
+    "@material/theme" "5.0.0-canary.a1a0deb3e.0"
+    "@material/touch-target" "5.0.0-canary.a1a0deb3e.0"
+    "@material/typography" "5.0.0-canary.a1a0deb3e.0"
+
 "@material/feature-targeting@5.0.0-canary.a1a0deb3e.0":
   version "5.0.0-canary.a1a0deb3e.0"
   resolved "https://registry.yarnpkg.com/@material/feature-targeting/-/feature-targeting-5.0.0-canary.a1a0deb3e.0.tgz#6e3f830877bb27ce9c032a720c4be073da733a0d"
@@ -1218,7 +1233,7 @@
     "@material/theme" "5.0.0-canary.a1a0deb3e.0"
     tslib "^1.9.3"
 
-"@material/list@5.0.0-canary.a1a0deb3e.0":
+"@material/list@5.0.0-canary.a1a0deb3e.0", "@material/list@=5.0.0-canary.a1a0deb3e.0":
   version "5.0.0-canary.a1a0deb3e.0"
   resolved "https://registry.yarnpkg.com/@material/list/-/list-5.0.0-canary.a1a0deb3e.0.tgz#3ae31a223abbff562cbfea9292abbc2bd6a210ab"
   integrity sha512-9+Xn17SspJCvG7xVQZS6hWlCpsl8NqkbkCLsufmruSInm0hZ8QmBITvbF1pXdSOo+TyK3ubppFEaznqovwMfwA==
@@ -1232,6 +1247,36 @@
     "@material/shape" "5.0.0-canary.a1a0deb3e.0"
     "@material/theme" "5.0.0-canary.a1a0deb3e.0"
     "@material/typography" "5.0.0-canary.a1a0deb3e.0"
+    tslib "^1.9.3"
+
+"@material/menu-surface@5.0.0-canary.a1a0deb3e.0", "@material/menu-surface@=5.0.0-canary.a1a0deb3e.0":
+  version "5.0.0-canary.a1a0deb3e.0"
+  resolved "https://registry.yarnpkg.com/@material/menu-surface/-/menu-surface-5.0.0-canary.a1a0deb3e.0.tgz#b04eedfb6280d8ee2025c2e2de35afec01ce76f5"
+  integrity sha512-BtmEI5AoJelv6g/qmY1dn8IsJt2PqUCRLNH4HeW4+Og+cSS5Gt5jtBfFm9/oJyKNaqYH8IImFmPSn2isBUTyyg==
+  dependencies:
+    "@material/animation" "5.0.0-canary.a1a0deb3e.0"
+    "@material/base" "5.0.0-canary.a1a0deb3e.0"
+    "@material/elevation" "5.0.0-canary.a1a0deb3e.0"
+    "@material/feature-targeting" "5.0.0-canary.a1a0deb3e.0"
+    "@material/rtl" "5.0.0-canary.a1a0deb3e.0"
+    "@material/shape" "5.0.0-canary.a1a0deb3e.0"
+    "@material/theme" "5.0.0-canary.a1a0deb3e.0"
+    tslib "^1.9.3"
+
+"@material/menu@5.0.0-canary.a1a0deb3e.0", "@material/menu@=5.0.0-canary.a1a0deb3e.0":
+  version "5.0.0-canary.a1a0deb3e.0"
+  resolved "https://registry.yarnpkg.com/@material/menu/-/menu-5.0.0-canary.a1a0deb3e.0.tgz#d7d72f67635fd6fa19e96f62b158fefc8f2906ad"
+  integrity sha512-NvZ578Yd5rfqKWbGcsyDBPqKJsaokuXxG0kUeK6y7w2d8cPs2cq+x5usJJyyfyu0FuDjoHynaF9O15skjE5M9Q==
+  dependencies:
+    "@material/base" "5.0.0-canary.a1a0deb3e.0"
+    "@material/dom" "5.0.0-canary.a1a0deb3e.0"
+    "@material/elevation" "5.0.0-canary.a1a0deb3e.0"
+    "@material/feature-targeting" "5.0.0-canary.a1a0deb3e.0"
+    "@material/list" "5.0.0-canary.a1a0deb3e.0"
+    "@material/menu-surface" "5.0.0-canary.a1a0deb3e.0"
+    "@material/ripple" "5.0.0-canary.a1a0deb3e.0"
+    "@material/rtl" "5.0.0-canary.a1a0deb3e.0"
+    "@material/theme" "5.0.0-canary.a1a0deb3e.0"
     tslib "^1.9.3"
 
 "@material/mwc-base@^0.13.0":
@@ -1297,6 +1342,19 @@
     tslib "^1.10.0"
     wicg-inert "^3.0.0"
 
+"@material/mwc-fab@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@material/mwc-fab/-/mwc-fab-0.13.0.tgz#42ac18dfe78f37153ab2a786eca2ff28ea58a563"
+  integrity sha512-wHTUkl8FQuXFw3WVAWuIESwj9GIGyzuBLYBsOVL+gUPTWBMI446GPl+MF7eidJ7MmevZmVAxXZCtJEwUG0/04Q==
+  dependencies:
+    "@material/fab" "=5.0.0-canary.a1a0deb3e.0"
+    "@material/mwc-base" "^0.13.0"
+    "@material/mwc-icon" "^0.13.0"
+    "@material/mwc-ripple" "^0.13.0"
+    lit-element "^2.2.1"
+    lit-html "^1.1.2"
+    tslib "^1.10.0"
+
 "@material/mwc-floating-label@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@material/mwc-floating-label/-/mwc-floating-label-0.13.0.tgz#f54b070e47503f1f2cf2b28fc2236b50fe5f3528"
@@ -1349,6 +1407,32 @@
     lit-html "^1.1.2"
     tslib "^1.10.0"
 
+"@material/mwc-list@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@material/mwc-list/-/mwc-list-0.13.0.tgz#60e940749692630b4c8435693910f1f554e2292f"
+  integrity sha512-wccYa5svBh68xz93osil9ZWItUt219idbX0a41MMXZmgm3esGXuGG4kH9hn14opKrhK4HgYfpFml3yt0Jlx/hQ==
+  dependencies:
+    "@material/list" "=5.0.0-canary.a1a0deb3e.0"
+    "@material/mwc-base" "^0.13.0"
+    "@material/mwc-checkbox" "^0.13.0"
+    "@material/mwc-radio" "^0.13.0"
+    lit-element "^2.2.1"
+    lit-html "^1.1.2"
+    tslib "^1.10.0"
+
+"@material/mwc-menu@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@material/mwc-menu/-/mwc-menu-0.13.0.tgz#77d466ae1d147aa32f9bddb151379da4ce130df1"
+  integrity sha512-kIq9sj19ajn9WyT7ImXODFZluYC1KuE+WQ02nGOEdv+LJf6gjDQS9o+ouz5K8kIOYWIwrc2ONqtBabRNXkAsJw==
+  dependencies:
+    "@material/menu" "=5.0.0-canary.a1a0deb3e.0"
+    "@material/menu-surface" "=5.0.0-canary.a1a0deb3e.0"
+    "@material/mwc-base" "^0.13.0"
+    "@material/mwc-list" "^0.13.0"
+    lit-element "^2.2.1"
+    lit-html "^1.1.2"
+    tslib "^1.10.0"
+
 "@material/mwc-notched-outline@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@material/mwc-notched-outline/-/mwc-notched-outline-0.13.0.tgz#b9e1281b47cbdd6ba0c7f1c024714594e0a3afd8"
@@ -1361,6 +1445,17 @@
     lit-element "^2.2.1"
     tslib "^1.10.0"
 
+"@material/mwc-radio@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@material/mwc-radio/-/mwc-radio-0.13.0.tgz#6b6989af755c4aa4ca85ce30c772c1573cb0f39a"
+  integrity sha512-4UbgDWZmIAbLb2O+6g4yTa7sNFObmROmnGehN/CSjLQj+sR29oA6kN1OCWQUwzGPiAYJ7dLkChNwJQNGZTRueQ==
+  dependencies:
+    "@material/mwc-base" "^0.13.0"
+    "@material/mwc-ripple" "^0.13.0"
+    "@material/radio" "=5.0.0-canary.a1a0deb3e.0"
+    lit-element "^2.2.1"
+    tslib "^1.10.0"
+
 "@material/mwc-ripple@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@material/mwc-ripple/-/mwc-ripple-0.13.0.tgz#f4089cfb30928af950a94bcc28128194d93e40b4"
@@ -1369,6 +1464,26 @@
     "@material/dom" "=5.0.0-canary.a1a0deb3e.0"
     "@material/mwc-base" "^0.13.0"
     "@material/ripple" "=5.0.0-canary.a1a0deb3e.0"
+    lit-element "^2.2.1"
+    lit-html "^1.1.2"
+    tslib "^1.10.0"
+
+"@material/mwc-select@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@material/mwc-select/-/mwc-select-0.13.0.tgz#cee546e96c44d01c88776949868728ded42b91be"
+  integrity sha512-o2AWtxIy5LSIFDePVW5qpsJXVCLO9cNRBZhuSSCcYlorrrhZFKZcugrgLfRQGefUsuJoUDQRUT/rMmHAJK7Z0g==
+  dependencies:
+    "@material/dom" "=5.0.0-canary.a1a0deb3e.0"
+    "@material/floating-label" "=5.0.0-canary.a1a0deb3e.0"
+    "@material/line-ripple" "=5.0.0-canary.a1a0deb3e.0"
+    "@material/mwc-base" "^0.13.0"
+    "@material/mwc-floating-label" "^0.13.0"
+    "@material/mwc-icon" "^0.13.0"
+    "@material/mwc-line-ripple" "^0.13.0"
+    "@material/mwc-menu" "^0.13.0"
+    "@material/mwc-notched-outline" "^0.13.0"
+    "@material/select" "=5.0.0-canary.a1a0deb3e.0"
+    "@material/theme" "=5.0.0-canary.a1a0deb3e.0"
     lit-element "^2.2.1"
     lit-html "^1.1.2"
     tslib "^1.10.0"
@@ -1427,6 +1542,21 @@
     "@material/theme" "5.0.0-canary.a1a0deb3e.0"
     tslib "^1.9.3"
 
+"@material/radio@=5.0.0-canary.a1a0deb3e.0":
+  version "5.0.0-canary.a1a0deb3e.0"
+  resolved "https://registry.yarnpkg.com/@material/radio/-/radio-5.0.0-canary.a1a0deb3e.0.tgz#a5932a904382750fdcf536b449e57404f21d2009"
+  integrity sha512-onOaQGf7krcs1YBfblZl4xEz71kSpuToW9mulgdS1lwu4GuRPvL7HiPQh1OTKzXjXfskQ74dplMd13FVHqv2Bg==
+  dependencies:
+    "@material/animation" "5.0.0-canary.a1a0deb3e.0"
+    "@material/base" "5.0.0-canary.a1a0deb3e.0"
+    "@material/density" "5.0.0-canary.a1a0deb3e.0"
+    "@material/dom" "5.0.0-canary.a1a0deb3e.0"
+    "@material/feature-targeting" "5.0.0-canary.a1a0deb3e.0"
+    "@material/ripple" "5.0.0-canary.a1a0deb3e.0"
+    "@material/theme" "5.0.0-canary.a1a0deb3e.0"
+    "@material/touch-target" "5.0.0-canary.a1a0deb3e.0"
+    tslib "^1.9.3"
+
 "@material/ripple@5.0.0-canary.a1a0deb3e.0", "@material/ripple@=5.0.0-canary.a1a0deb3e.0":
   version "5.0.0-canary.a1a0deb3e.0"
   resolved "https://registry.yarnpkg.com/@material/ripple/-/ripple-5.0.0-canary.a1a0deb3e.0.tgz#5ba0a8e1238db993cc4b9160dea0a82fb35af1f0"
@@ -1443,6 +1573,25 @@
   version "5.0.0-canary.a1a0deb3e.0"
   resolved "https://registry.yarnpkg.com/@material/rtl/-/rtl-5.0.0-canary.a1a0deb3e.0.tgz#b10470f304dfa49cc07e64e4fcd3850ce7b1a013"
   integrity sha512-twGx2x5Gl6hc8ap2kyPDrh7thWsANYEEsHB7LF5Y/U6/bJQDY+egnuqUtFD86+zNH+hIhM5JpBTMIqmoQev0pw==
+
+"@material/select@=5.0.0-canary.a1a0deb3e.0":
+  version "5.0.0-canary.a1a0deb3e.0"
+  resolved "https://registry.yarnpkg.com/@material/select/-/select-5.0.0-canary.a1a0deb3e.0.tgz#c3e9588da1c6ab26ceb3f40cbbdb4c72c2019886"
+  integrity sha512-AaUWFqtSfevbwnFV2n1p8c10YV6bS2O4Q9oIBkdDxSRZRaQ9N13r42a9fBfnpef6SRNHHhVCjAhVaUNi1AcD5w==
+  dependencies:
+    "@material/animation" "5.0.0-canary.a1a0deb3e.0"
+    "@material/base" "5.0.0-canary.a1a0deb3e.0"
+    "@material/floating-label" "5.0.0-canary.a1a0deb3e.0"
+    "@material/line-ripple" "5.0.0-canary.a1a0deb3e.0"
+    "@material/menu" "5.0.0-canary.a1a0deb3e.0"
+    "@material/menu-surface" "5.0.0-canary.a1a0deb3e.0"
+    "@material/notched-outline" "5.0.0-canary.a1a0deb3e.0"
+    "@material/ripple" "5.0.0-canary.a1a0deb3e.0"
+    "@material/rtl" "5.0.0-canary.a1a0deb3e.0"
+    "@material/shape" "5.0.0-canary.a1a0deb3e.0"
+    "@material/theme" "5.0.0-canary.a1a0deb3e.0"
+    "@material/typography" "5.0.0-canary.a1a0deb3e.0"
+    tslib "^1.9.3"
 
 "@material/shape@5.0.0-canary.a1a0deb3e.0", "@material/shape@=5.0.0-canary.a1a0deb3e.0":
   version "5.0.0-canary.a1a0deb3e.0"

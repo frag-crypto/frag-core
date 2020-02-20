@@ -99,8 +99,6 @@ class ShowAddress extends connect(store)(LitElement) {
         this.user = state.user
         this.app = state.app
         this.wallet = state.app.wallet
-        console.log('PRRRR')
-        console.log(state.app.wallet)
         if (state.app.wallet.addresses) console.log(state.app.wallet.addresses[0].address)
     }
 

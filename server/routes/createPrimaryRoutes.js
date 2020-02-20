@@ -66,30 +66,30 @@ const createPrimaryRoutes = (config, plugins) => {
                     index: true
                 }
             }
-        },
-        {
-            method: '*',
-            path: '/proxy/{url*}',
-            handler: {
-                proxy: {
-                    mapUri: (request) => {
-                        // console.log(request)
-                        // http://127.0.0.1:3000/proxy/explorer/addr=Qewuihwefuiehwfiuwe
-                        // protocol :// path:port / blockexplorer.json?addr=Qwqfdweqfdwefwef
-                        // const url = request.url.href.slice(7)// Chop out "/proxy/"
-                        const url = request.url.pathname.slice(7) + request.url.search// Chop out "/proxy/"
-                        if (url.includes('/admin/') && !config.user.enableManagement) return { uri: '' }
-                        // let url = remote.url + "/" + request.url.href.replace('/' + remote.path + '/', '')
-                        // console.log(url)
-                        // console.log(request)
-                        return {
-                            uri: url
-                        }
-                    },
-                    passThrough: true,
-                    xforward: true
-                }
-            }
+        // },
+        // {
+        //     method: '*',
+        //     path: '/proxy/{url*}',
+        //     handler: {
+        //         proxy: {
+        //             mapUri: (request) => {
+        //                 // console.log(request)
+        //                 // http://127.0.0.1:3000/proxy/explorer/addr=Qewuihwefuiehwfiuwe
+        //                 // protocol :// path:port / blockexplorer.json?addr=Qwqfdweqfdwefwef
+        //                 // const url = request.url.href.slice(7)// Chop out "/proxy/"
+        //                 const url = request.url.pathname.slice(7) + request.url.search// Chop out "/proxy/"
+        //                 // if (url.includes('/admin/') && !config.user.enableManagement) return { uri: '' } // Not matter not proxying anymore
+        //                 // let url = remote.url + "/" + request.url.href.replace('/' + remote.path + '/', '')
+        //                 // console.log(url)
+        //                 // console.log(request)
+        //                 return {
+        //                     uri: url
+        //                 }
+        //             },
+        //             passThrough: true,
+        //             xforward: true
+        //         }
+        //     }
         })
 
     return routes

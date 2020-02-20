@@ -2,11 +2,13 @@ const path = require('path')
 
 const config = {
     // New
+    node: 0,
     knownNodes: [
         {
             protocol: 'http',
-            port: 62391,
-            domain: '127.0.0.1'
+            port: 12391,
+            domain: '127.0.0.1',
+            enableManagement: true
         },
         {
             protocol: 'http',
@@ -15,16 +17,9 @@ const config = {
         }
     ],
     nodeSettings: {
-        pingInterval: 10 * 60 * 1000,
+        pingInterval: 10 * 60 * 1000
     },
     // End new
-    node: {
-        protocol: 'http',
-        domain: '127.0.0.1',
-        port: 62391,
-        pingInterval: 10 * 60 * 1000,
-        enableManagement: true
-    },
     version: process.env.npm_package_version,
     // user: {
     //     language: 'english', // default...english
@@ -67,7 +62,7 @@ const config = {
     },
     constants: {
         pollingInterval: 3000, // How long between checking for new unconfirmed transactions and new blocks (in milliseconds).
-        proxyURL: '/proxy/',
+        // proxyURL: '/proxy/', // nope!
         workerURL: '/build/worker.js' // Probably be replaced with something in all the build config
     }
 }

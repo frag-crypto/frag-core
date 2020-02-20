@@ -22,7 +22,8 @@ export const doUpdateAccountName = (address, expectedName, awaitingConfirm) => {
         const config = state.config
         const node = config.coin.node.api
         console.log(config.constants)
-        const url = config.constants.proxyURL + node.url + node.tail + GET_NAME_URL + address
+        // const url = config.constants.proxyURL + node.url + node.tail + GET_NAME_URL + address
+        const url = node.url + node.tail + GET_NAME_URL + address
         return fetch(url)
             .then(res => res.json())
             .then(names => {

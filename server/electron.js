@@ -5,15 +5,15 @@ let win
 
 function createWindow () {
     win = new BrowserWindow({
-        //frame: false,
+        // frame: false,
         backgroundColor: '#eee',
         width: 800,
         height: 600,
         webPreferences: {
             nodeIntegration: false,
-            partition: "persist:karma"
+            partition: 'persist:karma'
         },
-        icon: Path.join(__dirname, "../", config.icon),
+        icon: Path.join(__dirname, '../', config.icon),
         autoHideMenuBar: true
     })
     // mainWindow = new BrowserWindow({
@@ -25,8 +25,8 @@ function createWindow () {
     // })
     // mainWindow.loadFile('index.html')
     win.loadURL(url.format({
-        pathname: config.primary.domain + ":" + config.primary.port + "/karma/" + config.plugins.default,
-        protocol: config.primary.protocol + ":",
+        pathname: config.primary.domain + ':' + config.primary.port + '/karma/' + config.plugins.default,
+        protocol: config.primary.protocol + ':',
         slashes: true
     }))
     mainWindow.on('closed', function () {
