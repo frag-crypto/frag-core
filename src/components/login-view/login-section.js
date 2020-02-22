@@ -24,7 +24,7 @@ import { doStoreWallet } from '../../redux/user/user-actions.js'
 // import { createWallet } from '../../qora/createWallet.js'
 // import { createWallet } from '../../api/createWallet.js'
 // import { createWallet } from 'frag-qora-crypto'
-import { createWallet } from '@frag/crypto'
+import { createWallet } from '@frag-crypto/crypto'
 
 import snackbar from '../../functional-components/snackbar.js'
 import '../../custom-elements/frag-file-input.js'

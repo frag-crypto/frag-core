@@ -16,7 +16,7 @@ const options = {
 }
 
 const aliases = {
-    '@frag/crypto': 'node_modules/frag-qora-crypto/api.js'
+    '@frag-crypto/crypto': 'node_modules/frag-qora-crypto/api.js'
     // '@frag/crypto': path.join(__dirname, '../node_modules/frag-qora-crypto/')
 }
 

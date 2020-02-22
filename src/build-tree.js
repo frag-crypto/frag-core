@@ -10,7 +10,7 @@ const path = require('path')
 // Could be used to overwrite absolutely anything
 const aliases = {
     // '@frag/crypto': 'node_modules/frag-qora-crypto/api.js'
-    '@frag/crypto': 'node_modules/frag-qora-crypto'
+    '@frag-crypto/crypto': 'node_modules/frag-qora-crypto'
 }
 
 const apiComponents = {

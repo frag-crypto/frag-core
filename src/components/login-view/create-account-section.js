@@ -5,7 +5,7 @@ import { store } from '../../store.js'
 // import { createWallet } from '../../../qora/createWallet.js'
 // import { createWallet } from '../../qora/createWallet.js'
 // import { createWallet } from '../../api/createWallet.js'
-import { createWallet } from '@frag/crypto'
+import { createWallet } from '@frag-crypto/crypto'
 
 import { doLogin, doLogout, doSelectAddress } from '../../redux/app/app-actions.js'
 import { doStoreWallet } from '../../redux/user/user-actions.js'

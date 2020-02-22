@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../../store.js'
-import { Base58 } from '@frag/crypto'
+import { Base58 } from '@frag-crypto/crypto'
 
 import '@material/mwc-button'
 import '@material/mwc-icon'

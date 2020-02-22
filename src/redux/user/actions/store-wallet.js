@@ -1,7 +1,7 @@
 // import { generateSaveWalletData } from '../../../qora/storeWallet.js'
 // import { generateSaveWalletData } from '../../../api/storeWallet.js'
 // Changing to using a PhraseWallet method...not sure that's the best way to go but whatever.
-// import { generateSaveWalletData } from '@frag/crypto'
+// import { generateSaveWalletData } from '@frag-crypto/crypto'
 import { STORE_WALLET, UPDATE_STORED_WALLET_NAME } from '../user-action-types.js'
 // import { doStoreWallet } from '../../../redux/user/user-actions.js'
 
