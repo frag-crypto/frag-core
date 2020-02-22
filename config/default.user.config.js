@@ -33,8 +33,7 @@ const config = {
         },
         relativeTo: path.join(__dirname, '../'),
         primary: {
-            baseUrl: 'frag', // from coinConfig...hopefully useless
-            domain: 'qor.tal',
+            domain: '127.0.0.1',
             address: '127.0.0.1', // What the domain should point to
             port: 80, // Port to access the Qora UI from
             directory: './src/', // Core Qora-lite code.,
@@ -42,10 +41,10 @@ const config = {
             host: '0.0.0.0' // This probably shouldn't be the default...
         },
         plugin: {
-            domain: 'qor.tal', // '*.domain' is used to host subdomains
+            domain: '127.0.0.1', // '*.domain' is used to host subdomains
             address: '127.0.0.1',
             // domain: 'frag.ui'
-            port: 80, // meh, why not keep it, who knows what kind of stuff people get into
+            port: 51432, // meh, why not keep it, who knows what kind of stuff people get into
             // port: 9087, // Disabled. Will now run on the same port as the host
             directory: './plugins', // Where the plugin folders are stored,
             default: 'wallet',

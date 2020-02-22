@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, Notification } = require('electron')
+const { autoUpdater } = require('electron-updater')
 
 let mainWindow
 let win
@@ -11,9 +12,9 @@ function createWindow () {
         height: 600,
         webPreferences: {
             nodeIntegration: false,
-            partition: 'persist:karma'
+            partition: 'persist:qortal'
         },
-        icon: Path.join(__dirname, '../', config.icon),
+        // icon: Path.join(__dirname, '../', config.icon),
         autoHideMenuBar: true
     })
     // mainWindow = new BrowserWindow({
@@ -24,13 +25,12 @@ function createWindow () {
     //     }
     // })
     // mainWindow.loadFile('index.html')
-    win.loadURL(url.format({
-        pathname: config.primary.domain + ':' + config.primary.port + '/karma/' + config.plugins.default,
-        protocol: config.primary.protocol + ':',
-        slashes: true
-    }))
+    win.loadURL('http://qor.tal')
     mainWindow.on('closed', function () {
         mainWindow = null
+    })
+    mainWindow.once('ready-to-show', () => {
+        autoUpdater.checkForUpdatesAndNotify()
     })
 }
 
@@ -52,4 +52,22 @@ app.on('activate', function () {
 
 ipcMain.on('app_version', (event) => {
     event.sender.send('app_version', { version: app.getVersion() })
+})
+
+autoUpdater.on('update-available', () => {
+    // mainWindow.webContents.send('update_available') // Not used at the moment...
+    const n = new Notification({
+        title: 'Update available',
+        body: 'It will be downloaded in the background and installed on next restart'
+    })
+    n.show()
+})
+
+autoUpdater.on('update-downloaded', () => {
+    // mainWindow.webContents.send('update_downloaded') // Not used at the moment
+    const n = new Notification({
+        title: 'Update downloaded',
+        body: 'Restart your UI to update'
+    })
+    n.show()
 })

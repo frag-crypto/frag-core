@@ -52,11 +52,10 @@ class LoginSection extends connect(store)(LitElement) {
             selectedPage: { type: String },
             wallets: { type: Object },
             loginErrorMessage: { type: String },
-            rememberMe: { type: Boolean },
+            saveInBrowser: { type: Boolean },
             hasStoredWallets: { type: Boolean },
             saveInBrowser: { type: Boolean },
             backedUpWalletJSON: { type: Object },
-
             backedUpSeedLoading: { type: Boolean }
         }
     }
@@ -79,7 +78,7 @@ class LoginSection extends connect(store)(LitElement) {
         this.selectedPage = this.hasStoredWallets ? 'storedWallet' : 'loginOptions'
         this.selectedWallet = {}
         this.loginErrorMessage = ''
-        this.rememberMe = false
+        this.saveInBrowser = false
 
         this.loginOptions = [
             {
@@ -486,15 +485,17 @@ class LoginSection extends connect(store)(LitElement) {
                         store.dispatch(doLogin(wallet))
                         store.dispatch(doSelectAddress(wallet.addresses[0]))
                         this.navigate('show-address')
+                        console.log(wallet)
                         // store.dispatch(doUpdateAccountInfo({ name: store.getState().user.storedWallets[wallet.addresses[0].address].name }))
                         const storedWallets = store.getState().user.storedWallets
-                        const walletAddress = storedWallets[wallet.addresses[0].address]
+                        const storedWalletAddress = storedWallets[wallet.addresses[0].address]
                         // STORAGEEEE
-                        console.log(walletAddress, this.rememberMe, type)
-                        if (!walletAddress) {
+                        console.log(storedWalletAddress, this.saveInBrowser, type)
+                        if (!storedWalletAddress) {
+                            console.log(' -- Wallet not already stored -- ', this.saveInBrowser)
                             // const expectedName = storedWallets[wallet.addresses[0].address].name
                             // store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, false))
-                            if (this.rememberMe && type !== 'storedWallet') {
+                            if (this.saveInBrowser && type !== 'storedWallet') {
                                 //
                                 console.log('==== STORING THE WALLET ====')
                                 store.dispatch(doStoreWallet(wallet, source.password, '' /* username */, () => {

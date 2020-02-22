@@ -37,15 +37,20 @@ class ShowPlugin extends connect(store)(LitElement) {
             ` : 'about:blank'}" id="showPluginFrame"></iframe>
             */
     render () {
-        // console.log(this.app.registeredUrls[this.url])
+        console.log(this.app.registeredUrls[this.url])
         // console.log(this.app.registeredUrls)
         // Let's come back to this...
         return html`
             <iframe src="${this.app.registeredUrls[this.url] ? `
-                ${window.location.protocol}//${this.app.registeredUrls[this.url].domain}.${window.location.hostname}/${this.app.registeredUrls[this.url].page}
+                ${window.location.protocol}//${this.config.user.server.plugin.domain}:${this.config.user.server.plugin.port}/plugin/${this.app.registeredUrls[this.url].domain}/${this.app.registeredUrls[this.url].page}
             ` : 'about:blank'}" id="showPluginFrame"></iframe>
+
         `
     }
+    /*
+    <iframe src="${this.app.registeredUrls[this.url] ? `
+                ${window.location.protocol}//${this.app.registeredUrls[this.url].domain}.${window.location.hostname}/${this.app.registeredUrls[this.url].page}
+            ` : 'about:blank'}" id="showPluginFrame"></iframe>*/
 
     firstUpdated (changedProps) {
         console.log(changedProps)

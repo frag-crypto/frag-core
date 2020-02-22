@@ -1,11 +1,11 @@
 {
-    "name": "frag-core",
-    "version": "2.0.0-alpha.1",
-    "description": "Frag's UI",
+    "name": "@frag-crypto/frag-core",
+    "version": "0.0.0",
+    "description": "Core component of a frag ui",
     "main": "frag-core.js",
-    "repository": "https://github.com/irontiga/frag-ui.git",
+    "repository": "https://github.com/frag-crypto/frag-core.git",
     "author": "irontiga <irontiga@gmail.com>",
-    "license": "GPL-3.0",
+    "license": "MIT",
     "scripts": {
         "buildd": "cross-env NODE_ENV=production rollup -c",
         "build": "node tooling/run_build.js",

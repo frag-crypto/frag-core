@@ -17,6 +17,7 @@ import '@polymer/paper-spinner/paper-spinner-lite'
 import '@material/mwc-button'
 import '@material/mwc-dialog'
 import '@material/mwc-icon-button'
+import '@material/mwc-textfield'
 
 class WalletProfile extends connect(store)(LitElement) {
     static get properties () {
@@ -113,80 +114,6 @@ class WalletProfile extends connect(store)(LitElement) {
                 </div>
             </div>
 
-            <!-- <paper-dialog id="profileDialog" with-backdrop> -->
-            <mwc-dialog id="profileDialog">
-                <div>
-                <!-- Gets moved to documnet.body so we need to put styles here -->
-                    <style>
-                        /* Dialog styles */
-                        #dialogAccountIcon {
-                            font-size:76px;
-                            color: var(--mdc-theme-primary);
-                        }
-
-                        h1 {
-                            font-weight: 100;
-                        }
-
-                        span {
-                            font-size: 18px;
-                            word-break: break-all;
-                        }
-                        .title {
-                            font-weight:600;
-                            font-size:12px;
-                            line-height: 32px;
-                            opacity: 0.66;
-                        }
-                        #profileList {
-                            padding:0;
-                        }
-                        #profileList > * {
-                            /* padding-left:24px;
-                            padding-right:24px; */
-                        }
-                        #nameDiv:hover, #backupDiv:hover {
-                            cursor: pointer;
-                        }
-                        .red-button {
-                            /* --mdc-theme-on-primary: var(--mdc-theme-error); */
-                            --mdc-theme-primary: var(--mdc-theme-error);
-                        }
-                    </style>
-                    <div style="text-align:center">
-                        <mwc-icon id="dialogAccountIcon">account_circle</mwc-icon>
-                        <h1>Profile</h1>
-                        <hr>
-                    </div>
-                    <div id="profileList">
-                        <span class="title">Address</span>
-                        <br>
-                        <div><span class="">${this.wallet.addresses[0].address}</span></div>
-                        ${true ? html`
-                            <span class="title">Qora address</span>
-                            <br>
-                            <div><span class="">Qabcdefghijklmnop</span></div>
-                            <span class="title">Burned Qora amount</span>
-                            <br>
-                            <div><span class="">17 000</span></div>
-                        ` : ''}
-                        <span class="title">Public key</span>
-                        <br>
-                        <div><span class="">${this.wallet.addresses[0].base58PublicKey}</span></div>
-                        <div id="backupDiv" style="position:relative;" @click=${() => this.downloadBackup()}>
-                            <span class="title">Backup</span>
-                            <br>
-                            <span class="">Download wallet backup <mwc-icon style="float:right; margin-top:-2px; width:24px; overflow:hidden;">cloud_download</mwc-icon></span>
-                            <paper-ripple></paper-ripple>
-                            <br>
-                        </div>
-                    </div>
-                </div>
-                <mwc-button slot="primaryAction" dialogAction="close">Close</mwc-button>
-            </mwc-dialog>
-            <!-- </paper-dialog> -->
-
-            <!-- <paper-dialog style="width:400px;" id="setNameDialog" with-backdrop> -->
             <mwc-dialog id="setNameDialog">
                 <h1 style="font-size: 24px; padding-top: 6px;">Set name</h1>
 
@@ -199,7 +126,89 @@ class WalletProfile extends connect(store)(LitElement) {
                 <mwc-button slot="primaryAction" class="confirm" @click=${() => this._setName()}>Go</mwc-button>
                 <mwc-button slot="secondaryAction" dialogAction="close" class="red-button">Cancel</mwc-button>
             </mwc-dialog>
-            <!-- </paper-dialog> -->
+
+            <div id="dialogs">
+                <style>
+                    /* Dialog styles */
+                    #dialogAccountIcon {
+                        font-size:76px;
+                        color: var(--mdc-theme-primary);
+                    }
+
+                    h1 {
+                        font-weight: 100;
+                    }
+
+                    span {
+                        font-size: 18px;
+                        word-break: break-all;
+                    }
+                    .title {
+                        font-weight:600;
+                        font-size:12px;
+                        line-height: 32px;
+                        opacity: 0.66;
+                    }
+                    #profileList {
+                        padding:0;
+                    }
+                    #profileList > * {
+                        /* padding-left:24px;
+                        padding-right:24px; */
+                    }
+                    #nameDiv:hover, #backupDiv:hover {
+                        cursor: pointer;
+                    }
+                    .red-button {
+                        /* --mdc-theme-on-primary: var(--mdc-theme-error); */
+                        --mdc-theme-primary: var(--mdc-theme-error);
+                    }
+                </style>
+                <mwc-dialog id="profileDialog">
+                    <div>
+                    <!-- Gets moved to documnet.body so we need to put styles here -->
+                        <div style="text-align:center">
+                            <mwc-icon id="dialogAccountIcon">account_circle</mwc-icon>
+                            <h1>Profile</h1>
+                            <hr>
+                        </div>
+                        <div id="profileList">
+                            <span class="title">Address</span>
+                            <br>
+                            <div><span class="">${this.wallet.addresses[0].address}</span></div>
+                            ${true ? html`
+                                <span class="title">Qora address</span>
+                                <br>
+                                <div><span class="">Qabcdefghijklmnop</span></div>
+                                <span class="title">Burned Qora amount</span>
+                                <br>
+                                <div><span class="">17 000</span></div>
+                            ` : ''}
+                            <span class="title">Public key</span>
+                            <br>
+                            <div><span class="">${this.wallet.addresses[0].base58PublicKey}</span></div>
+                            <div id="backupDiv" style="position:relative;" @click=${() => this.dialogContainer.getElementById('downloadBackupPasswordDialog').show()}>
+                                <span class="title">Backup</span>
+                                <br>
+                                <span class="">Download wallet backup <mwc-icon style="float:right; margin-top:-2px; width:24px; overflow:hidden;">cloud_download</mwc-icon></span>
+                                <paper-ripple></paper-ripple>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <mwc-button slot="primaryAction" dialogAction="close">Close</mwc-button>
+                </mwc-dialog>
+
+                <mwc-dialog id="downloadBackupPasswordDialog" heading="Backup password">
+                    <p>
+                        Please choose a password to encrypt your backup with (this can be the same as the one you logged in with, or different)
+                    </p>
+                    <mwc-textfield style="width:100%;" icon="vpn_key" id="downloadBackupPassword" label="Password"></mwc-textfield>
+                    <mwc-button slot="primaryAction" class="confirm" @click=${() => this.downloadBackup()}>Go</mwc-button>
+                    <mwc-button slot="secondaryAction" dialogAction="close" class="red-button">Close</mwc-button>
+                <mwc-dialog>
+
+            </div>
 
             <paper-toast id="toast" horizontal-align="right" vertical-align="top" vertical-offset="64"></paper-toast>
 
@@ -226,10 +235,13 @@ class WalletProfile extends connect(store)(LitElement) {
 
     firstUpdated () {
         const container = document.body.querySelector('main-app').shadowRoot.querySelector('app-view').shadowRoot
-        const dialog = this.shadowRoot.getElementById('profileDialog')
-        this.dialog = container.appendChild(dialog)
-        const setNameDialog = this.shadowRoot.getElementById('setNameDialog')
-        this.setNameDialog = container.appendChild(setNameDialog)
+        const dialogs = this.shadowRoot.getElementById('dialogs')
+        this.dialogContainer = container
+        container.appendChild(dialogs)
+        console.log(container)
+        // const setNameDialog = this.shadowRoot.getElementById('setNameDialog')
+        this.dialog = container.getElementById('profileDialog')
+        this.setNameDialog = container.getElementById('setNameDialog')
 
         const toast = this.shadowRoot.getElementById('toast')
         // querySelector('show-plugin').shadowRoot.
@@ -243,11 +255,14 @@ class WalletProfile extends connect(store)(LitElement) {
         this.toast = container.appendChild(toast)
     }
 
-    downloadBackup () {
+    async downloadBackup () {
         console.log('== DOWNLOAD ==')
         const state = store.getState()
-        const data = state.user.storedWallets[state.app.selectedAddress.address]
+        const password = this.dialogContainer.getElementById('downloadBackupPassword').value
+        // const data = state.user.storedWallets[state.app.selectedAddress.address]
+        const data = await state.app.wallet.generateSaveWalletData(password, state.config.crypto.kdfThreads, () => {})
         // 'application/json' - omit...
+        console.log(data)
         const dataString = JSON.stringify(data)
         // return download(dataString, 'karma_backup.json')
         console.log(dataString)

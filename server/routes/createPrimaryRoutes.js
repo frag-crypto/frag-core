@@ -73,7 +73,7 @@ const createPrimaryRoutes = (config, plugins) => {
                     index: true
                 }
             }
-        // },
+        }
         // {
         //     method: '*',
         //     path: '/proxy/{url*}',
@@ -97,7 +97,8 @@ const createPrimaryRoutes = (config, plugins) => {
         //             xforward: true
         //         }
         //     }
-        })
+        // }
+    )
 
     return routes
 }
