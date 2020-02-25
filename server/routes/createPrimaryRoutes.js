@@ -25,7 +25,7 @@ const createPrimaryRoutes = (config, plugins) => {
             handler: {
                 file: {
                     path: path.join(__dirname, '../../public/index.html'),
-                    confine: false
+                    confine: path.join(__dirname, '../../public/')
                 }
                 // file: path.join(__dirname, "../../build/src/index.html") // Production...maybe
             }
@@ -36,7 +36,7 @@ const createPrimaryRoutes = (config, plugins) => {
             handler: {
                 file: {
                     path: path.join(__dirname, '../../favicon.ico'),
-                    confine: false
+                    confine: path.join(__dirname, '../../')
                 }
                 // file: path.join(__dirname, "../../build/src/index.html") // Production
             }
