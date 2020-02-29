@@ -73,7 +73,14 @@ const createPrimaryRoutes = (config, plugins) => {
                     index: true
                 }
             }
-        }
+        }//,
+        // {
+        //     method: 'GET',
+        //     path: '/getDir',
+        //     handler: (request, h) => {
+        //         return process.env['APP_PATH']
+        //     }
+        // }
         // {
         //     method: '*',
         //     path: '/proxy/{url*}',

@@ -362,7 +362,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                 <label
                                     for="saveInBrowserCheckbox"
                                     @click=${() => this.shadowRoot.getElementById('saveInBrowserCheckbox').click()}
-                                    >Save in this browserrrr</label>
+                                    >Save in this browser</label>
                                     <mwc-checkbox id="saveInBrowserCheckbox" @click=${e => { this.saveAccount = !e.target.checked }} ?checked=${this.saveAccount}></mwc-checkbox>
                             </div>
                         </div>
