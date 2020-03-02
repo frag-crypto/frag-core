@@ -1,6 +1,6 @@
 {
     "name": "@frag-crypto/frag-core",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Core component of a frag ui",
     "main": "frag-core.js",
     "repository": "https://github.com/frag-crypto/frag-core.git",
