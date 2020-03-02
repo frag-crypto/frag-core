@@ -55,7 +55,7 @@ const createPluginRoutes = (config, plugins) => {
             handler: (request, h) => {
                 const plugin = request.params.path.split('/')[0]
                 const filePath = path.join(pluginFolders[plugin], '../', request.params.path)
-                console.log(filePath)
+                // console.log(filePath)
                 const response = h.file(filePath, {
                     confine: false
                 })

@@ -10,7 +10,6 @@ const createCommonRoutes = require('./createCommonRoutes.js')
 
 const createPrimaryRoutes = (config, plugins) => {
     const routes = createCommonRoutes(config)
-    console.log(config.build.options.outputDir)
     routes.push(
         {
             method: 'GET',

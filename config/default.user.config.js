@@ -1,6 +1,6 @@
 const path = require('path')
 
-const config = {
+const user = {
     // New
     node: 0,
     knownNodes: [
@@ -66,4 +66,4 @@ const config = {
     }
 }
 
-module.exports = config
+module.exports = user
