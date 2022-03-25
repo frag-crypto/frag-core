@@ -91,7 +91,7 @@
         "core-js": "^3.6.4",
         "cross-env": "^7.0.0",
         "dimport": "^1.0.0",
-        "electron": "^8.0.0",
+        "electron": "^13.6.6",
         "electron-builder": "^22.3.2",
         "electron-updater": "^4.2.0",
         "epml": "^0.3.3",
